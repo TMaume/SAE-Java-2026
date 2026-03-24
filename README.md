@@ -4,10 +4,10 @@
 
 Ce projet est développé par :
 
-* **MAUME Timothy** - *Développeur*
-* **TAUZI Eliott** - *Développeur*
-* **MONLOUIS Guewen** - *Développeur*
-* **QUEFELEC Neven** - *Développeur*
+* **MAUME Timothy**
+* **TAUZI Eliott**
+* **MONLOUIS Guewen**
+* **QUEFELEC Neven**
 
 
 **Cloner le dépôt :**
