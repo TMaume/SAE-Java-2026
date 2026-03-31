@@ -1,4 +1,4 @@
-package fr.univorleans.iut45.briquiuto;
+
 
 import javafx.application.Application;
 import javafx.scene.Scene;
