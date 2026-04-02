@@ -1,0 +1,738 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XMI xmi.version="1.2" xmlns:UML="org.omg.xmi.namespace.UML">
+  <XMI.header>
+    <XMI.documentation>
+      <XMI.exporter>BriquIUTO UML Export</XMI.exporter>
+      <XMI.exporterVersion>1.0</XMI.exporterVersion>
+    </XMI.documentation>
+  </XMI.header>
+  <XMI.content>
+    <UML:Model xmi.id="model1" name="BriquesCollectionManager">
+      <UML:Namespace.ownedElement>
+
+        <!-- ==================== CLASSES DOMAINE ==================== -->
+
+        <!-- Boite (abstraite) -->
+        <UML:Class xmi.id="c_boite" name="Boite" isAbstract="true" visibility="public">
+          <UML:Classifier.feature>
+            <UML:Attribute xmi.id="a_boite_num" name="numBoite" visibility="private">
+              <UML:StructuralFeature.type>
+                <UML:DataType xmi.idref="dt_string"/>
+              </UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Attribute xmi.id="a_boite_nom" name="nomBoite" visibility="private">
+              <UML:StructuralFeature.type>
+                <UML:DataType xmi.idref="dt_string"/>
+              </UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Attribute xmi.id="a_boite_annee" name="annee" visibility="private">
+              <UML:StructuralFeature.type>
+                <UML:DataType xmi.idref="dt_int"/>
+              </UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Attribute xmi.id="a_boite_nbpieces" name="nbPieces" visibility="private">
+              <UML:StructuralFeature.type>
+                <UML:DataType xmi.idref="dt_int"/>
+              </UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Attribute xmi.id="a_boite_theme" name="theme" visibility="private">
+              <UML:StructuralFeature.type>
+                <UML:Class xmi.idref="c_theme"/>
+              </UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Operation xmi.id="op_boite_getcontenu" name="getContenu" visibility="public">
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id="ret_boite_getcontenu" kind="return">
+                  <UML:Parameter.type>
+                    <UML:Class xmi.idref="c_contenu"/>
+                  </UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+            <UML:Operation xmi.id="op_boite_stats" name="getStatistiques" visibility="public">
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id="ret_boite_stats" kind="return">
+                  <UML:Parameter.type>
+                    <UML:DataType xmi.idref="dt_string"/>
+                  </UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+          </UML:Classifier.feature>
+        </UML:Class>
+
+        <!-- BoiteComposee -->
+        <UML:Class xmi.id="c_boitecomposee" name="BoiteComposee" isAbstract="false" visibility="public">
+          <UML:Classifier.feature>
+            <UML:Attribute xmi.id="a_bc_sousboites" name="sousBoites" visibility="private">
+              <UML:StructuralFeature.type>
+                <UML:DataType xmi.idref="dt_list"/>
+              </UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Operation xmi.id="op_bc_ajouter" name="ajouterSousBoite" visibility="public">
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id="p_bc_ajouter_b" name="b" kind="in">
+                  <UML:Parameter.type><UML:Class xmi.idref="c_boite"/></UML:Parameter.type>
+                </UML:Parameter>
+                <UML:Parameter xmi.id="ret_bc_ajouter" kind="return">
+                  <UML:Parameter.type><UML:DataType xmi.idref="dt_void"/></UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+            <UML:Operation xmi.id="op_bc_get" name="getSousBoites" visibility="public">
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id="ret_bc_get" kind="return">
+                  <UML:Parameter.type><UML:DataType xmi.idref="dt_list"/></UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+            <UML:Operation xmi.id="op_bc_stats" name="getStatistiques" visibility="public">
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id="ret_bc_stats" kind="return">
+                  <UML:Parameter.type><UML:DataType xmi.idref="dt_string"/></UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+          </UML:Classifier.feature>
+        </UML:Class>
+
+        <!-- BoitePersonnalisee -->
+        <UML:Class xmi.id="c_boitepers" name="BoitePersonnalisee" isAbstract="false" visibility="public">
+          <UML:Classifier.feature>
+            <UML:Attribute xmi.id="a_bp_id" name="idUnique" visibility="private">
+              <UML:StructuralFeature.type><UML:DataType xmi.idref="dt_string"/></UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Attribute xmi.id="a_bp_pieces" name="pieces" visibility="private">
+              <UML:StructuralFeature.type><UML:DataType xmi.idref="dt_list"/></UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Operation xmi.id="op_bp_genid" name="genererIdUnique" visibility="public">
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id="ret_bp_genid" kind="return">
+                  <UML:Parameter.type><UML:DataType xmi.idref="dt_string"/></UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+            <UML:Operation xmi.id="op_bp_verif" name="verifierDoublon" visibility="public">
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id="ret_bp_verif" kind="return">
+                  <UML:Parameter.type><UML:DataType xmi.idref="dt_boolean"/></UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+            <UML:Operation xmi.id="op_bp_enreg" name="enregistrer" visibility="public">
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id="ret_bp_enreg" kind="return">
+                  <UML:Parameter.type><UML:DataType xmi.idref="dt_void"/></UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+            <UML:Operation xmi.id="op_bp_nb" name="getNbPieces" visibility="public">
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id="ret_bp_nb" kind="return">
+                  <UML:Parameter.type><UML:DataType xmi.idref="dt_int"/></UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+          </UML:Classifier.feature>
+        </UML:Class>
+
+        <!-- Theme -->
+        <UML:Class xmi.id="c_theme" name="Theme" isAbstract="false" visibility="public">
+          <UML:Classifier.feature>
+            <UML:Attribute xmi.id="a_th_id" name="idTheme" visibility="private">
+              <UML:StructuralFeature.type><UML:DataType xmi.idref="dt_int"/></UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Attribute xmi.id="a_th_nom" name="nomTheme" visibility="private">
+              <UML:StructuralFeature.type><UML:DataType xmi.idref="dt_string"/></UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Attribute xmi.id="a_th_parent" name="parent" visibility="private">
+              <UML:StructuralFeature.type><UML:Class xmi.idref="c_theme"/></UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Attribute xmi.id="a_th_sous" name="sousThemes" visibility="private">
+              <UML:StructuralFeature.type><UML:DataType xmi.idref="dt_list"/></UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Operation xmi.id="op_th_getsous" name="getSousThemes" visibility="public">
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id="ret_th_getsous" kind="return">
+                  <UML:Parameter.type><UML:DataType xmi.idref="dt_list"/></UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+            <UML:Operation xmi.id="op_th_isracine" name="isRacine" visibility="public">
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id="ret_th_isracine" kind="return">
+                  <UML:Parameter.type><UML:DataType xmi.idref="dt_boolean"/></UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+          </UML:Classifier.feature>
+        </UML:Class>
+
+        <!-- Contenu -->
+        <UML:Class xmi.id="c_contenu" name="Contenu" isAbstract="false" visibility="public">
+          <UML:Classifier.feature>
+            <UML:Attribute xmi.id="a_ct_id" name="idCont" visibility="private">
+              <UML:StructuralFeature.type><UML:DataType xmi.idref="dt_int"/></UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Attribute xmi.id="a_ct_version" name="version" visibility="private">
+              <UML:StructuralFeature.type><UML:DataType xmi.idref="dt_string"/></UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Attribute xmi.id="a_ct_pieces" name="pieces" visibility="private">
+              <UML:StructuralFeature.type><UML:DataType xmi.idref="dt_list"/></UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Attribute xmi.id="a_ct_figs" name="figurines" visibility="private">
+              <UML:StructuralFeature.type><UML:DataType xmi.idref="dt_list"/></UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Attribute xmi.id="a_ct_boites" name="boitesIncluses" visibility="private">
+              <UML:StructuralFeature.type><UML:DataType xmi.idref="dt_list"/></UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Operation xmi.id="op_ct_complet" name="estComplet" visibility="public">
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id="ret_ct_complet" kind="return">
+                  <UML:Parameter.type><UML:DataType xmi.idref="dt_boolean"/></UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+            <UML:Operation xmi.id="op_ct_nb" name="getNbTotalPieces" visibility="public">
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id="ret_ct_nb" kind="return">
+                  <UML:Parameter.type><UML:DataType xmi.idref="dt_int"/></UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+            <UML:Operation xmi.id="op_ct_manq" name="getPiecesManquantes" visibility="public">
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id="ret_ct_manq" kind="return">
+                  <UML:Parameter.type><UML:DataType xmi.idref="dt_list"/></UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+          </UML:Classifier.feature>
+        </UML:Class>
+
+        <!-- ContenuPiece -->
+        <UML:Class xmi.id="c_contenupiece" name="ContenuPiece" isAbstract="false" visibility="public">
+          <UML:Classifier.feature>
+            <UML:Attribute xmi.id="a_cp_qte" name="quantite" visibility="private">
+              <UML:StructuralFeature.type><UML:DataType xmi.idref="dt_int"/></UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Attribute xmi.id="a_cp_suppl" name="enSupplement" visibility="private">
+              <UML:StructuralFeature.type><UML:DataType xmi.idref="dt_boolean"/></UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Attribute xmi.id="a_cp_piece" name="piece" visibility="private">
+              <UML:StructuralFeature.type><UML:Class xmi.idref="c_piece"/></UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Operation xmi.id="op_cp_getqte" name="getQuantite" visibility="public">
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id="ret_cp_getqte" kind="return">
+                  <UML:Parameter.type><UML:DataType xmi.idref="dt_int"/></UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+            <UML:Operation xmi.id="op_cp_issuppl" name="isEnSupplement" visibility="public">
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id="ret_cp_issuppl" kind="return">
+                  <UML:Parameter.type><UML:DataType xmi.idref="dt_boolean"/></UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+          </UML:Classifier.feature>
+        </UML:Class>
+
+        <!-- ContenuFigurine -->
+        <UML:Class xmi.id="c_conteaufig" name="ContenuFigurine" isAbstract="false" visibility="public">
+          <UML:Classifier.feature>
+            <UML:Attribute xmi.id="a_cf_qte" name="quantite" visibility="private">
+              <UML:StructuralFeature.type><UML:DataType xmi.idref="dt_int"/></UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Attribute xmi.id="a_cf_fig" name="figurine" visibility="private">
+              <UML:StructuralFeature.type><UML:Class xmi.idref="c_figurine"/></UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Operation xmi.id="op_cf_getqte" name="getQuantite" visibility="public">
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id="ret_cf_getqte" kind="return">
+                  <UML:Parameter.type><UML:DataType xmi.idref="dt_int"/></UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+            <UML:Operation xmi.id="op_cf_getfig" name="getFigurine" visibility="public">
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id="ret_cf_getfig" kind="return">
+                  <UML:Parameter.type><UML:Class xmi.idref="c_figurine"/></UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+          </UML:Classifier.feature>
+        </UML:Class>
+
+        <!-- Piece -->
+        <UML:Class xmi.id="c_piece" name="Piece" isAbstract="false" visibility="public">
+          <UML:Classifier.feature>
+            <UML:Attribute xmi.id="a_p_num" name="numPiece" visibility="private">
+              <UML:StructuralFeature.type><UML:DataType xmi.idref="dt_string"/></UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Attribute xmi.id="a_p_nom" name="nomPiece" visibility="private">
+              <UML:StructuralFeature.type><UML:DataType xmi.idref="dt_string"/></UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Attribute xmi.id="a_p_cat" name="categorie" visibility="private">
+              <UML:StructuralFeature.type><UML:Class xmi.idref="c_categorie"/></UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Attribute xmi.id="a_p_coul" name="couleur" visibility="private">
+              <UML:StructuralFeature.type><UML:Class xmi.idref="c_couleur"/></UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Operation xmi.id="op_p_getcat" name="getCategorie" visibility="public">
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id="ret_p_getcat" kind="return">
+                  <UML:Parameter.type><UML:Class xmi.idref="c_categorie"/></UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+            <UML:Operation xmi.id="op_p_getcoul" name="getCouleur" visibility="public">
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id="ret_p_getcoul" kind="return">
+                  <UML:Parameter.type><UML:Class xmi.idref="c_couleur"/></UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+            <UML:Operation xmi.id="op_p_tostring" name="toString" visibility="public">
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id="ret_p_tostring" kind="return">
+                  <UML:Parameter.type><UML:DataType xmi.idref="dt_string"/></UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+          </UML:Classifier.feature>
+        </UML:Class>
+
+        <!-- Categorie -->
+        <UML:Class xmi.id="c_categorie" name="Categorie" isAbstract="false" visibility="public">
+          <UML:Classifier.feature>
+            <UML:Attribute xmi.id="a_cat_id" name="idCat" visibility="private">
+              <UML:StructuralFeature.type><UML:DataType xmi.idref="dt_int"/></UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Attribute xmi.id="a_cat_nom" name="nomCat" visibility="private">
+              <UML:StructuralFeature.type><UML:DataType xmi.idref="dt_string"/></UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Operation xmi.id="op_cat_getnom" name="getNomCat" visibility="public">
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id="ret_cat_getnom" kind="return">
+                  <UML:Parameter.type><UML:DataType xmi.idref="dt_string"/></UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+            <UML:Operation xmi.id="op_cat_tostring" name="toString" visibility="public">
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id="ret_cat_tostring" kind="return">
+                  <UML:Parameter.type><UML:DataType xmi.idref="dt_string"/></UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+          </UML:Classifier.feature>
+        </UML:Class>
+
+        <!-- Couleur -->
+        <UML:Class xmi.id="c_couleur" name="Couleur" isAbstract="false" visibility="public">
+          <UML:Classifier.feature>
+            <UML:Attribute xmi.id="a_co_id" name="idCoul" visibility="private">
+              <UML:StructuralFeature.type><UML:DataType xmi.idref="dt_int"/></UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Attribute xmi.id="a_co_nom" name="nomCoul" visibility="private">
+              <UML:StructuralFeature.type><UML:DataType xmi.idref="dt_string"/></UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Attribute xmi.id="a_co_rgb" name="rgb" visibility="private">
+              <UML:StructuralFeature.type><UML:DataType xmi.idref="dt_string"/></UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Attribute xmi.id="a_co_transp" name="transparent" visibility="private">
+              <UML:StructuralFeature.type><UML:DataType xmi.idref="dt_boolean"/></UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Operation xmi.id="op_co_getnom" name="getNomCoul" visibility="public">
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id="ret_co_getnom" kind="return">
+                  <UML:Parameter.type><UML:DataType xmi.idref="dt_string"/></UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+            <UML:Operation xmi.id="op_co_tostring" name="toString" visibility="public">
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id="ret_co_tostring" kind="return">
+                  <UML:Parameter.type><UML:DataType xmi.idref="dt_string"/></UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+          </UML:Classifier.feature>
+        </UML:Class>
+
+        <!-- Figurine -->
+        <UML:Class xmi.id="c_figurine" name="Figurine" isAbstract="false" visibility="public">
+          <UML:Classifier.feature>
+            <UML:Attribute xmi.id="a_fi_id" name="idFig" visibility="private">
+              <UML:StructuralFeature.type><UML:DataType xmi.idref="dt_int"/></UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Attribute xmi.id="a_fi_nom" name="nomFig" visibility="private">
+              <UML:StructuralFeature.type><UML:DataType xmi.idref="dt_string"/></UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Attribute xmi.id="a_fi_nb" name="nbParties" visibility="private">
+              <UML:StructuralFeature.type><UML:DataType xmi.idref="dt_int"/></UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Operation xmi.id="op_fi_getnom" name="getNomFig" visibility="public">
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id="ret_fi_getnom" kind="return">
+                  <UML:Parameter.type><UML:DataType xmi.idref="dt_string"/></UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+            <UML:Operation xmi.id="op_fi_tostring" name="toString" visibility="public">
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id="ret_fi_tostring" kind="return">
+                  <UML:Parameter.type><UML:DataType xmi.idref="dt_string"/></UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+          </UML:Classifier.feature>
+        </UML:Class>
+
+        <!-- ==================== COUCHE COLLECTION ==================== -->
+
+        <!-- CollectionPersonnelle -->
+        <UML:Class xmi.id="c_collection" name="CollectionPersonnelle" isAbstract="false" visibility="public">
+          <UML:Classifier.feature>
+            <UML:Attribute xmi.id="a_col_boites" name="boites" visibility="private">
+              <UML:StructuralFeature.type><UML:DataType xmi.idref="dt_list"/></UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Operation xmi.id="op_col_ajouter" name="ajouterBoite" visibility="public">
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id="p_col_ajouter_b" name="b" kind="in">
+                  <UML:Parameter.type><UML:Class xmi.idref="c_boite"/></UML:Parameter.type>
+                </UML:Parameter>
+                <UML:Parameter xmi.id="ret_col_ajouter" kind="return">
+                  <UML:Parameter.type><UML:DataType xmi.idref="dt_void"/></UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+            <UML:Operation xmi.id="op_col_complete" name="marquerComplete" visibility="public">
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id="p_col_complete_b" name="b" kind="in">
+                  <UML:Parameter.type><UML:Class xmi.idref="c_boite"/></UML:Parameter.type>
+                </UML:Parameter>
+                <UML:Parameter xmi.id="ret_col_complete" kind="return">
+                  <UML:Parameter.type><UML:DataType xmi.idref="dt_void"/></UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+            <UML:Operation xmi.id="op_col_incomplete" name="marquerIncomplete" visibility="public">
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id="p_col_incomplete_b" name="b" kind="in">
+                  <UML:Parameter.type><UML:Class xmi.idref="c_boite"/></UML:Parameter.type>
+                </UML:Parameter>
+                <UML:Parameter xmi.id="ret_col_incomplete" kind="return">
+                  <UML:Parameter.type><UML:DataType xmi.idref="dt_void"/></UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+            <UML:Operation xmi.id="op_col_manq" name="getPiecesManquantes" visibility="public">
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id="p_col_manq_b" name="b" kind="in">
+                  <UML:Parameter.type><UML:Class xmi.idref="c_boite"/></UML:Parameter.type>
+                </UML:Parameter>
+                <UML:Parameter xmi.id="ret_col_manq" kind="return">
+                  <UML:Parameter.type><UML:DataType xmi.idref="dt_list"/></UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+            <UML:Operation xmi.id="op_col_theme" name="rechercherBoitesParTheme" visibility="public">
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id="p_col_theme_t" name="theme" kind="in">
+                  <UML:Parameter.type><UML:Class xmi.idref="c_theme"/></UML:Parameter.type>
+                </UML:Parameter>
+                <UML:Parameter xmi.id="ret_col_theme" kind="return">
+                  <UML:Parameter.type><UML:DataType xmi.idref="dt_list"/></UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+            <UML:Operation xmi.id="op_col_compo" name="composerBoitePersonnalisee" visibility="public">
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id="p_col_compo_n" name="nom" kind="in">
+                  <UML:Parameter.type><UML:DataType xmi.idref="dt_string"/></UML:Parameter.type>
+                </UML:Parameter>
+                <UML:Parameter xmi.id="p_col_compo_p" name="pieces" kind="in">
+                  <UML:Parameter.type><UML:DataType xmi.idref="dt_list"/></UML:Parameter.type>
+                </UML:Parameter>
+                <UML:Parameter xmi.id="ret_col_compo" kind="return">
+                  <UML:Parameter.type><UML:Class xmi.idref="c_boitepers"/></UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+            <UML:Operation xmi.id="op_col_lister" name="listerCollection" visibility="public">
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id="ret_col_lister" kind="return">
+                  <UML:Parameter.type><UML:DataType xmi.idref="dt_list"/></UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+          </UML:Classifier.feature>
+        </UML:Class>
+
+        <!-- EtatBoite -->
+        <UML:Class xmi.id="c_etatboite" name="EtatBoite" isAbstract="false" visibility="public">
+          <UML:Classifier.feature>
+            <UML:Attribute xmi.id="a_eb_boite" name="boite" visibility="private">
+              <UML:StructuralFeature.type><UML:Class xmi.idref="c_boite"/></UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Attribute xmi.id="a_eb_complete" name="complete" visibility="private">
+              <UML:StructuralFeature.type><UML:DataType xmi.idref="dt_boolean"/></UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Attribute xmi.id="a_eb_manq" name="piecesManquantes" visibility="private">
+              <UML:StructuralFeature.type><UML:DataType xmi.idref="dt_list"/></UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Operation xmi.id="op_eb_iscomplete" name="isComplete" visibility="public">
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id="ret_eb_iscomplete" kind="return">
+                  <UML:Parameter.type><UML:DataType xmi.idref="dt_boolean"/></UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+            <UML:Operation xmi.id="op_eb_getmanq" name="getPiecesManquantes" visibility="public">
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id="ret_eb_getmanq" kind="return">
+                  <UML:Parameter.type><UML:DataType xmi.idref="dt_list"/></UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+          </UML:Classifier.feature>
+        </UML:Class>
+
+        <!-- ==================== INTERFACES DAO ==================== -->
+
+        <!-- IBoiteDAO -->
+        <UML:Interface xmi.id="i_iboitedao" name="IBoiteDAO" visibility="public">
+          <UML:Classifier.feature>
+            <UML:Operation xmi.id="op_ibd_findnum" name="findByNumero" visibility="public"/>
+            <UML:Operation xmi.id="op_ibd_findnom" name="findByNom" visibility="public"/>
+            <UML:Operation xmi.id="op_ibd_findtheme" name="findByTheme" visibility="public"/>
+            <UML:Operation xmi.id="op_ibd_save" name="save" visibility="public"/>
+            <UML:Operation xmi.id="op_ibd_update" name="update" visibility="public"/>
+            <UML:Operation xmi.id="op_ibd_findall" name="findAll" visibility="public"/>
+          </UML:Classifier.feature>
+        </UML:Interface>
+
+        <!-- IThemeDAO -->
+        <UML:Interface xmi.id="i_ithemedao" name="IThemeDAO" visibility="public">
+          <UML:Classifier.feature>
+            <UML:Operation xmi.id="op_itd_findall" name="findAll" visibility="public"/>
+            <UML:Operation xmi.id="op_itd_findbyid" name="findById" visibility="public"/>
+            <UML:Operation xmi.id="op_itd_save" name="save" visibility="public"/>
+            <UML:Operation xmi.id="op_itd_findsous" name="findSousThemes" visibility="public"/>
+            <UML:Operation xmi.id="op_itd_findboites" name="findBoitesByTheme" visibility="public"/>
+          </UML:Classifier.feature>
+        </UML:Interface>
+
+        <!-- ICollectionDAO -->
+        <UML:Interface xmi.id="i_icolldao" name="ICollectionDAO" visibility="public">
+          <UML:Classifier.feature>
+            <UML:Operation xmi.id="op_icd_findall" name="findAll" visibility="public"/>
+            <UML:Operation xmi.id="op_icd_findboite" name="findByBoite" visibility="public"/>
+            <UML:Operation xmi.id="op_icd_save" name="save" visibility="public"/>
+            <UML:Operation xmi.id="op_icd_update" name="update" visibility="public"/>
+            <UML:Operation xmi.id="op_icd_delete" name="delete" visibility="public"/>
+          </UML:Classifier.feature>
+        </UML:Interface>
+
+        <!-- ==================== DAO JDBC ==================== -->
+
+        <!-- BoiteDAOJdbc -->
+        <UML:Class xmi.id="c_boitedao" name="BoiteDAOJdbc" isAbstract="false" visibility="public">
+          <UML:Classifier.feature>
+            <UML:Attribute xmi.id="a_bd_conn" name="connection" visibility="private">
+              <UML:StructuralFeature.type><UML:DataType xmi.idref="dt_connection"/></UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Operation xmi.id="op_bd_findnum" name="findByNumero" visibility="public"/>
+            <UML:Operation xmi.id="op_bd_findnom" name="findByNom" visibility="public"/>
+            <UML:Operation xmi.id="op_bd_findtheme" name="findByTheme" visibility="public"/>
+            <UML:Operation xmi.id="op_bd_save" name="save" visibility="public"/>
+            <UML:Operation xmi.id="op_bd_update" name="update" visibility="public"/>
+          </UML:Classifier.feature>
+        </UML:Class>
+
+        <!-- ThemeDAOJdbc -->
+        <UML:Class xmi.id="c_themedao" name="ThemeDAOJdbc" isAbstract="false" visibility="public">
+          <UML:Classifier.feature>
+            <UML:Attribute xmi.id="a_td_conn" name="connection" visibility="private">
+              <UML:StructuralFeature.type><UML:DataType xmi.idref="dt_connection"/></UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Operation xmi.id="op_td_findall" name="findAll" visibility="public"/>
+            <UML:Operation xmi.id="op_td_findbyid" name="findById" visibility="public"/>
+            <UML:Operation xmi.id="op_td_findsous" name="findSousThemes" visibility="public"/>
+            <UML:Operation xmi.id="op_td_findboites" name="findBoitesByTheme" visibility="public"/>
+          </UML:Classifier.feature>
+        </UML:Class>
+
+        <!-- CollectionDAOJdbc -->
+        <UML:Class xmi.id="c_colldao" name="CollectionDAOJdbc" isAbstract="false" visibility="public">
+          <UML:Classifier.feature>
+            <UML:Attribute xmi.id="a_cd_conn" name="connection" visibility="private">
+              <UML:StructuralFeature.type><UML:DataType xmi.idref="dt_connection"/></UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Operation xmi.id="op_cd_findall" name="findAll" visibility="public"/>
+            <UML:Operation xmi.id="op_cd_findboite" name="findByBoite" visibility="public"/>
+            <UML:Operation xmi.id="op_cd_save" name="save" visibility="public"/>
+            <UML:Operation xmi.id="op_cd_update" name="update" visibility="public"/>
+            <UML:Operation xmi.id="op_cd_delete" name="delete" visibility="public"/>
+          </UML:Classifier.feature>
+        </UML:Class>
+
+        <!-- ConnexionJDBC -->
+        <UML:Class xmi.id="c_connexion" name="ConnexionJDBC" isAbstract="false" visibility="public">
+          <UML:Classifier.feature>
+            <UML:Attribute xmi.id="a_cx_url" name="url" visibility="private">
+              <UML:StructuralFeature.type><UML:DataType xmi.idref="dt_string"/></UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Attribute xmi.id="a_cx_user" name="user" visibility="private">
+              <UML:StructuralFeature.type><UML:DataType xmi.idref="dt_string"/></UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Attribute xmi.id="a_cx_pass" name="password" visibility="private">
+              <UML:StructuralFeature.type><UML:DataType xmi.idref="dt_string"/></UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Attribute xmi.id="a_cx_inst" name="instance" visibility="private" ownerScope="classifier">
+              <UML:StructuralFeature.type><UML:Class xmi.idref="c_connexion"/></UML:StructuralFeature.type>
+            </UML:Attribute>
+            <UML:Operation xmi.id="op_cx_getinst" name="getInstance" visibility="public" ownerScope="classifier">
+              <UML:BehavioralFeature.parameter>
+                <UML:Parameter xmi.id="ret_cx_getinst" kind="return">
+                  <UML:Parameter.type><UML:DataType xmi.idref="dt_connection"/></UML:Parameter.type>
+                </UML:Parameter>
+              </UML:BehavioralFeature.parameter>
+            </UML:Operation>
+          </UML:Classifier.feature>
+        </UML:Class>
+
+        <!-- ==================== DATATYPES ==================== -->
+        <UML:DataType xmi.id="dt_string" name="String"/>
+        <UML:DataType xmi.id="dt_int" name="int"/>
+        <UML:DataType xmi.id="dt_boolean" name="boolean"/>
+        <UML:DataType xmi.id="dt_void" name="void"/>
+        <UML:DataType xmi.id="dt_list" name="List"/>
+        <UML:DataType xmi.id="dt_connection" name="Connection"/>
+
+        <!-- ==================== RELATIONS ==================== -->
+
+        <!-- Héritage : BoiteComposee extends Boite -->
+        <UML:Generalization xmi.id="gen_bc_boite" child="c_boitecomposee" parent="c_boite"/>
+
+        <!-- Héritage : BoitePersonnalisee extends Boite -->
+        <UML:Generalization xmi.id="gen_bp_boite" child="c_boitepers" parent="c_boite"/>
+
+        <!-- Boite -> Theme (association 0..1) -->
+        <UML:Association xmi.id="assoc_boite_theme">
+          <UML:Association.connection>
+            <UML:AssociationEnd xmi.id="ae_bt_boite" type="c_boite" multiplicity="0..*" aggregation="none"/>
+            <UML:AssociationEnd xmi.id="ae_bt_theme" type="c_theme" multiplicity="0..1" aggregation="none" name="theme"/>
+          </UML:Association.connection>
+        </UML:Association>
+
+        <!-- Boite -> Contenu (composition 1) -->
+        <UML:Association xmi.id="comp_boite_contenu">
+          <UML:Association.connection>
+            <UML:AssociationEnd xmi.id="ae_bc2_boite" type="c_boite" multiplicity="1" aggregation="composite"/>
+            <UML:AssociationEnd xmi.id="ae_bc2_contenu" type="c_contenu" multiplicity="1" aggregation="none" name="contenu"/>
+          </UML:Association.connection>
+        </UML:Association>
+
+        <!-- Contenu -> ContenuPiece (composition 0..*) -->
+        <UML:Association xmi.id="comp_contenu_cp">
+          <UML:Association.connection>
+            <UML:AssociationEnd xmi.id="ae_ccp_contenu" type="c_contenu" multiplicity="1" aggregation="composite"/>
+            <UML:AssociationEnd xmi.id="ae_ccp_cp" type="c_contenupiece" multiplicity="0..*" aggregation="none" name="pieces"/>
+          </UML:Association.connection>
+        </UML:Association>
+
+        <!-- Contenu -> ContenuFigurine (composition 0..*) -->
+        <UML:Association xmi.id="comp_contenu_cf">
+          <UML:Association.connection>
+            <UML:AssociationEnd xmi.id="ae_ccf_contenu" type="c_contenu" multiplicity="1" aggregation="composite"/>
+            <UML:AssociationEnd xmi.id="ae_ccf_cf" type="c_conteaufig" multiplicity="0..*" aggregation="none" name="figurines"/>
+          </UML:Association.connection>
+        </UML:Association>
+
+        <!-- ContenuPiece -> Piece (association 1) -->
+        <UML:Association xmi.id="assoc_cp_piece">
+          <UML:Association.connection>
+            <UML:AssociationEnd xmi.id="ae_cpp_cp" type="c_contenupiece" multiplicity="0..*" aggregation="none"/>
+            <UML:AssociationEnd xmi.id="ae_cpp_p" type="c_piece" multiplicity="1" aggregation="none" name="piece"/>
+          </UML:Association.connection>
+        </UML:Association>
+
+        <!-- ContenuFigurine -> Figurine (association 1) -->
+        <UML:Association xmi.id="assoc_cf_fig">
+          <UML:Association.connection>
+            <UML:AssociationEnd xmi.id="ae_cff_cf" type="c_conteaufig" multiplicity="0..*" aggregation="none"/>
+            <UML:AssociationEnd xmi.id="ae_cff_fig" type="c_figurine" multiplicity="1" aggregation="none" name="figurine"/>
+          </UML:Association.connection>
+        </UML:Association>
+
+        <!-- Piece -> Categorie (association 1) -->
+        <UML:Association xmi.id="assoc_piece_cat">
+          <UML:Association.connection>
+            <UML:AssociationEnd xmi.id="ae_pc_piece" type="c_piece" multiplicity="0..*" aggregation="none"/>
+            <UML:AssociationEnd xmi.id="ae_pc_cat" type="c_categorie" multiplicity="1" aggregation="none" name="categorie"/>
+          </UML:Association.connection>
+        </UML:Association>
+
+        <!-- Piece -> Couleur (association 1) -->
+        <UML:Association xmi.id="assoc_piece_coul">
+          <UML:Association.connection>
+            <UML:AssociationEnd xmi.id="ae_pcoul_piece" type="c_piece" multiplicity="0..*" aggregation="none"/>
+            <UML:AssociationEnd xmi.id="ae_pcoul_coul" type="c_couleur" multiplicity="1" aggregation="none" name="couleur"/>
+          </UML:Association.connection>
+        </UML:Association>
+
+        <!-- CollectionPersonnelle -> EtatBoite (composition 0..*) -->
+        <UML:Association xmi.id="comp_col_etat">
+          <UML:Association.connection>
+            <UML:AssociationEnd xmi.id="ae_ce_col" type="c_collection" multiplicity="1" aggregation="composite"/>
+            <UML:AssociationEnd xmi.id="ae_ce_etat" type="c_etatboite" multiplicity="0..*" aggregation="none" name="boites"/>
+          </UML:Association.connection>
+        </UML:Association>
+
+        <!-- EtatBoite -> Boite (association 1) -->
+        <UML:Association xmi.id="assoc_etat_boite">
+          <UML:Association.connection>
+            <UML:AssociationEnd xmi.id="ae_eb_etat" type="c_etatboite" multiplicity="0..*" aggregation="none"/>
+            <UML:AssociationEnd xmi.id="ae_eb_boite" type="c_boite" multiplicity="1" aggregation="none" name="boite"/>
+          </UML:Association.connection>
+        </UML:Association>
+
+        <!-- BoiteDAOJdbc implements IBoiteDAO -->
+        <UML:Realization xmi.id="real_bd_ibd" client="c_boitedao" supplier="i_iboitedao"/>
+
+        <!-- ThemeDAOJdbc implements IThemeDAO -->
+        <UML:Realization xmi.id="real_td_itd" client="c_themedao" supplier="i_ithemedao"/>
+
+        <!-- CollectionDAOJdbc implements ICollectionDAO -->
+        <UML:Realization xmi.id="real_cd_icd" client="c_colldao" supplier="i_icolldao"/>
+
+        <!-- CollectionPersonnelle depends on IBoiteDAO -->
+        <UML:Dependency xmi.id="dep_col_ibd" client="c_collection" supplier="i_iboitedao"/>
+
+        <!-- CollectionPersonnelle depends on IThemeDAO -->
+        <UML:Dependency xmi.id="dep_col_itd" client="c_collection" supplier="i_ithemedao"/>
+
+        <!-- CollectionPersonnelle depends on ICollectionDAO -->
+        <UML:Dependency xmi.id="dep_col_icd" client="c_collection" supplier="i_icolldao"/>
+
+        <!-- DAO depends on ConnexionJDBC -->
+        <UML:Dependency xmi.id="dep_bd_cx" client="c_boitedao" supplier="c_connexion"/>
+        <UML:Dependency xmi.id="dep_td_cx" client="c_themedao" supplier="c_connexion"/>
+        <UML:Dependency xmi.id="dep_cd_cx" client="c_colldao" supplier="c_connexion"/>
+
+        <!-- Theme auto-reference (parent) -->
+        <UML:Association xmi.id="assoc_theme_parent">
+          <UML:Association.connection>
+            <UML:AssociationEnd xmi.id="ae_tp_child" type="c_theme" multiplicity="0..*" aggregation="none"/>
+            <UML:AssociationEnd xmi.id="ae_tp_parent" type="c_theme" multiplicity="0..1" aggregation="none" name="parent"/>
+          </UML:Association.connection>
+        </UML:Association>
+
+      </UML:Namespace.ownedElement>
+    </UML:Model>
+  </XMI.content>
+</XMI>
