@@ -20,7 +20,7 @@ STRUCTURE DU DÉVELOPPEMENT : RÉPARTITION DES 12 CLASSES
 
 [ ] NEVEN
 ------------------------------------------------------------------------
-1. Classe : Piece           [Statut: ]
+1. Classe : Piece           [Statut: WIP]
 2. Classe : ContenusFig     [Statut: ]
 3. Classe : Fig             [Statut: ]
 

@@ -5,7 +5,7 @@ public class Piece {
     private String numPiece;
     private String nomPiece;
     private Categorie categorie;
-    private Couleur couleur;
+
 
     public Piece() {
     }
@@ -38,19 +38,8 @@ public class Piece {
         couleur = newVar;
     }
 
-    public Couleur getCouleur() {
-        return couleur;
-    }
-
-    public Categorie obtenirCategorie() {
-    }
-
-    public Couleur obtenirCouleur() {
-    }
-
-    public String obtenirNumero() {
-    }
 
     public String afficher() {
+        return "Pièce n°" + numPiece + " : " + nomPiece;
     }
 }
