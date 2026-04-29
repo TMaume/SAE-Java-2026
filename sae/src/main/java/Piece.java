@@ -7,7 +7,10 @@ public class Piece {
     private Categorie categorie;
 
 
-    public Piece() {
+    public Piece(String numPiece, String nomPiece, Categorie categorie) {
+        this.numPiece = numPiece; 
+        this.nomPiece = nomPiece;
+        this.categorie = categorie;
     }
 
     public void setNumPiece(String newVar) {
@@ -39,7 +42,7 @@ public class Piece {
     }
 
 
-    public String afficher() {
+    public String toString() {
         return "Pièce n°" + numPiece + " : " + nomPiece;
     }
 }
