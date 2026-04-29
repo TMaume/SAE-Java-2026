@@ -1,118 +1,56 @@
 package Metier;
 
-import java.util.*;
-
-
-/**
- * Class Piece
- */
 public class Piece {
 
-  //
-  // Fields
-  //
+    private String numPiece;
+    private String nomPiece;
+    private Categorie categorie;
+    private Couleur couleur;
 
-  private String numPiece;
-  private String nomPiece;
+    public Piece() {
+    }
 
-  private Categorie m_categorie;
-  
-  //
-  // Constructors
-  //
-  public Piece () { };
-  
-  //
-  // Methods
-  //
+    public void setNumPiece(String newVar) {
+        numPiece = newVar;
+    }
 
+    public String getNumPiece() {
+        return numPiece;
+    }
 
-  //
-  // Accessor methods
-  //
+    public void setNomPiece(String newVar) {
+        nomPiece = newVar;
+    }
 
-  /**
-   * Set the value of numPiece
-   * @param newVar the new value of numPiece
-   */
-  public void setNumPiece (String newVar) {
-    numPiece = newVar;
-  }
+    public String getNomPiece() {
+        return nomPiece;
+    }
 
-  /**
-   * Get the value of numPiece
-   * @return the value of numPiece
-   */
-  public String getNumPiece () {
-    return numPiece;
-  }
+    public void setCategorie(Categorie newVar) {
+        categorie = newVar;
+    }
 
-  /**
-   * Set the value of nomPiece
-   * @param newVar the new value of nomPiece
-   */
-  public void setNomPiece (String newVar) {
-    nomPiece = newVar;
-  }
+    public Categorie getCategorie() {
+        return categorie;
+    }
 
-  /**
-   * Get the value of nomPiece
-   * @return the value of nomPiece
-   */
-  public String getNomPiece () {
-    return nomPiece;
-  }
+    public void setCouleur(Couleur newVar) {
+        couleur = newVar;
+    }
 
-  /**
-   * Set the value of m_categorie
-   * @param newVar the new value of m_categorie
-   */
-  private void setCategorie (Categorie newVar) {
-    m_categorie = newVar;
-  }
+    public Couleur getCouleur() {
+        return couleur;
+    }
 
-  /**
-   * Get the value of m_categorie
-   * @return the value of m_categorie
-   */
-  private Categorie getCategorie () {
-    return m_categorie;
-  }
+    public Categorie obtenirCategorie() {
+    }
 
-  //
-  // Other methods
-  //
+    public Couleur obtenirCouleur() {
+    }
 
-  /**
-   * @return       Metier.Categorie
-   */
-  public Metier.Categorie obtenirCategorie()
-  {
-  }
+    public String obtenirNumero() {
+    }
 
-
-  /**
-   * @return       Metier.Couleur
-   */
-  public Metier.Couleur obtenirCouleur()
-  {
-  }
-
-
-  /**
-   * @return       String
-   */
-  public String obtenirNumero()
-  {
-  }
-
-
-  /**
-   * @return       String
-   */
-  public String afficher()
-  {
-  }
-
-
+    public String afficher() {
+    }
 }

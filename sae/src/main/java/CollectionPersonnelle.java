@@ -1,117 +1,39 @@
 package Metier;
 
+import java.util.List;
 
-/**
- * Class CollectionPersonnelle
- */
 public class CollectionPersonnelle {
 
-  //
-  // Fields
-  //
+    public CollectionPersonnelle() {
+    }
 
-  
-  //
-  // Constructors
-  //
-  public CollectionPersonnelle () { };
-  
-  //
-  // Methods
-  //
+    public void ajouterBoite(Boite boite) {
+    }
 
+    public void marquerComplete(Boite boite) {
+    }
 
-  //
-  // Accessor methods
-  //
+    public void marquerIncomplete(Boite boite) {
+    }
 
-  //
-  // Other methods
-  //
+    public List obtenirPiecesManquantes(Boite boite) {
+    }
 
-  /**
-   * @param        boite
-   */
-  public void ajouterBoite(Metier.Boite boite)
-  {
-  }
+    public List rechercherBoitesParTheme(Theme theme) {
+    }
 
+    public BoitePersonnalisee composerBoitePersonnalisee(String nom, List pieces) {
+    }
 
-  /**
-   * @param        boite
-   */
-  public void marquerComplete(Metier.Boite boite)
-  {
-  }
+    public Boite rechercherBoiteParNumero(String numero) {
+    }
 
+    public List listerCollection() {
+    }
 
-  /**
-   * @param        boite
-   */
-  public void marquerIncomplete(Metier.Boite boite)
-  {
-  }
+    public void enregistrerNouvelleBoite(Boite boite) {
+    }
 
-
-  /**
-   * @return       List
-   * @param        boite
-   */
-  public List obtenirPiecesManquantes(Metier.Boite boite)
-  {
-  }
-
-
-  /**
-   * @return       List
-   * @param        theme
-   */
-  public List rechercherBoitesParTheme(Metier.Theme theme)
-  {
-  }
-
-
-  /**
-   * @return       Metier.BoitePersonnalisee
-   * @param        nom
-   * @param        pieces
-   */
-  public Metier.BoitePersonnalisee composerBoitePersonnalisee(String nom, List pieces)
-  {
-  }
-
-
-  /**
-   * @return       Metier.Boite
-   * @param        numero
-   */
-  public Metier.Boite rechercherBoiteParNumero(String numero)
-  {
-  }
-
-
-  /**
-   * @return       List
-   */
-  public List listerCollection()
-  {
-  }
-
-
-  /**
-   * @param        boite
-   */
-  public void enregistrerNouvelleBoite(Metier.Boite boite)
-  {
-  }
-
-
-  /**
-   * @param        boite
-   */
-  public void mettreAJourContenuBoite(Metier.Boite boite)
-  {
-  }
-
-
+    public void mettreAJourContenuBoite(Boite boite) {
+    }
 }

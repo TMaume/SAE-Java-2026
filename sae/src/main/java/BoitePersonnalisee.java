@@ -1,55 +1,16 @@
 package Metier;
 
-
-/**
- * Class BoitePersonnalisee
- */
 class BoitePersonnalisee extends Boite {
 
-  //
-  // Fields
-  //
+    public BoitePersonnalisee() {
+    }
 
-  
-  //
-  // Constructors
-  //
-  public BoitePersonnalisee () { };
-  
-  //
-  // Methods
-  //
+    public String genererIdentifiantUnique() {
+    }
 
+    public void enregistrer() {
+    }
 
-  //
-  // Accessor methods
-  //
-
-  //
-  // Other methods
-  //
-
-  /**
-   * @return       String
-   */
-  public String genererIdentifiantUnique()
-  {
-  }
-
-
-  /**
-   */
-  public void enregistrer()
-  {
-  }
-
-
-  /**
-   * @return       boolean
-   */
-  private boolean verifierDoublon()
-  {
-  }
-
-
+    private boolean verifierDoublon() {
+    }
 }

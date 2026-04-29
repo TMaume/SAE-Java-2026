@@ -1,98 +1,49 @@
 package Metier;
 
+import java.util.List;
 
-/**
- * Class Theme
- */
 public class Theme {
 
-  //
-  // Fields
-  //
+    private int idTheme;
+    private String nomTheme;
+    private Theme parentTheme;
 
-  private int idTheme;
-  private String nomTheme;
-  
-  //
-  // Constructors
-  //
-  public Theme () { };
-  
-  //
-  // Methods
-  //
+    public Theme() {
+    }
 
+    public void setIdTheme(int newVar) {
+        idTheme = newVar;
+    }
 
-  //
-  // Accessor methods
-  //
+    public int getIdTheme() {
+        return idTheme;
+    }
 
-  /**
-   * Set the value of idTheme
-   * @param newVar the new value of idTheme
-   */
-  public void setIdTheme (int newVar) {
-    idTheme = newVar;
-  }
+    public void setNomTheme(String newVar) {
+        nomTheme = newVar;
+    }
 
-  /**
-   * Get the value of idTheme
-   * @return the value of idTheme
-   */
-  public int getIdTheme () {
-    return idTheme;
-  }
+    public String getNomTheme() {
+        return nomTheme;
+    }
 
-  /**
-   * Set the value of nomTheme
-   * @param newVar the new value of nomTheme
-   */
-  public void setNomTheme (String newVar) {
-    nomTheme = newVar;
-  }
+    public void setParentTheme(Theme newVar) {
+        parentTheme = newVar;
+    }
 
-  /**
-   * Get the value of nomTheme
-   * @return the value of nomTheme
-   */
-  public String getNomTheme () {
-    return nomTheme;
-  }
+    public Theme getParentTheme() {
+        return parentTheme;
+    }
 
-  //
-  // Other methods
-  //
+    public List obtenirSousThemes() {
+    }
 
-  /**
-   * @return       List
-   */
-  public List obtenirSousThemes()
-  {
-  }
+    public boolean estRacine() {
+    }
 
+    public String obtenirNom() {
+    }
 
-  /**
-   * @return       boolean
-   */
-  public boolean estRacine()
-  {
-  }
-
-
-  /**
-   * @return       String
-   */
-  public String obtenirNom()
-  {
-  }
-
-
-  /**
-   * @return       Metier.Theme
-   */
-  public Metier.Theme obtenirParent()
-  {
-  }
-
-
+    public Theme obtenirParent() {
+    }
 }

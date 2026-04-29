@@ -1,144 +1,56 @@
 package Metier;
 
-import java.util.*;
-
-
-/**
- * Class ContenuPiece
- */
 public class ContenuPiece {
 
-  //
-  // Fields
-  //
+    private int quantite;
+    private boolean enSupplement;
+    private Piece piece;
+    private Couleur couleur;
 
-  private int quantite;
-  private boolean enSupplement;
+    public ContenuPiece() {
+    }
 
-  private Vector piecesVector = new Vector();
+    public void setQuantite(int newVar) {
+        quantite = newVar;
+    }
 
-  private Couleur m_couleur;
-  
-  //
-  // Constructors
-  //
-  public ContenuPiece () { };
-  
-  //
-  // Methods
-  //
+    public int getQuantite() {
+        return quantite;
+    }
 
+    public void setEnSupplement(boolean newVar) {
+        enSupplement = newVar;
+    }
 
-  //
-  // Accessor methods
-  //
+    public boolean getEnSupplement() {
+        return enSupplement;
+    }
 
-  /**
-   * Set the value of quantite
-   * @param newVar the new value of quantite
-   */
-  public void setQuantite (int newVar) {
-    quantite = newVar;
-  }
+    public void setPiece(Piece newVar) {
+        piece = newVar;
+    }
 
-  /**
-   * Get the value of quantite
-   * @return the value of quantite
-   */
-  public int getQuantite () {
-    return quantite;
-  }
+    public Piece getPiece() {
+        return piece;
+    }
 
-  /**
-   * Set the value of enSupplement
-   * @param newVar the new value of enSupplement
-   */
-  public void setEnSupplement (boolean newVar) {
-    enSupplement = newVar;
-  }
+    public void setCouleur(Couleur newVar) {
+        couleur = newVar;
+    }
 
-  /**
-   * Get the value of enSupplement
-   * @return the value of enSupplement
-   */
-  public boolean getEnSupplement () {
-    return enSupplement;
-  }
+    public Couleur getCouleur() {
+        return couleur;
+    }
 
-  /**
-   * Add a Pieces object to the piecesVector List
-   */
-  private void addPieces (Piece new_object) {
-    piecesVector.add(new_object);
-  }
+    public int obtenirQuantite() {
+    }
 
-  /**
-   * Remove a Pieces object from piecesVector List
-   */
-  private void removePieces (Piece new_object)
-  {
-    piecesVector.remove(new_object);
-  }
+    public boolean estEnSupplement() {
+    }
 
-  /**
-   * Get the List of Pieces objects held by piecesVector
-   * @return List of Pieces objects held by piecesVector
-   */
-  private List getPiecesList () {
-    return (List) piecesVector;
-  }
+    public Piece obtenirPiece() {
+    }
 
-
-  /**
-   * Set the value of m_couleur
-   * @param newVar the new value of m_couleur
-   */
-  private void setCouleur (Couleur newVar) {
-    m_couleur = newVar;
-  }
-
-  /**
-   * Get the value of m_couleur
-   * @return the value of m_couleur
-   */
-  private Couleur getCouleur () {
-    return m_couleur;
-  }
-
-  //
-  // Other methods
-  //
-
-  /**
-   * @return       int
-   */
-  public int obtenirQuantite()
-  {
-  }
-
-
-  /**
-   * @return       boolean
-   */
-  public boolean estEnSupplement()
-  {
-  }
-
-
-  /**
-   * @return       Metier.Piece
-   */
-  public Metier.Piece obtenirPiece()
-  {
-  }
-
-
-  /**
-   * @return       Metier.Couleur
-   */
-  public Metier.Couleur obtenirCouleur()
-  {
-  }
-
-
+    public Couleur obtenirCouleur() {
+    }
 }

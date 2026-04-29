@@ -1,118 +1,46 @@
-package Metier;
-
-import java.util.*;
 
 
-/**
- * Class EtatBoite
- */
+import java.util.List;
+
 public class EtatBoite {
 
-  //
-  // Fields
-  //
+    private boolean complete;
+    private List piecesManquantes;
+    private Boite boite;
 
-  private boolean complete;
-  private List piecesManquantes;
+    public EtatBoite() {
+    }
 
-  private Vector piecesVector = new Vector();
-  
-  //
-  // Constructors
-  //
-  public EtatBoite () { };
-  
-  //
-  // Methods
-  //
+    public void setComplete(boolean newVar) {
+        complete = newVar;
+    }
 
+    public boolean getComplete() {
+        return complete;
+    }
 
-  //
-  // Accessor methods
-  //
+    public void setPiecesManquantes(List newVar) {
+        piecesManquantes = newVar;
+    }
 
-  /**
-   * Set the value of complete
-   * @param newVar the new value of complete
-   */
-  public void setComplete (boolean newVar) {
-    complete = newVar;
-  }
+    public List getPiecesManquantes() {
+        return piecesManquantes;
+    }
 
-  /**
-   * Get the value of complete
-   * @return the value of complete
-   */
-  public boolean getComplete () {
-    return complete;
-  }
+    public void setBoite(Boite newVar) {
+        boite = newVar;
+    }
 
-  /**
-   * Set the value of piecesManquantes
-   * @param newVar the new value of piecesManquantes
-   */
-  public void setPiecesManquantes (List newVar) {
-    piecesManquantes = newVar;
-  }
+    public Boite getBoite() {
+        return boite;
+    }
 
-  /**
-   * Get the value of piecesManquantes
-   * @return the value of piecesManquantes
-   */
-  public List getPiecesManquantes () {
-    return piecesManquantes;
-  }
+    public boolean estComplete() {
+    }
 
-  /**
-   * Add a Pieces object to the piecesVector List
-   */
-  private void addPieces (Piece new_object) {
-    piecesVector.add(new_object);
-  }
+    public List obtenirPiecesManquantes() {
+    }
 
-  /**
-   * Remove a Pieces object from piecesVector List
-   */
-  private void removePieces (Piece new_object)
-  {
-    piecesVector.remove(new_object);
-  }
-
-  /**
-   * Get the List of Pieces objects held by piecesVector
-   * @return List of Pieces objects held by piecesVector
-   */
-  private List getPiecesList () {
-    return (List) piecesVector;
-  }
-
-
-  //
-  // Other methods
-  //
-
-  /**
-   * @return       boolean
-   */
-  public boolean estComplete()
-  {
-  }
-
-
-  /**
-   * @return       List
-   */
-  public List obtenirPiecesManquantes()
-  {
-  }
-
-
-  /**
-   * @return       Metier.Boite
-   */
-  public Metier.Boite obtenirBoite()
-  {
-  }
-
-
+    public Boite obtenirBoite() {
+    }
 }
