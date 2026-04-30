@@ -31,12 +31,12 @@ public class Figurine {
         return nbParties;
     }
 
-    public String obtenirNom() {
-    }
-
-    public int obtenirNombreParties() {
-    }
-
-    public String afficher() {
+    @Override
+    public String toString() {
+        return "Figurine{" +
+                "idFig='" + idFig + '\'' +
+                ", nomFig='" + nomFig + '\'' +
+                ", nbParties=" + nbParties +
+                '}';
     }
 }

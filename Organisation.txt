@@ -4,8 +4,8 @@ STRUCTURE DU DÉVELOPPEMENT : RÉPARTITION DES 12 CLASSES
 
 [ ] TIMOTHY
 ------------------------------------------------------------------------
-1. Classe : Couleur         [Statut: ]
-2. Classe : ContenuBoite    [Statut: ]
+1. Classe : Couleur         [Statut: OK ]
+2. Classe : ContenuBoite    [Statut: OK ]
 3. Classe : CollectionPerso  [Statut: ]
 
 ------------------------------------------------------------------------

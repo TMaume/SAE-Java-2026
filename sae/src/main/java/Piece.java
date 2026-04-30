@@ -2,8 +2,8 @@ public class Piece {
 
     private String numPiece;
     private String nomPiece;
+
     private Categorie categorie;
-    private Couleur couleur;
 
     public Piece() {
     }
@@ -32,23 +32,17 @@ public class Piece {
         return categorie;
     }
 
-    public void setCouleur(Couleur newVar) {
-        couleur = newVar;
-    }
-
-    public Couleur getCouleur() {
-        return couleur;
-    }
 
     public Categorie obtenirCategorie() {
+        return null;
     }
 
     public Couleur obtenirCouleur() {
+        return null;
     }
 
-    public String obtenirNumero() {
-    }
-
-    public String afficher() {
+    @Override
+    public String toString() {
+        return null;
     }
 }

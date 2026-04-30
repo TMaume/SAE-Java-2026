@@ -40,12 +40,8 @@ public class Couleur {
         return transparent;
     }
 
-    public String obtenirNom() {
-    }
-
-    public boolean estTransparente() {
-    }
-
-    public String afficher() {
+    @Override
+    public String toString() {
+        return "Couleur: " + nomCoul + ", RGB: " + rgb + ", Transparente: " + transparent;
     }
 }

@@ -1,20 +1,19 @@
 import java.util.List;
+import java.util.ArrayList;
 
 public class CollectionPersonnelle {
+    private List boites;
 
     public CollectionPersonnelle() {
+        this.boites = new ArrayList<>();
     }
 
     public void ajouterBoite(Boite boite) {
-    }
-
-    public void marquerComplete(Boite boite) {
-    }
-
-    public void marquerIncomplete(Boite boite) {
+        boites.add(boite);
     }
 
     public List obtenirPiecesManquantes(Boite boite) {
+        return this.getEtatBoite(boite).getPiecesManquantes();
     }
 
     public List rechercherBoitesParTheme(Theme theme) {

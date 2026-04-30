@@ -1,4 +1,4 @@
-public class ContenuPiece {
+public class AttributsPiece {
 
     private int quantite;
     private boolean enSupplement;

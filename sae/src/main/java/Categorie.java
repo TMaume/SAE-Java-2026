@@ -22,9 +22,11 @@ public class Categorie {
         return nomCat;
     }
 
-    public String obtenirNom() {
-    }
 
-    public String afficher() {
+    public String toString() {
+        return "Categorie{" +
+                "idCat=" + idCat +
+                ", nomCat='" + nomCat + '\'' +
+                '}';
     }
 }

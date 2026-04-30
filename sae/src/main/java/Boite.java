@@ -1,13 +1,22 @@
+import java.util.List;
+
 abstract public class Boite {
 
+    //MCD
     private String numBoite;
     private String nomBoite;
     private int annee;
     private int nbPieces;
-    private EtatBoite etatBoite;
+    //Liaison
     private Theme theme;
+    private List<SousBoite> sousBoites = null;
 
-    public Boite() {
+    public Boite (String numBoite, String nomBoite, int annee, int nbPieces, Theme theme) {
+        this.numBoite = numBoite;
+        this.nomBoite = nomBoite;
+        this.annee = annee;
+        this.nbPieces = nbPieces;
+        this.theme = theme;
     }
 
     public void setNumBoite(String newVar) {
@@ -16,10 +25,6 @@ abstract public class Boite {
 
     public String getNumBoite() {
         return numBoite;
-    }
-
-    public void setNomBoite(String newVar) {
-        nomBoite = newVar;
     }
 
     public String getNomBoite() {
@@ -42,14 +47,6 @@ abstract public class Boite {
         return nbPieces;
     }
 
-    public void setEtatBoite(EtatBoite newVar) {
-        etatBoite = newVar;
-    }
-
-    public EtatBoite getEtatBoite() {
-        return etatBoite;
-    }
-
     public void setTheme(Theme newVar) {
         theme = newVar;
     }
@@ -58,18 +55,27 @@ abstract public class Boite {
         return theme;
     }
 
-    public Contenu obtenirContenu() {
-    }
+    // public void completerBoite() {
+    //     this.etatBoite.setComplete(true);
+    // }
 
-    public String obtenirStatistiques() {
-    }
+    // public void incompleterBoite() {
+    //     this.etatBoite.setComplete(false);
+    // }
 
-    public String obtenirNumero() {
-    }
+    // public Contenu obtenirContenu() {
 
-    public String obtenirNom() {
-    }
+    // }
 
-    public Theme obtenirTheme() {
-    }
+    // public String obtenirStatistiques() {
+    // }
+
+    // public String obtenirNumero() {
+    // }
+
+    // public String obtenirNom() {
+    // }
+
+    // public Theme obtenirTheme() {
+    // }
 }

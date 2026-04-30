@@ -4,9 +4,17 @@ public class Theme {
 
     private int idTheme;
     private String nomTheme;
-    private Theme parentTheme;
+    private Theme parentTheme = null;
 
-    public Theme() {
+    public Theme(int idTheme, String nomTheme, Theme parentTheme) {
+        this.idTheme = idTheme;
+        this.nomTheme = nomTheme;
+        this.parentTheme = parentTheme;
+    }
+
+    public Theme(int idTheme, String nomTheme) {
+        this.idTheme = idTheme;
+        this.nomTheme = nomTheme;
     }
 
     public void setIdTheme(int newVar) {
@@ -34,14 +42,18 @@ public class Theme {
     }
 
     public List obtenirSousThemes() {
+        return null;
     }
 
     public boolean estRacine() {
-    }
-
-    public String obtenirNom() {
+        if (this.parentTheme == null) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public Theme obtenirParent() {
+        return parentTheme;
     }
 }

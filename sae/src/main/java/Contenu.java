@@ -4,11 +4,14 @@ public class Contenu {
 
     private int idCont;
     private int version;
-    private List boitesIncluses;
-    private ContenuBoite boiteIncluse;
-    private ContenuFigurine figurines;
-    private ContenuPiece pieces;
-    private Boite boites;
+    private List<SousBoite> boitesIncluses;
+    private ContenuFigurine figurine;
+    private AttributsPiece pieces;
+    private Boite laBoite;
+
+
+    // methode faireBoite
+    // methode faireFigurine
 
     public Contenu() {
     }
@@ -29,61 +32,67 @@ public class Contenu {
         return version;
     }
 
-    public void setBoitesIncluses(List newVar) {
+    public void setBoitesIncluses(List<SousBoite> newVar) {
         boitesIncluses = newVar;
     }
 
-    public List getBoitesIncluses() {
+    public List<SousBoite> getBoitesIncluses() {
         return boitesIncluses;
     }
 
-    public void setBoiteIncluse(ContenuBoite newVar) {
-        boiteIncluse = newVar;
+    public void setBoiteIncluse(List<SousBoite> newVar) {
+        boitesIncluses = newVar;
     }
 
-    public ContenuBoite getBoiteIncluse() {
-        return boiteIncluse;
+    public List<SousBoite> getBoiteIncluse() {
+        return boitesIncluses;
     }
 
     public void setFigurines(ContenuFigurine newVar) {
-        figurines = newVar;
+        figurine = newVar;
     }
 
     public ContenuFigurine getFigurines() {
-        return figurines;
+        return figurine;
     }
 
-    public void setPieces(ContenuPiece newVar) {
+    public void setPieces(AttributsPiece newVar) {
         pieces = newVar;
     }
 
-    public ContenuPiece getPieces() {
+    public AttributsPiece getPieces() {
         return pieces;
     }
 
     public void setBoites(Boite newVar) {
-        boites = newVar;
+        laBoite = newVar;
     }
 
     public Boite getBoites() {
-        return boites;
+        return laBoite;
     }
 
     public boolean estComplet() {
+        return false;
     }
 
     public int obtenirNbTotalPiece() {
+        return 0;
     }
 
     public List obtenirPieceManquantes() {
+        return null;
     }
 
     public List obtenirPiece() {
+        return null;
     }
 
     public List obtenirFigurines() {
+        return null;
     }
 
     public List obtenirBoitesIncluses() {
+        return null;
     }
 }

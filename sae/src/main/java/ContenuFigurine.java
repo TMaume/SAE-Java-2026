@@ -22,9 +22,4 @@ public class ContenuFigurine {
         return figurine;
     }
 
-    public int obtenirQuantite() {
-    }
-
-    public Figurine obtenirFigurine() {
-    }
 }
