@@ -4,28 +4,19 @@ public class Categorie {
     private int idCat;
     private String nomCat;
 
-    public Categorie() {
+    public Categorie(int id, String nom) {
+        this.idCat = id;
+        this.nomCat = nom;
     }
 
-    public void setIdCat(int newVar) {
-        idCat = newVar;
-    }
-
-    public int getIdCat() {
+    public int getId() {
         return idCat;
     }
 
-    public void setNomCat(String newVar) {
-        nomCat = newVar;
-    }
-
-    public String getNomCat() {
+    public String getNom() {
         return nomCat;
     }
 
-    public String obtenirNom() {
-    }
 
-    public String afficher() {
-    }
+
 }

@@ -5,86 +5,57 @@ public class Contenu {
 
     private int idCont;
     private int version;
-    private List boitesIncluses;
-    private ContenuBoite boiteIncluse;
-    private ContenuFigurine figurines;
-    private ContenuPiece pieces;
-    private Boite boites;
+    private List<ContenuBoite> boitesIncluses;
+    private List<ContenuFigurine> figurines;
+    private List<ContenuPiece> pieces;
+    private Boite boite;
+    private Figurine figurine;
 
-    public Contenu() {
+    public Contenu(int idCont, List<ContenuBoite> boitesIncluses, List<ContenuFigurine> figurines, List<ContenuPiece> pieces, Boite boite) {
+        this.idCont = idCont;
+        this.boitesIncluses = boitesIncluses;
+        this.figurines = figurines;
+        this.pieces = pieces;
+        this.boite = boite;
     }
 
-    public void setIdCont(int newVar) {
-        idCont = newVar;
+    public Contenu(int idCont, List<ContenuBoite> boitesIncluses, List<ContenuFigurine> figurines, List<ContenuPiece> pieces, Figurine figurine) {
+        this.idCont = idCont;
+        this.boitesIncluses = boitesIncluses;
+        this.figurines = figurines;
+        this.pieces = pieces;
+        this.figurine = figurine;
     }
 
-    public int getIdCont() {
+    public int getId() {
         return idCont;
-    }
-
-    public void setVersion(int newVar) {
-        version = newVar;
     }
 
     public int getVersion() {
         return version;
     }
 
-    public void setBoitesIncluses(List newVar) {
-        boitesIncluses = newVar;
-    }
-
-    public List getBoitesIncluses() {
+    public List<ContenuBoite> getBoitesIncluses() {
         return boitesIncluses;
     }
 
-    public void setBoiteIncluse(ContenuBoite newVar) {
-        boiteIncluse = newVar;
-    }
-
-    public ContenuBoite getBoiteIncluse() {
-        return boiteIncluse;
-    }
-
-    public void setFigurines(ContenuFigurine newVar) {
-        figurines = newVar;
-    }
-
-    public ContenuFigurine getFigurines() {
+    public List<ContenuFigurine> getFigurines() {
         return figurines;
     }
 
-    public void setPieces(ContenuPiece newVar) {
-        pieces = newVar;
-    }
-
-    public ContenuPiece getPieces() {
+    public List<ContenuPiece> getPieces() {
         return pieces;
     }
 
-    public void setBoites(Boite newVar) {
-        boites = newVar;
+    public Boite getBoite() {
+        return boite;
     }
 
-    public Boite getBoites() {
-        return boites;
+    public Figurine getFigurine() {
+        return figurine;
     }
 
-    public boolean estComplet() {
-    }
+    
 
-    public int obtenirNbTotalPiece() {
-    }
-
-    public List obtenirPieceManquantes() {
-    }
-
-    public List obtenirPiece() {
-    }
-
-    public List obtenirFigurines() {
-    }
-
-    public List obtenirBoitesIncluses() {
-    }
+    
 }
