@@ -1,0 +1,856 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:uml="http://schema.omg.org/spec/UML/2.1">
+  <xmi:Documentation exporter="umbrello uml modeller 25.12.0 http://umbrello.kde.org" exporterVersion="2.0.4"/>
+  <uml:Model xmi:id="m1" name="BriquesCollectionManager">
+    <packagedElement xmi:type="uml:Stereotype" xmi:id="folder" name="folder"/>
+    <packagedElement xmi:type="uml:Stereotype" xmi:id="dataType" name="dataType"/>
+    <packagedElement xmi:type="uml:Stereotype" xmi:id="interface" name="interface"/>
+    <packagedElement xmi:type="uml:Model" xmi:id="Logical_View" name="Logical View" stereotype="folder">
+      <uml:Package xmi:id="Datatypes" name="nouveau-dossier" stereotype="folder">
+        <packagedElement xmi:type="uml:DataType" xmi:id="dt_string" name="String" stereotype="dataType"/>
+        <packagedElement xmi:type="uml:DataType" xmi:id="dt_int" name="int" stereotype="dataType"/>
+        <packagedElement xmi:type="uml:DataType" xmi:id="dt_boolean" name="boolean" stereotype="dataType"/>
+        <packagedElement xmi:type="uml:DataType" xmi:id="dt_void" name="void" stereotype="dataType"/>
+        <packagedElement xmi:type="uml:DataType" xmi:id="dt_list" name="List" stereotype="dataType"/>
+        <packagedElement xmi:type="uml:DataType" xmi:id="dt_connection" name="Connection" stereotype="dataType"/>
+        <packagedElement xmi:type="uml:DataType" xmi:id="uVNaOx1ZtrmWx" name="char" stereotype="dataType"/>
+        <packagedElement xmi:type="uml:DataType" xmi:id="uo72JRCGyCyJa" name="float" stereotype="dataType"/>
+        <packagedElement xmi:type="uml:DataType" xmi:id="u4gmWEBl3DgEf" name="double" stereotype="dataType"/>
+        <packagedElement xmi:type="uml:DataType" xmi:id="u2Ez7fvjbeX9h" name="byte" stereotype="dataType"/>
+        <packagedElement xmi:type="uml:DataType" xmi:id="ua2vLTEyqrPe8" name="short" stereotype="dataType"/>
+        <packagedElement xmi:type="uml:DataType" xmi:id="ummJl9alJWxLR" name="long" stereotype="dataType"/>
+        <packagedElement xmi:type="uml:DataType" xmi:id="utETwKP8WGRMw" name="Integer" stereotype="dataType"/>
+        <packagedElement xmi:type="uml:DataType" xmi:id="uZoptgzpjep8Z" name="Character" stereotype="dataType"/>
+        <packagedElement xmi:type="uml:DataType" xmi:id="u3VRvBDk0ssii" name="Boolean" stereotype="dataType"/>
+        <packagedElement xmi:type="uml:DataType" xmi:id="uXC6GQbO6NoGW" name="Float" stereotype="dataType"/>
+        <packagedElement xmi:type="uml:DataType" xmi:id="uw2xrchg9s2Am" name="Double" stereotype="dataType"/>
+        <packagedElement xmi:type="uml:DataType" xmi:id="u1XSvkvkARB4t" name="Byte" stereotype="dataType"/>
+        <packagedElement xmi:type="uml:DataType" xmi:id="u3umCVYzeQJMD" name="Short" stereotype="dataType"/>
+        <packagedElement xmi:type="uml:DataType" xmi:id="upvFv1CkfqbY6" name="Long" stereotype="dataType"/>
+        <packagedElement xmi:type="uml:DataType" xmi:id="uJVsycvfQRHs2" name="StringBuffer" stereotype="dataType"/>
+        <packagedElement xmi:type="uml:DataType" xmi:id="upAXkqPLKQSCx" name="StringBuilder" stereotype="dataType"/>
+      </uml:Package>
+      <packagedElement xmi:type="uml:Package" xmi:id="pkg_metier" name="Metier">
+        <packagedElement xmi:type="uml:Class" xmi:id="c_theme" name="Theme">
+          <ownedAttribute xmi:type="uml:Property" xmi:id="a_th_id" name="idTheme" visibility="private" type="dt_int"/>
+          <ownedAttribute xmi:type="uml:Property" xmi:id="a_th_nom" name="nomTheme" visibility="private" type="dt_string"/>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_th_sousthemes" name="obtenirSousThemes">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_th_sousthemes" type="dt_list" direction="return"/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_th_estracine" name="estRacine">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_th_estracine" type="dt_boolean" direction="return"/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_th_nom" name="obtenirNom">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_th_nom" type="dt_string" direction="return"/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_th_parent" name="obtenirParent">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_th_parent" type="c_theme" direction="return"/>
+          </ownedOperation>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Class" xmi:id="c_boite" name="Boite" isAbstract="true">
+          <ownedAttribute xmi:type="uml:Property" xmi:id="a_b_num" name="numBoite" visibility="private" type="dt_string"/>
+          <ownedAttribute xmi:type="uml:Property" xmi:id="a_b_nom" name="nomBoite" visibility="private" type="dt_string"/>
+          <ownedAttribute xmi:type="uml:Property" xmi:id="a_b_annee" name="annee" visibility="private" type="dt_int"/>
+          <ownedAttribute xmi:type="uml:Property" xmi:id="a_b_nbp" name="nbPieces" visibility="private" type="dt_int"/>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_b_contenu" name="obtenirContenu">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_b_contenu" type="c_contenu" direction="return"/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_b_stats" name="obtenirStatistiques">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_b_stats" type="dt_string" direction="return"/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_b_num" name="obtenirNumero">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_b_num" type="dt_string" direction="return"/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_b_nomop" name="obtenirNom">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_b_nomop" type="dt_string" direction="return"/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_b_theme" name="obtenirTheme">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_b_theme" type="c_theme" direction="return"/>
+          </ownedOperation>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Class" xmi:id="c_boitepers" name="BoitePersonnalisee" visibility="implementation">
+          <generalization xmi:type="uml:Generalization" xmi:id="uwLkTk90qp5Al" general="c_boite"/>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_bp_gen" name="genererIdentifiantUnique">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_bp_gen" type="dt_string" direction="return"/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_bp_doublon" name="verifierDoublon" visibility="private">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_bp_doublon" type="dt_boolean" direction="return"/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_bp_enreg" name="enregistrer">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_bp_enreg" type="dt_void" direction="return"/>
+          </ownedOperation>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Class" xmi:id="c_contenu" name="Contenu">
+          <ownedAttribute xmi:type="uml:Property" xmi:id="a_ct_id" name="idCont" visibility="private" type="dt_int"/>
+          <ownedAttribute xmi:type="uml:Property" xmi:id="a_ct_version" name="version" visibility="private" type="dt_int"/>
+          <ownedAttribute xmi:type="uml:Property" xmi:id="a_ct_boites" name="boitesIncluses" visibility="private" type="dt_list"/>
+          <ownedAttribute xmi:type="uml:Property" xmi:id="uD0RrF49TxTBv" name="boiteIncluse" visibility="private" type="uVpVIl5GVNemK"/>
+          <ownedAttribute xmi:type="uml:Property" xmi:id="utBQy6DZ3VAlz" name="figurines" visibility="private" type="c_contenuFig"/>
+          <ownedAttribute xmi:type="uml:Property" xmi:id="u2Yxhpb6H9me2" name="pieces" visibility="private" type="c_contenupiece"/>
+          <ownedAttribute xmi:type="uml:Property" xmi:id="ul5sErpSdxEsu" name="nouvel-attribut" visibility="private" type="c_contenupiece"/>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_ct_complet" name="estComplet">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_ct_complet" type="dt_boolean" direction="return"/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_ct_nbp" name="obtenirNbTotalPiece">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_ct_nbp" type="dt_int" direction="return"/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_ct_manq" name="obtenirPieceManquantes">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_ct_manq" type="dt_list" direction="return"/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_ct_getpieces" name="obtenirPiece">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_ct_getpieces" type="dt_list" direction="return"/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_ct_getfigs" name="obtenirFigurines">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_ct_getfigs" type="dt_list" direction="return"/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_ct_getboites" name="obtenirBoitesIncluses">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_ct_getboites" type="dt_list" direction="return"/>
+          </ownedOperation>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Class" xmi:id="c_contenupiece" name="ContenuPiece">
+          <ownedAttribute xmi:type="uml:Property" xmi:id="a_cp_qte" name="quantite" visibility="private" type="dt_int"/>
+          <ownedAttribute xmi:type="uml:Property" xmi:id="a_cp_supp" name="enSupplement" visibility="private" type="dt_boolean"/>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_cp_qte" name="obtenirQuantite">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_cp_qte" type="dt_int" direction="return"/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_cp_supp" name="estEnSupplement">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_cp_supp" type="dt_boolean" direction="return"/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_cp_piece" name="obtenirPiece">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_cp_piece" type="c_piece" direction="return"/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_cp_coul" name="obtenirCouleur">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_cp_coul" type="c_couleur" direction="return"/>
+          </ownedOperation>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Class" xmi:id="c_contenuFig" name="ContenuFigurine">
+          <ownedAttribute xmi:type="uml:Property" xmi:id="a_cf_qte" name="quantite" visibility="private" type="dt_int"/>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_cf_qte" name="obtenirQuantite">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_cf_qte" type="dt_int" direction="return"/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_cf_fig" name="obtenirFigurine">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_cf_fig" type="c_figurine" direction="return"/>
+          </ownedOperation>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Class" xmi:id="c_piece" name="Piece">
+          <ownedAttribute xmi:type="uml:Property" xmi:id="a_p_num" name="numPiece" visibility="private" type="dt_string"/>
+          <ownedAttribute xmi:type="uml:Property" xmi:id="a_p_nom" name="nomPiece" visibility="private" type="dt_string"/>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_p_cat" name="obtenirCategorie">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_p_cat" type="c_categorie" direction="return"/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_p_coul" name="obtenirCouleur">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_p_coul" type="c_couleur" direction="return"/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_p_num" name="obtenirNumero">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_p_num" type="dt_string" direction="return"/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_p_aff" name="afficher">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_p_aff" type="dt_string" direction="return"/>
+          </ownedOperation>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Class" xmi:id="c_categorie" name="Categorie">
+          <ownedAttribute xmi:type="uml:Property" xmi:id="a_cat_id" name="idCat" visibility="private" type="dt_int"/>
+          <ownedAttribute xmi:type="uml:Property" xmi:id="a_cat_nom" name="nomCat" visibility="private" type="dt_string"/>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_cat_nom" name="obtenirNom">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_cat_nom" type="dt_string" direction="return"/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_cat_aff" name="afficher">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_cat_aff" type="dt_string" direction="return"/>
+          </ownedOperation>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Class" xmi:id="c_couleur" name="Couleur">
+          <ownedAttribute xmi:type="uml:Property" xmi:id="a_co_id" name="idCoul" visibility="private" type="dt_int"/>
+          <ownedAttribute xmi:type="uml:Property" xmi:id="a_co_nom" name="nomCoul" visibility="private" type="dt_string"/>
+          <ownedAttribute xmi:type="uml:Property" xmi:id="a_co_rgb" name="rgb" visibility="private" type="dt_string"/>
+          <ownedAttribute xmi:type="uml:Property" xmi:id="a_co_transp" name="transparent" visibility="private" type="dt_boolean"/>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_co_nom" name="obtenirNom">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_co_nom" type="dt_string" direction="return"/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_co_transp" name="estTransparente">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_co_transp" type="dt_boolean" direction="return"/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_co_aff" name="afficher">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_co_aff" type="dt_string" direction="return"/>
+          </ownedOperation>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Class" xmi:id="c_figurine" name="Figurine">
+          <ownedAttribute xmi:type="uml:Property" xmi:id="a_fi_id" name="idFig" visibility="private" type="dt_string"/>
+          <ownedAttribute xmi:type="uml:Property" xmi:id="a_fi_nom" name="nomFig" visibility="private" type="dt_string"/>
+          <ownedAttribute xmi:type="uml:Property" xmi:id="a_fi_nb" name="nbParties" visibility="private" type="dt_int"/>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_fi_nom" name="obtenirNom">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_fi_nom" type="dt_string" direction="return"/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_fi_nbp" name="obtenirNombreParties">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_fi_nbp" type="dt_int" direction="return"/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_fi_aff" name="afficher">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_fi_aff" type="dt_string" direction="return"/>
+          </ownedOperation>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Class" xmi:id="c_etatboite" name="EtatBoite">
+          <ownedAttribute xmi:type="uml:Property" xmi:id="a_eb_complet" name="complete" visibility="private" type="dt_boolean"/>
+          <ownedAttribute xmi:type="uml:Property" xmi:id="a_eb_manq" name="piecesManquantes" visibility="private" type="dt_list"/>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_eb_complet" name="estComplete">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_eb_complet" type="dt_boolean" direction="return"/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_eb_manq" name="obtenirPiecesManquantes">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_eb_manq" type="dt_list" direction="return"/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_eb_boite" name="obtenirBoite">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_eb_boite" type="c_boite" direction="return"/>
+          </ownedOperation>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Class" xmi:id="c_collection" name="CollectionPersonnelle">
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_col_ajouter" name="ajouterBoite">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_col_ajouter" type="dt_void" direction="return"/>
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="p_col_ajouter" name="boite" type="c_boite" value=""/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_col_marqcomp" name="marquerComplete">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_col_marqcomp" type="dt_void" direction="return"/>
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="p_col_marqcomp" name="boite" type="c_boite" value=""/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_col_marqinc" name="marquerIncomplete">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_col_marqinc" type="dt_void" direction="return"/>
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="p_col_marqinc" name="boite" type="c_boite" value=""/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_col_manq" name="obtenirPiecesManquantes">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_col_manq" type="dt_list" direction="return"/>
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="p_col_manq" name="boite" type="c_boite" value=""/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_col_theme" name="rechercherBoitesParTheme">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_col_theme" type="dt_list" direction="return"/>
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="p_col_theme" name="theme" type="c_theme" value=""/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_col_perso" name="composerBoitePersonnalisee">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_col_perso" type="c_boitepers" direction="return"/>
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="p_col_perso_n" name="nom" type="dt_string" value=""/>
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="p_col_perso_p" name="pieces" type="dt_list" value=""/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_col_num" name="rechercherBoiteParNumero">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_col_num" type="c_boite" direction="return"/>
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="p_col_num" name="numero" type="dt_string" value=""/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_col_lister" name="listerCollection">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_col_lister" type="dt_list" direction="return"/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_col_enreg" name="enregistrerNouvelleBoite">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_col_enreg" type="dt_void" direction="return"/>
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="p_col_enreg" name="boite" type="c_boite" value=""/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_col_maj" name="mettreAJourContenuBoite">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_col_maj" type="dt_void" direction="return"/>
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="p_col_maj" name="boite" type="c_boite" value=""/>
+          </ownedOperation>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Association" xmi:id="assoc_cf_figurine" name="">
+          <ownedEnd xmi:type="uml:AssociationEnd" xmi:id="ae_cff_cf" name="" type="c_contenuFig" aggregation="none" isNavigable="true" changeability="changeable"/>
+          <ownedEnd xmi:type="uml:AssociationEnd" xmi:id="ae_cff_fig" name="figurine" type="c_figurine" multiplicity="1" aggregation="none" isNavigable="true" changeability="changeable"/>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Association" xmi:id="assoc_piece_cat" name="">
+          <ownedEnd xmi:type="uml:AssociationEnd" xmi:id="ae_pc_piece" name="" visibility="private" type="c_piece" multiplicity="0..*" aggregation="none" isNavigable="true" changeability="changeable"/>
+          <ownedEnd xmi:type="uml:AssociationEnd" xmi:id="ae_pc_cat" name="categorie" visibility="private" type="c_categorie" multiplicity="1" aggregation="none" isNavigable="true" changeability="changeable"/>
+        </packagedElement>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Package" xmi:id="pkg_dao" name="DAO">
+        <packagedElement xmi:type="uml:Class" xmi:id="c_connexion" name="ConnexionJDBC">
+          <ownedAttribute xmi:type="uml:Property" xmi:id="a_cx_url" name="url" visibility="private" type="dt_string"/>
+          <ownedAttribute xmi:type="uml:Property" xmi:id="a_cx_user" name="utilisateur" visibility="private" type="dt_string"/>
+          <ownedAttribute xmi:type="uml:Property" xmi:id="a_cx_pass" name="motDePasse" visibility="private" type="dt_string"/>
+          <ownedAttribute xmi:type="uml:Property" xmi:id="a_cx_inst" name="instance" visibility="private" ownerScope="classifier" type="c_connexion"/>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_cx_inst" name="obtenirInstance" ownerScope="classifier">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_cx_inst" type="dt_connection" direction="return"/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_cx_fermer" name="fermerConnexion">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_cx_fermer" type="dt_void" direction="return"/>
+          </ownedOperation>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Interface" xmi:id="i_iboitedao" name="IBoiteDAO" stereotype="interface">
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_ibd_num" name="rechercherParNumero">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_ibd_num" type="c_boite" direction="return"/>
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="p_ibd_num" name="numero" type="dt_string" value=""/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_ibd_nom" name="rechercherParNom">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_ibd_nom" type="dt_list" direction="return"/>
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="p_ibd_nom" name="nom" type="dt_string" value=""/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_ibd_theme" name="rechercherParTheme">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_ibd_theme" type="dt_list" direction="return"/>
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="p_ibd_theme" name="theme" type="c_theme" value=""/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_ibd_cont" name="rechercherBoitesContenant">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_ibd_cont" type="dt_list" direction="return"/>
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="p_ibd_cont" name="piece" type="c_piece" value=""/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_ibd_enreg" name="enregistrer">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_ibd_enreg" type="dt_void" direction="return"/>
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="p_ibd_enreg" name="boite" type="c_boite" value=""/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_ibd_maj" name="mettreAJour">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_ibd_maj" type="dt_void" direction="return"/>
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="p_ibd_maj" name="boite" type="c_boite" value=""/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_ibd_tout" name="obtenirToutes">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_ibd_tout" type="dt_list" direction="return"/>
+          </ownedOperation>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Interface" xmi:id="i_ithemedao" name="IThemeDAO" stereotype="interface">
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_itd_tous" name="obtenirTous">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_itd_tous" type="dt_list" direction="return"/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_itd_id" name="rechercherParId">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_itd_id" type="c_theme" direction="return"/>
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="p_itd_id" name="id" type="dt_int" value=""/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_itd_enreg" name="enregistrer">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_itd_enreg" type="dt_void" direction="return"/>
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="p_itd_enreg" name="theme" type="c_theme" value=""/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_itd_sous" name="obtenirSousThemes">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_itd_sous" type="dt_list" direction="return"/>
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="p_itd_sous" name="theme" type="c_theme" value=""/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_itd_boites" name="obtenirBoitesParTheme">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_itd_boites" type="dt_list" direction="return"/>
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="p_itd_boites" name="theme" type="c_theme" value=""/>
+          </ownedOperation>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Interface" xmi:id="i_ipiecedao" name="IPieceDAO" stereotype="interface">
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_ipd_num" name="rechercherParNumero">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_ipd_num" type="c_piece" direction="return"/>
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="p_ipd_num" name="numero" type="dt_string" value=""/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_ipd_nom" name="rechercherParNom">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_ipd_nom" type="dt_list" direction="return"/>
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="p_ipd_nom" name="nom" type="dt_string" value=""/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_ipd_cat" name="rechercherParCategorie">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_ipd_cat" type="dt_list" direction="return"/>
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="p_ipd_cat" name="categorie" type="c_categorie" value=""/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_ipd_exist" name="verifierExistence">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_ipd_exist" type="dt_boolean" direction="return"/>
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="p_ipd_exist" name="numero" type="dt_string" value=""/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_ipd_enreg" name="enregistrer">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_ipd_enreg" type="dt_void" direction="return"/>
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="p_ipd_enreg" name="piece" type="c_piece" value=""/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_ipd_toutes" name="obtenirToutes">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_ipd_toutes" type="dt_list" direction="return"/>
+          </ownedOperation>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Interface" xmi:id="i_icolldao" name="ICollectionDAO" stereotype="interface">
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_icd_tout" name="obtenirTout">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_icd_tout" type="dt_list" direction="return"/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_icd_boite" name="rechercherParBoite">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_icd_boite" type="c_etatboite" direction="return"/>
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="p_icd_boite" name="boite" type="c_boite" value=""/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_icd_enreg" name="enregistrer">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_icd_enreg" type="dt_void" direction="return"/>
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="p_icd_enreg" name="etatBoite" type="c_etatboite" value=""/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_icd_maj" name="mettreAJour">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_icd_maj" type="dt_void" direction="return"/>
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="p_icd_maj" name="etatBoite" type="c_etatboite" value=""/>
+          </ownedOperation>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_icd_suppr" name="supprimer">
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="r_icd_suppr" type="dt_void" direction="return"/>
+            <ownedParameter xmi:type="uml:Parameter" xmi:id="p_icd_suppr" name="etatBoite" type="c_etatboite" value=""/>
+          </ownedOperation>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Class" xmi:id="c_boitedao" name="BoiteDAOJdbc">
+          <ownedAttribute xmi:type="uml:Property" xmi:id="a_bd_conn" name="connexion" visibility="private" type="dt_connection"/>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_bd_num" name="rechercherParNumero"/>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_bd_nom" name="rechercherParNom"/>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_bd_theme" name="rechercherParTheme"/>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_bd_cont" name="rechercherBoitesContenant"/>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_bd_enreg" name="enregistrer"/>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_bd_maj" name="mettreAJour"/>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_bd_toutes" name="obtenirToutes"/>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Class" xmi:id="c_themedao" name="ThemeDAOJdbc">
+          <ownedAttribute xmi:type="uml:Property" xmi:id="a_td_conn" name="connexion" visibility="private" type="dt_connection"/>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_td_tous" name="obtenirTous"/>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_td_id" name="rechercherParId"/>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_td_enreg" name="enregistrer"/>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_td_sous" name="obtenirSousThemes"/>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_td_boites" name="obtenirBoitesParTheme"/>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Class" xmi:id="c_piecedao" name="PieceDAOJdbc">
+          <ownedAttribute xmi:type="uml:Property" xmi:id="a_pd_conn" name="connexion" visibility="private" type="dt_connection"/>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_pd_num" name="rechercherParNumero"/>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_pd_nom" name="rechercherParNom"/>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_pd_cat" name="rechercherParCategorie"/>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_pd_exist" name="verifierExistence"/>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_pd_enreg" name="enregistrer"/>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_pd_tout" name="obtenirToutes"/>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Class" xmi:id="c_colldao" name="CollectionDAOJdbc">
+          <ownedAttribute xmi:type="uml:Property" xmi:id="a_cd_conn" name="connexion" visibility="private" type="dt_connection"/>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_cd_tout" name="obtenirTout"/>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_cd_boite" name="rechercherParBoite"/>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_cd_enreg" name="enregistrer"/>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_cd_maj" name="mettreAJour"/>
+          <ownedOperation xmi:type="uml:Operation" xmi:id="op_cd_suppr" name="supprimer"/>
+        </packagedElement>
+        <interfaceRealization xmi:type="uml:InterfaceRealization" xmi:id="real_bd_ibd" name="" client="c_boitedao" supplier="i_iboitedao"/>
+        <interfaceRealization xmi:type="uml:InterfaceRealization" xmi:id="real_td_itd" name="" client="c_themedao" supplier="i_ithemedao"/>
+        <interfaceRealization xmi:type="uml:InterfaceRealization" xmi:id="real_pd_ipd" name="" client="c_piecedao" supplier="i_ipiecedao"/>
+        <interfaceRealization xmi:type="uml:InterfaceRealization" xmi:id="real_cd_icd" name="" client="c_colldao" supplier="i_icolldao"/>
+        <packagedElement xmi:type="uml:Dependency" xmi:id="dep_bd_cx" name="" client="c_boitedao" supplier="c_connexion"/>
+        <packagedElement xmi:type="uml:Dependency" xmi:id="dep_td_cx" name="" client="c_themedao" supplier="c_connexion"/>
+        <packagedElement xmi:type="uml:Dependency" xmi:id="dep_pd_cx" name="" client="c_piecedao" supplier="c_connexion"/>
+        <packagedElement xmi:type="uml:Dependency" xmi:id="dep_cd_cx" name="" client="c_colldao" supplier="c_connexion"/>
+        <packagedElement xmi:type="uml:Dependency" xmi:id="dep_col_ibd" name="" client="c_collection" supplier="i_iboitedao"/>
+        <packagedElement xmi:type="uml:Dependency" xmi:id="dep_col_itd" name="" client="c_collection" supplier="i_ithemedao"/>
+        <packagedElement xmi:type="uml:Dependency" xmi:id="dep_col_ipd" name="" client="c_collection" supplier="i_ipiecedao"/>
+        <packagedElement xmi:type="uml:Dependency" xmi:id="dep_col_icd" name="" client="c_collection" supplier="i_icolldao"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Association" xmi:id="umbV8INb2jfEE" name="">
+        <ownedEnd xmi:type="uml:AssociationEnd" xmi:id="urhA7wqDHWCa5" name="" type="c_boite" aggregation="none" isNavigable="false" changeability="changeable"/>
+        <ownedEnd xmi:type="uml:AssociationEnd" xmi:id="umEykkr1Lj2dx" name=" boite" visibility="private" type="c_etatboite" multiplicity="1" aggregation="none" isNavigable="true" changeability="changeable"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Association" xmi:id="uAlpWFAozs7Sr" name="">
+        <ownedEnd xmi:type="uml:AssociationEnd" xmi:id="ur2kSB9NgLo81" name="" type="c_etatboite" aggregation="none" isNavigable="false" changeability="changeable"/>
+        <ownedEnd xmi:type="uml:AssociationEnd" xmi:id="u09MVTGhYPRBg" name="" type="c_collection" aggregation="none" isNavigable="true" changeability="changeable"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Association" xmi:id="uudvN1Pd6VIY3" name="">
+        <ownedEnd xmi:type="uml:AssociationEnd" xmi:id="ufsN8cZXfYJbf" name="" type="c_boite" aggregation="none" isNavigable="false" changeability="changeable"/>
+        <ownedEnd xmi:type="uml:AssociationEnd" xmi:id="udKXMAsejAIe0" name=" theme" visibility="private" type="c_theme" multiplicity="1" aggregation="none" isNavigable="true" changeability="changeable"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Class" xmi:id="uVpVIl5GVNemK" name="ContenuBoite">
+        <ownedAttribute xmi:type="uml:Property" xmi:id="uYwqZbFDGT1Td" name="quantite" visibility="private" type="dt_int"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Class" xmi:id="uKWQeqCZa9gnA" name="nouvelle-classe"/>
+      <packagedElement xmi:type="uml:Association" xmi:id="ugmdqF0FzBRVi" name="">
+        <ownedEnd xmi:type="uml:AssociationEnd" xmi:id="u8Q65iXPoygAm" name="" type="c_etatboite" aggregation="none" isNavigable="false" changeability="changeable"/>
+        <ownedEnd xmi:type="uml:AssociationEnd" xmi:id="u5NTaknAnPRQq" name="pieces" visibility="private" type="c_piece" multiplicity="*" aggregation="none" isNavigable="true" changeability="changeable"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Association" xmi:id="uijtiGOUi46zv" name="">
+        <ownedEnd xmi:type="uml:AssociationEnd" xmi:id="uMCJ65YUicUNr" name="" type="c_theme" aggregation="none" isNavigable="false" changeability="changeable"/>
+        <ownedEnd xmi:type="uml:AssociationEnd" xmi:id="u0kiQTLBsZaxS" name="" type="c_theme" aggregation="none" isNavigable="true" changeability="changeable"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Association" xmi:id="uF7TsC29NnDoc" name="">
+        <ownedEnd xmi:type="uml:AssociationEnd" xmi:id="us14uaoYNZS5K" name="" type="c_theme" aggregation="none" isNavigable="false" changeability="changeable"/>
+        <ownedEnd xmi:type="uml:AssociationEnd" xmi:id="u2SrmVVTzuSjA" name="" type="c_theme" aggregation="none" isNavigable="true" changeability="changeable"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Association" xmi:id="uVr35MDWGOkXA" name="">
+        <ownedEnd xmi:type="uml:AssociationEnd" xmi:id="u11xF9altjNfO" name="" type="c_contenu" aggregation="none" isNavigable="false" changeability="changeable"/>
+        <ownedEnd xmi:type="uml:AssociationEnd" xmi:id="u5r1yY5m0WfTT" name="figurinef" visibility="private" type="c_figurine" multiplicity="*" aggregation="none" isNavigable="true" changeability="changeable"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Association" xmi:id="u8STAkorxZ2Fw" name="">
+        <ownedEnd xmi:type="uml:AssociationEnd" xmi:id="ujhifd6NXH8MG" name="" type="c_contenupiece" aggregation="none" isNavigable="false" changeability="changeable"/>
+        <ownedEnd xmi:type="uml:AssociationEnd" xmi:id="ujx2XqwbKVeT6" name="pieces" visibility="private" type="c_piece" multiplicity="*" aggregation="none" isNavigable="true" changeability="changeable"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Association" xmi:id="uRSU5g6upcHhp" name="">
+        <ownedEnd xmi:type="uml:AssociationEnd" xmi:id="uBQKcK09hBm5h" name="" type="c_contenupiece" aggregation="none" isNavigable="false" changeability="changeable"/>
+        <ownedEnd xmi:type="uml:AssociationEnd" xmi:id="u79apfuTapU01" name="couleur" visibility="private" type="c_couleur" multiplicity="1" aggregation="none" isNavigable="true" changeability="changeable"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Association" xmi:id="uzZJhW5u8GIUF" name="">
+        <ownedEnd xmi:type="uml:AssociationEnd" xmi:id="u4T5PzKiX3DCt" name="" type="c_boite" aggregation="none" isNavigable="false" changeability="changeable"/>
+        <ownedEnd xmi:type="uml:AssociationEnd" xmi:id="uZP15WZh5YYMh" name=" contenub" visibility="private" type="uVpVIl5GVNemK" multiplicity="*" aggregation="none" isNavigable="true" changeability="changeable"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Association" xmi:id="u6CaTKTTw0eYK" name="">
+        <ownedEnd xmi:type="uml:AssociationEnd" xmi:id="uzvKOncyNwCAP" name="contenus" visibility="private" type="c_contenu" multiplicity="*" aggregation="none" isNavigable="true" changeability="changeable"/>
+        <ownedEnd xmi:type="uml:AssociationEnd" xmi:id="uxoG430AYaBgk" name="boites" visibility="private" type="c_boite" multiplicity="1" aggregation="none" isNavigable="true" changeability="changeable"/>
+      </packagedElement>
+      <xmi:Extension extender="umbrello">
+        <diagrams>
+          <diagram xmi.id="uGxWqPlQnTFcv" name="Diagramme de classes" type="1" documentation="" backgroundcolor="#ffffff" usebackgroundcolor="0" fillcolor="#ffffc0" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" griddotcolor="#d3d3d3" linecolor="#990000" linewidth="0" textcolor="#000000" usefillcolor="1" usealignmentguides="1" showattribassocs="1" showatts="1" showattsig="1" showops="1" showopsig="1" showpackage="1" showpubliconly="0" showscope="1" showstereotype="2" localid="-1" showgrid="0" snapgrid="0" snapcsgrid="0" snapx="25" snapy="25" zoom="39" canvasheight="1334.16" canvaswidth="1789.65" isopen="1">
+            <widgets>
+              <classwidget xmi.id="c_categorie" localid="uzTGItm81Qust" textcolor="#000000" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="0" usesdiagramusefillcolor="0" fillcolor="#ffffc0" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" x="991.391" y="82.714" width="152" height="70" isinstance="0" showstereotype="2" showoperations="1" showpubliconly="0" showopsigs="601" showpackage="1" showscope="1" showattributes="1" showattsigs="601"/>
+              <classwidget xmi.id="c_figurine" localid="uMsstD2uwVplX" textcolor="#000000" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="0" usesdiagramusefillcolor="0" fillcolor="#ffffc0" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" x="232.494" y="52.961" width="192" height="98" isinstance="0" showstereotype="2" showoperations="1" showpubliconly="0" showopsigs="601" showpackage="1" showscope="1" showattributes="1" showattsigs="601"/>
+              <classwidget xmi.id="c_piece" localid="uytDfE7Z7wfUA" textcolor="#000000" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="0" usesdiagramusefillcolor="0" fillcolor="#ffffc0" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" x="1290.78" y="68.714" width="205" height="98" isinstance="0" showstereotype="2" showoperations="1" showpubliconly="0" showopsigs="601" showpackage="1" showscope="1" showattributes="1" showattsigs="601"/>
+              <classwidget xmi.id="c_contenu" localid="u5qzvxXr1BInk" textcolor="#000000" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="0" usesdiagramusefillcolor="0" fillcolor="#ffffc0" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" x="523.391" y="289.071" width="215" height="196" isinstance="0" showstereotype="2" showoperations="1" showpubliconly="0" showopsigs="601" showpackage="1" showscope="1" showattributes="1" showattsigs="601"/>
+              <classwidget xmi.id="uVpVIl5GVNemK" localid="u0ulY4O0TgiMz" textcolor="#000000" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="0" usesdiagramusefillcolor="0" fillcolor="#ffffc0" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" x="232.494" y="352.071" width="102" height="35" isinstance="0" showstereotype="2" showoperations="1" showpubliconly="0" showopsigs="601" showpackage="1" showscope="1" showattributes="1" showattsigs="601"/>
+              <classwidget xmi.id="c_etatboite" localid="uAdXsT4sttGv5" textcolor="#000000" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="0" usesdiagramusefillcolor="0" fillcolor="#ffffc0" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" x="334.494" y="919.452" width="221" height="84" isinstance="0" showstereotype="2" showoperations="1" showpubliconly="0" showopsigs="601" showpackage="1" showscope="1" showattributes="1" showattsigs="601"/>
+              <classwidget xmi.id="c_contenupiece" localid="uXsTnRPKJ1rfK" textcolor="#000000" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="0" usesdiagramusefillcolor="0" fillcolor="#ffffc0" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" x="1055.59" y="320.571" width="199" height="98" isinstance="0" showstereotype="2" showoperations="1" showpubliconly="0" showopsigs="601" showpackage="1" showscope="1" showattributes="1" showattsigs="601"/>
+              <classwidget xmi.id="c_boite" localid="un3MFHuJukV1e" textcolor="#000000" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="0" usesdiagramusefillcolor="0" fillcolor="#ffffc0" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" x="543.391" y="604.559" width="195" height="140" isinstance="0" showstereotype="2" showoperations="1" showpubliconly="0" showopsigs="601" showpackage="1" showscope="1" showattributes="1" showattsigs="601" drawascircle="0"/>
+              <classwidget xmi.id="c_collection" localid="u3CL1svP07PxP" textcolor="#000000" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="0" usesdiagramusefillcolor="0" fillcolor="#ffffc0" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" x="202.494" y="1173.16" width="485" height="161" isinstance="0" showstereotype="2" showoperations="1" showpubliconly="0" showopsigs="601" showpackage="1" showscope="1" showattributes="1" showattsigs="601"/>
+              <classwidget xmi.id="c_boitepers" localid="uVQpWemg7oi3p" textcolor="#000000" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="0" usesdiagramusefillcolor="0" fillcolor="#ffffc0" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" x="951.391" y="646.559" width="232" height="63" isinstance="0" showstereotype="2" showoperations="1" showpubliconly="0" showopsigs="601" showpackage="1" showscope="1" showattributes="1" showattsigs="601"/>
+              <classwidget xmi.id="c_theme" localid="uUoVt4ONz2HQ4" textcolor="#000000" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="0" usesdiagramusefillcolor="0" fillcolor="#ffffc0" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" x="828.485" y="870.452" width="186" height="98" isinstance="0" showstereotype="2" showoperations="1" showpubliconly="0" showopsigs="601" showpackage="1" showscope="1" showattributes="1" showattsigs="601"/>
+              <classwidget xmi.id="c_couleur" localid="u1YYNZF1VyLE2" textcolor="#000000" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="0" usesdiagramusefillcolor="0" fillcolor="#ffffc0" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" x="1514.65" y="306.579" width="190" height="112" isinstance="0" showstereotype="2" showoperations="1" showpubliconly="0" showopsigs="601" showpackage="1" showscope="1" showattributes="1" showattsigs="601"/>
+              <classwidget xmi.id="c_contenuFig" localid="uMpqBDCVFedET" textcolor="#000000" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="0" usesdiagramusefillcolor="0" fillcolor="#ffffc0" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" x="543.953" y="73.961" width="184" height="56" isinstance="0" showstereotype="2" showoperations="1" showpubliconly="0" showopsigs="601" showpackage="1" showscope="1" showattributes="1" showattsigs="601"/>
+            </widgets>
+            <messages/>
+            <associations>
+              <assocwidget xmi.id="u8STAkorxZ2Fw" localid="uBtzHsxUvzVbn" textcolor="#000000" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" seqnum="" type="512" widgetaid="c_contenupiece" widgetbid="c_piece" indexa="0" totalcounta="0" indexb="0" totalcountb="0">
+                <floatingtext xmi.id="umtvbdZ1okaYM" localid="u9kMR55ZLMkO2" textcolor="none" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" x="1348" y="168" width="14" height="18" isinstance="0" showstereotype="2" text="*" pretext="" posttext="" role="702"/>
+                <floatingtext xmi.id="udAWWvlee0xvO" localid="uaBwo9VB93RXt" textcolor="none" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" x="1297.94" y="168.714" width="57" height="18" isinstance="0" showstereotype="2" text="pieces" pretext="-" posttext="" role="710"/>
+                <linepath layout="Direct">
+                  <startpoint startx="1201.43" starty="320.571"/>
+                  <endpoint endx="1346.94" endy="166.714"/>
+                </linepath>
+              </assocwidget>
+              <assocwidget xmi.id="uwLkTk90qp5Al" localid="uap8eh9WkJGVb" textcolor="none" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" seqnum="" type="500" widgetaid="c_boitepers" widgetbid="c_boite" indexa="0" totalcounta="0" indexb="0" totalcountb="0">
+                <linepath layout="Direct">
+                  <startpoint startx="951.391" starty="677.107"/>
+                  <endpoint endx="738.391" endy="675.359"/>
+                </linepath>
+              </assocwidget>
+              <assocwidget xmi.id="uVr35MDWGOkXA" localid="uYFFdM1D7heW7" textcolor="#000000" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" seqnum="" type="512" widgetaid="c_contenu" widgetbid="c_figurine" indexa="0" totalcounta="0" indexb="0" totalcountb="0">
+                <floatingtext xmi.id="uOuEERB0lRAAl" localid="updu3xMR9IHBA" textcolor="none" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" x="366.839" y="153.159" width="14" height="18" isinstance="0" showstereotype="2" text="*" pretext="" posttext="" role="702"/>
+                <floatingtext xmi.id="uJ9YiSeNfYvcy" localid="uqmyGm9A7TVcc" textcolor="none" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" x="383.293" y="152.961" width="63" height="18" isinstance="0" showstereotype="2" text="figurinef" pretext="-" posttext="" role="710"/>
+                <linepath layout="Direct">
+                  <startpoint startx="526.949" starty="289.071"/>
+                  <endpoint endx="380.465" endy="150.961"/>
+                </linepath>
+              </assocwidget>
+              <assocwidget xmi.id="uRSU5g6upcHhp" localid="u0iVdFG3bGf7p" textcolor="#000000" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" seqnum="" type="512" widgetaid="c_contenupiece" widgetbid="c_couleur" indexa="0" totalcounta="0" indexb="0" totalcountb="0">
+                <floatingtext xmi.id="uLMu17hc8z3uI" localid="uWxNMsmCLbBri" textcolor="none" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" x="1505.64" y="363.04" width="16" height="18" isinstance="0" showstereotype="2" text="1" pretext="" posttext="" role="702"/>
+                <floatingtext xmi.id="uOt97C0CiMopZ" localid="uisCCrKjTDGdi" textcolor="none" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" x="1422.15" y="387.071" width="63" height="18" isinstance="0" showstereotype="2" text="couleur" pretext="-" posttext="" role="710"/>
+                <linepath layout="Direct">
+                  <startpoint startx="1254.59" starty="368.04"/>
+                  <endpoint endx="1514.65" endy="364.04"/>
+                </linepath>
+              </assocwidget>
+              <assocwidget xmi.id="uF7TsC29NnDoc" localid="udHAbG71lZJat" textcolor="none" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" seqnum="" type="512" widgetaid="c_theme" widgetbid="c_theme" indexa="0" totalcounta="0" indexb="0" totalcountb="0">
+                <linepath layout="Direct">
+                  <startpoint startx="874.985" starty="870.452"/>
+                  <endpoint endx="967.985" endy="870.452"/>
+                  <point x="874.985" y="820.452"/>
+                  <point x="967.985" y="820.452"/>
+                </linepath>
+              </assocwidget>
+              <assocwidget xmi.id="ugmdqF0FzBRVi" localid="uOjU231x3wp5P" textcolor="#000000" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" seqnum="" type="512" widgetaid="c_etatboite" widgetbid="c_piece" indexa="0" totalcounta="0" indexb="0" totalcountb="0">
+                <floatingtext xmi.id="urS8ceq4XT1Yh" localid="uFunLGjJDwBkQ" textcolor="none" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" x="1290.78" y="166.714" width="14" height="18" isinstance="0" showstereotype="2" text="*" pretext="" posttext="" role="702"/>
+                <floatingtext xmi.id="uHTCz0HFzMcbm" localid="uOOvaMscoWyAi" textcolor="none" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" x="1254.59" y="189.547" width="51" height="18" isinstance="0" showstereotype="2" text="pieces" pretext="-" posttext="" role="710"/>
+                <linepath layout="Direct">
+                  <startpoint startx="492.198" starty="919.452"/>
+                  <endpoint endx="1338.21" endy="166.714"/>
+                </linepath>
+              </assocwidget>
+              <assocwidget xmi.id="uzZJhW5u8GIUF" localid="uRCY9iV7GThSP" textcolor="#000000" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" seqnum="" type="512" widgetaid="c_boite" widgetbid="uVpVIl5GVNemK" indexa="0" totalcounta="0" indexb="0" totalcountb="0">
+                <floatingtext xmi.id="uIzCQjfHky0dr" localid="uf90tpU0dY93r" textcolor="none" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" x="318" y="389" width="14" height="18" isinstance="0" showstereotype="2" text="*" pretext="" posttext="" role="702"/>
+                <floatingtext xmi.id="uAZwXRYLN5Zd2" localid="ulyFfFLMSkNKH" textcolor="none" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" x="304.858" y="431.873" width="73" height="18" isinstance="0" showstereotype="2" text=" contenub" pretext="-" posttext="" role="710"/>
+                <linepath layout="Direct">
+                  <startpoint startx="558.862" starty="604.559"/>
+                  <endpoint endx="304.001" endy="387.071"/>
+                </linepath>
+              </assocwidget>
+              <assocwidget xmi.id="utBQy6DZ3VAlz" localid="uDEfEC5luedRX" textcolor="#000000" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" seqnum="" type="510" visibilityA="1" visibilityB="1" changeabilityA="900" changeabilityB="900" widgetaid="c_contenu" widgetbid="c_contenuFig" indexa="0" totalcounta="0" indexb="0" totalcountb="0">
+                <floatingtext xmi.id="uydMuPN188Xip" localid="uoZgmSPiqFUH2" textcolor="none" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Sans Serif,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" x="568.953" y="131.961" width="65" height="18" isinstance="0" showstereotype="2" text="figurines" pretext="-" posttext="" role="710"/>
+                <floatingtext xmi.id="udY98rhSnGUzd" localid="ueNM9TfqlditH" textcolor="none" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Sans Serif,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" x="634.282" y="209.26" width="60" height="18" isinstance="0" showstereotype="2" text="figurines" pretext="" posttext="" role="703"/>
+                <linepath layout="Direct">
+                  <startpoint startx="632.631" starty="289.071"/>
+                  <endpoint endx="635.456" endy="129.961"/>
+                </linepath>
+              </assocwidget>
+              <assocwidget xmi.id="uAlpWFAozs7Sr" localid="uVKXiN2aHdfFo" textcolor="none" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" seqnum="" type="512" widgetaid="c_etatboite" widgetbid="c_collection" indexa="0" totalcounta="0" indexb="0" totalcountb="0">
+                <linepath layout="Direct">
+                  <startpoint startx="444.994" starty="1003.45"/>
+                  <endpoint endx="444.994" endy="1173.16"/>
+                </linepath>
+              </assocwidget>
+              <assocwidget xmi.id="assoc_cf_figurine" localid="u40x9Q4PJWdOI" textcolor="#000000" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" seqnum="" type="503" widgetaid="c_contenuFig" widgetbid="c_figurine" indexa="0" totalcounta="0" indexb="0" totalcountb="0">
+                <floatingtext xmi.id="uZxaw68yFL5BY" localid="uijnwRDyom8YJ" textcolor="none" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" x="436.994" y="108.204" width="16" height="18" isinstance="0" showstereotype="2" text="1" pretext="" posttext="" role="702"/>
+                <floatingtext xmi.id="uup2fvuR25q1X" localid="ugIGaUq0aNSaT" textcolor="none" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" x="424.494" y="73.961" width="64" height="18" isinstance="0" showstereotype="2" text="figurine" pretext="+" posttext="" role="710"/>
+                <linepath layout="Direct">
+                  <startpoint startx="543.953" starty="101.961"/>
+                  <endpoint endx="424.494" endy="101.961"/>
+                </linepath>
+              </assocwidget>
+              <assocwidget xmi.id="u2Yxhpb6H9me2" localid="uoG2vJ5apoZd8" textcolor="#000000" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" seqnum="" type="510" visibilityA="1" visibilityB="1" changeabilityA="900" changeabilityB="900" widgetaid="c_contenu" widgetbid="c_contenupiece" indexa="0" totalcounta="0" indexb="0" totalcountb="0">
+                <floatingtext xmi.id="u1WUYPCCoAbuZ" localid="uO4Wog38yP8Fw" textcolor="none" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Sans Serif,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" x="1000.49" y="378.071" width="14" height="18" isinstance="0" showstereotype="2" text="*" pretext="" posttext="" role="702"/>
+                <floatingtext xmi.id="u1kcDVPxxHiI5" localid="uifst3tU8cGv7" textcolor="none" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Sans Serif,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" x="991.391" y="343.071" width="51" height="18" isinstance="0" showstereotype="2" text="pieces" pretext="-" posttext="" role="710"/>
+                <linepath layout="Direct">
+                  <startpoint startx="738.391" starty="383.482"/>
+                  <endpoint endx="1055.59" endy="372.893"/>
+                </linepath>
+              </assocwidget>
+              <assocwidget xmi.id="umbV8INb2jfEE" localid="ugphJzsgssXqV" textcolor="#000000" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" seqnum="" type="512" widgetaid="c_boite" widgetbid="c_etatboite" indexa="0" totalcounta="0" indexb="0" totalcountb="0">
+                <floatingtext xmi.id="u5esOfizNoX7l" localid="uw2EzTGCRZfuZ" textcolor="none" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" x="477.625" y="901.452" width="16" height="18" isinstance="0" showstereotype="2" text="1" pretext="" posttext="" role="702"/>
+                <floatingtext xmi.id="ubuOCCUdNWd69" localid="uTsmU8DC3tgBP" textcolor="none" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" x="428.528" y="891.358" width="46" height="18" isinstance="0" showstereotype="2" text=" boite" pretext="-" posttext="" role="710"/>
+                <linepath layout="Direct">
+                  <startpoint startx="593.093" starty="744.559"/>
+                  <endpoint endx="473.673" endy="919.452"/>
+                </linepath>
+              </assocwidget>
+              <assocwidget xmi.id="uudvN1Pd6VIY3" localid="uLOKb66JSGK1f" textcolor="#000000" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" seqnum="" type="512" widgetaid="c_boite" widgetbid="c_theme" indexa="0" totalcounta="0" indexb="0" totalcountb="0">
+                <floatingtext xmi.id="usq4FXw3MjPtH" localid="ugZIkEQRjb88h" textcolor="none" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" x="860.24" y="838.474" width="16" height="18" isinstance="0" showstereotype="2" text="1" pretext="" posttext="" role="702"/>
+                <floatingtext xmi.id="u43RLW0okOznv" localid="ugmYqheTKNOp4" textcolor="none" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" x="788.868" y="852.452" width="55" height="18" isinstance="0" showstereotype="2" text=" theme" pretext="-" posttext="" role="710"/>
+                <linepath layout="Direct">
+                  <startpoint startx="721.096" starty="744.559"/>
+                  <endpoint endx="865.342" endy="870.452"/>
+                </linepath>
+              </assocwidget>
+              <assocwidget xmi.id="uD0RrF49TxTBv" localid="u64ex1D8dcm02" textcolor="#000000" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" seqnum="" type="510" visibilityA="1" visibilityB="1" changeabilityA="900" changeabilityB="900" widgetaid="c_contenu" widgetbid="uVpVIl5GVNemK" indexa="0" totalcounta="0" indexb="0" totalcountb="0">
+                <floatingtext xmi.id="uNW1caS6mC81F" localid="uzaopN6jO9vPW" textcolor="none" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Sans Serif,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" x="328.093" y="370.165" width="14" height="18" isinstance="0" showstereotype="2" text="*" pretext="" posttext="" role="702"/>
+                <floatingtext xmi.id="utSRhyKH3WHZH" localid="uO65Fql9Asq9O" textcolor="none" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Sans Serif,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" x="336.494" y="372.571" width="85" height="18" isinstance="0" showstereotype="2" text="boiteIncluse" pretext="-" posttext="" role="710"/>
+                <linepath layout="Direct">
+                  <startpoint startx="523.391" starty="381.656"/>
+                  <endpoint endx="334.494" endy="372.14"/>
+                </linepath>
+              </assocwidget>
+              <assocwidget xmi.id="assoc_piece_cat" localid="uaELlaHyW6ZtH" textcolor="#000000" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" seqnum="" type="503" widgetaid="c_piece" widgetbid="c_categorie" indexa="0" totalcounta="0" indexb="0" totalcountb="0">
+                <floatingtext xmi.id="uGVRQAZqcScUR" localid="uG1rrCpELJWwN" textcolor="none" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" x="1246.78" y="81" width="29" height="18" isinstance="0" showstereotype="2" text="0..*" pretext="" posttext="" role="701"/>
+                <floatingtext xmi.id="uUjWnTTsL5nif" localid="u1dvkcroQ7NPv" textcolor="none" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" x="1143.26" y="91.961" width="16" height="18" isinstance="0" showstereotype="2" text="1" pretext="" posttext="" role="702"/>
+                <floatingtext xmi.id="ukorWtqyZhV4O" localid="ulTQzjNCNuB8d" textcolor="none" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" x="1148.89" y="132.961" width="69" height="18" isinstance="0" showstereotype="2" text="categorie" pretext="-" posttext="" role="710"/>
+                <linepath layout="Direct">
+                  <startpoint startx="1290.78" starty="117.714"/>
+                  <endpoint endx="1143.39" endy="117.714"/>
+                </linepath>
+              </assocwidget>
+              <assocwidget xmi.id="ul5sErpSdxEsu" localid="uzG1BmIYh3mlb" textcolor="none" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" seqnum="" type="510" visibilityA="1" visibilityB="1" changeabilityA="900" changeabilityB="900" widgetaid="c_contenu" widgetbid="c_contenupiece" indexa="0" totalcounta="0" indexb="0" totalcountb="0">
+                <floatingtext xmi.id="ufv6SomvYqXLh" localid="uX6v1ztswfrD4" textcolor="none" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Sans Serif,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" x="955.595" y="398.571" width="102" height="18" isinstance="0" showstereotype="2" text="nouvel-attribut" pretext="-" posttext="" role="710"/>
+                <linepath layout="Direct">
+                  <startpoint startx="738.391" starty="383.482"/>
+                  <endpoint endx="1055.59" endy="372.893"/>
+                </linepath>
+              </assocwidget>
+              <assocwidget xmi.id="u6CaTKTTw0eYK" localid="u4cFlHXBGYSbe" textcolor="#000000" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" seqnum="" type="503" widgetaid="c_contenu" widgetbid="c_boite" indexa="0" totalcounta="0" indexb="0" totalcountb="0">
+                <floatingtext xmi.id="uABsHo602l39H" localid="ubiBSmk86Zs2E" textcolor="none" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" x="618" y="487" width="14" height="18" isinstance="0" showstereotype="2" text="*" pretext="" posttext="" role="701"/>
+                <floatingtext xmi.id="u4p3Unn40po23" localid="uTmkQLiyrgSK2" textcolor="none" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" x="636.391" y="486.751" width="73" height="18" isinstance="0" showstereotype="2" text="contenus" pretext="-" posttext="" role="709"/>
+                <floatingtext xmi.id="ujJSQyZij2NTo" localid="uvdMN5bRgIUb7" textcolor="none" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" x="640" y="584" width="16" height="18" isinstance="0" showstereotype="2" text="1" pretext="" posttext="" role="702"/>
+                <floatingtext xmi.id="uoTAw0RczL79I" localid="uHCJPEH7baw0L" textcolor="none" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" x="591.891" y="584.559" width="55" height="18" isinstance="0" showstereotype="2" text="boites" pretext="-" posttext="" role="710"/>
+                <linepath layout="Direct">
+                  <startpoint startx="634.3" starty="485.071"/>
+                  <endpoint endx="638.456" endy="604.559"/>
+                </linepath>
+              </assocwidget>
+              <assocwidget xmi.id="uijtiGOUi46zv" localid="u8edgfj7ZVDPx" textcolor="none" linecolor="#990000" linewidth="0" usefillcolor="1" usesdiagramfillcolor="1" usesdiagramusefillcolor="1" fillcolor="none" font="Noto Sans,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1" autoresize="1" seqnum="" type="512" widgetaid="c_theme" widgetbid="c_theme" indexa="0" totalcounta="0" indexb="0" totalcountb="0">
+                <linepath layout="Direct">
+                  <startpoint startx="874.985" starty="870.452"/>
+                  <endpoint endx="967.985" endy="870.452"/>
+                  <point x="874.985" y="820.452"/>
+                  <point x="967.985" y="820.452"/>
+                </linepath>
+              </assocwidget>
+            </associations>
+          </diagram>
+        </diagrams>
+      </xmi:Extension>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Model" xmi:id="Use_Case_View" name="Use Case View" stereotype="folder"/>
+    <packagedElement xmi:type="uml:Model" xmi:id="Component_View" name="Component View" stereotype="folder"/>
+    <packagedElement xmi:type="uml:Model" xmi:id="Deployment_View" name="Deployment View" stereotype="folder"/>
+    <packagedElement xmi:type="uml:Model" xmi:id="Entity_Relationship_Model" name="Entity Relationship Model" stereotype="folder"/>
+  </uml:Model>
+  <xmi:Extension extender="umbrello">
+    <docsettings viewid="uGxWqPlQnTFcv" documentation="" uniqueid="upAXkqPLKQSCx"/>
+    <listview>
+      <listitem id="Views" type="800" open="1">
+        <listitem id="Entity_Relationship_Model" type="836" open="1"/>
+        <listitem id="Use_Case_View" type="802" open="1"/>
+        <listitem id="Component_View" type="821" open="1"/>
+        <listitem id="Deployment_View" type="827" open="1"/>
+        <listitem id="Logical_View" type="801" open="1">
+          <listitem id="uVpVIl5GVNemK" type="813" open="1">
+            <listitem id="uYwqZbFDGT1Td" type="814" open="0"/>
+          </listitem>
+          <listitem id="pkg_dao" type="818" open="0">
+            <listitem id="c_boitedao" type="813" open="0">
+              <listitem id="a_bd_conn" type="814" open="0"/>
+              <listitem id="op_bd_enreg" type="815" open="0"/>
+              <listitem id="op_bd_maj" type="815" open="0"/>
+              <listitem id="op_bd_toutes" type="815" open="0"/>
+              <listitem id="op_bd_cont" type="815" open="0"/>
+              <listitem id="op_bd_nom" type="815" open="0"/>
+              <listitem id="op_bd_num" type="815" open="0"/>
+              <listitem id="op_bd_theme" type="815" open="0"/>
+            </listitem>
+            <listitem id="c_colldao" type="813" open="0">
+              <listitem id="a_cd_conn" type="814" open="0"/>
+              <listitem id="op_cd_enreg" type="815" open="0"/>
+              <listitem id="op_cd_maj" type="815" open="0"/>
+              <listitem id="op_cd_tout" type="815" open="0"/>
+              <listitem id="op_cd_boite" type="815" open="0"/>
+              <listitem id="op_cd_suppr" type="815" open="0"/>
+            </listitem>
+            <listitem id="c_connexion" type="813" open="0">
+              <listitem id="op_cx_fermer" type="815" open="0"/>
+              <listitem id="a_cx_inst" type="814" open="0"/>
+              <listitem id="a_cx_pass" type="814" open="0"/>
+              <listitem id="op_cx_inst" type="815" open="0"/>
+              <listitem id="a_cx_url" type="814" open="0"/>
+              <listitem id="a_cx_user" type="814" open="0"/>
+            </listitem>
+            <listitem id="i_iboitedao" type="817" open="0">
+              <listitem id="op_ibd_enreg" type="815" open="0"/>
+              <listitem id="op_ibd_maj" type="815" open="0"/>
+              <listitem id="op_ibd_tout" type="815" open="0"/>
+              <listitem id="op_ibd_cont" type="815" open="0"/>
+              <listitem id="op_ibd_nom" type="815" open="0"/>
+              <listitem id="op_ibd_num" type="815" open="0"/>
+              <listitem id="op_ibd_theme" type="815" open="0"/>
+            </listitem>
+            <listitem id="i_icolldao" type="817" open="0">
+              <listitem id="op_icd_enreg" type="815" open="0"/>
+              <listitem id="op_icd_maj" type="815" open="0"/>
+              <listitem id="op_icd_tout" type="815" open="0"/>
+              <listitem id="op_icd_boite" type="815" open="0"/>
+              <listitem id="op_icd_suppr" type="815" open="0"/>
+            </listitem>
+            <listitem id="i_ipiecedao" type="817" open="0">
+              <listitem id="op_ipd_enreg" type="815" open="0"/>
+              <listitem id="op_ipd_toutes" type="815" open="0"/>
+              <listitem id="op_ipd_cat" type="815" open="0"/>
+              <listitem id="op_ipd_nom" type="815" open="0"/>
+              <listitem id="op_ipd_num" type="815" open="0"/>
+              <listitem id="op_ipd_exist" type="815" open="0"/>
+            </listitem>
+            <listitem id="i_ithemedao" type="817" open="0">
+              <listitem id="op_itd_enreg" type="815" open="0"/>
+              <listitem id="op_itd_boites" type="815" open="0"/>
+              <listitem id="op_itd_sous" type="815" open="0"/>
+              <listitem id="op_itd_tous" type="815" open="0"/>
+              <listitem id="op_itd_id" type="815" open="0"/>
+            </listitem>
+            <listitem id="c_piecedao" type="813" open="0">
+              <listitem id="a_pd_conn" type="814" open="0"/>
+              <listitem id="op_pd_enreg" type="815" open="0"/>
+              <listitem id="op_pd_tout" type="815" open="0"/>
+              <listitem id="op_pd_cat" type="815" open="0"/>
+              <listitem id="op_pd_nom" type="815" open="0"/>
+              <listitem id="op_pd_num" type="815" open="0"/>
+              <listitem id="op_pd_exist" type="815" open="0"/>
+            </listitem>
+            <listitem id="c_themedao" type="813" open="0">
+              <listitem id="a_td_conn" type="814" open="0"/>
+              <listitem id="op_td_enreg" type="815" open="0"/>
+              <listitem id="op_td_boites" type="815" open="0"/>
+              <listitem id="op_td_sous" type="815" open="0"/>
+              <listitem id="op_td_tous" type="815" open="0"/>
+              <listitem id="op_td_id" type="815" open="0"/>
+            </listitem>
+          </listitem>
+          <listitem id="uGxWqPlQnTFcv" type="807" label="Diagramme de classes" open="0"/>
+          <listitem id="pkg_metier" type="818" open="1">
+            <listitem id="c_boite" type="813" open="0">
+              <listitem id="a_b_annee" type="814" open="0"/>
+              <listitem id="a_b_nbp" type="814" open="0"/>
+              <listitem id="a_b_nom" type="814" open="0"/>
+              <listitem id="a_b_num" type="814" open="0"/>
+              <listitem id="op_b_contenu" type="815" open="0"/>
+              <listitem id="op_b_nomop" type="815" open="0"/>
+              <listitem id="op_b_num" type="815" open="0"/>
+              <listitem id="op_b_stats" type="815" open="0"/>
+              <listitem id="op_b_theme" type="815" open="0"/>
+            </listitem>
+            <listitem id="c_boitepers" type="813" open="1">
+              <listitem id="op_bp_enreg" type="815" open="0"/>
+              <listitem id="op_bp_gen" type="815" open="0"/>
+              <listitem id="op_bp_doublon" type="815" open="0"/>
+            </listitem>
+            <listitem id="c_categorie" type="813" open="0">
+              <listitem id="op_cat_aff" type="815" open="0"/>
+              <listitem id="a_cat_id" type="814" open="0"/>
+              <listitem id="a_cat_nom" type="814" open="0"/>
+              <listitem id="op_cat_nom" type="815" open="0"/>
+            </listitem>
+            <listitem id="c_collection" type="813" open="0">
+              <listitem id="op_col_ajouter" type="815" open="0"/>
+              <listitem id="op_col_perso" type="815" open="0"/>
+              <listitem id="op_col_enreg" type="815" open="0"/>
+              <listitem id="op_col_lister" type="815" open="0"/>
+              <listitem id="op_col_marqcomp" type="815" open="0"/>
+              <listitem id="op_col_marqinc" type="815" open="0"/>
+              <listitem id="op_col_maj" type="815" open="0"/>
+              <listitem id="op_col_manq" type="815" open="0"/>
+              <listitem id="op_col_num" type="815" open="0"/>
+              <listitem id="op_col_theme" type="815" open="0"/>
+            </listitem>
+            <listitem id="c_contenu" type="813" open="1">
+              <listitem id="uD0RrF49TxTBv" type="814" open="0"/>
+              <listitem id="a_ct_boites" type="814" open="0"/>
+              <listitem id="op_ct_complet" type="815" open="0"/>
+              <listitem id="utBQy6DZ3VAlz" type="814" open="0"/>
+              <listitem id="a_ct_id" type="814" open="0"/>
+              <listitem id="ul5sErpSdxEsu" type="814" open="0"/>
+              <listitem id="op_ct_getboites" type="815" open="0"/>
+              <listitem id="op_ct_getfigs" type="815" open="0"/>
+              <listitem id="op_ct_nbp" type="815" open="0"/>
+              <listitem id="op_ct_getpieces" type="815" open="0"/>
+              <listitem id="op_ct_manq" type="815" open="0"/>
+              <listitem id="u2Yxhpb6H9me2" type="814" open="0"/>
+              <listitem id="a_ct_version" type="814" open="0"/>
+            </listitem>
+            <listitem id="c_contenuFig" type="813" open="0">
+              <listitem id="op_cf_fig" type="815" open="0"/>
+              <listitem id="op_cf_qte" type="815" open="0"/>
+              <listitem id="a_cf_qte" type="814" open="0"/>
+            </listitem>
+            <listitem id="c_contenupiece" type="813" open="0">
+              <listitem id="a_cp_supp" type="814" open="0"/>
+              <listitem id="op_cp_supp" type="815" open="0"/>
+              <listitem id="op_cp_coul" type="815" open="0"/>
+              <listitem id="op_cp_piece" type="815" open="0"/>
+              <listitem id="op_cp_qte" type="815" open="0"/>
+              <listitem id="a_cp_qte" type="814" open="0"/>
+            </listitem>
+            <listitem id="c_couleur" type="813" open="0">
+              <listitem id="op_co_aff" type="815" open="0"/>
+              <listitem id="op_co_transp" type="815" open="0"/>
+              <listitem id="a_co_id" type="814" open="0"/>
+              <listitem id="a_co_nom" type="814" open="0"/>
+              <listitem id="op_co_nom" type="815" open="0"/>
+              <listitem id="a_co_rgb" type="814" open="0"/>
+              <listitem id="a_co_transp" type="814" open="0"/>
+            </listitem>
+            <listitem id="c_etatboite" type="813" open="0">
+              <listitem id="a_eb_complet" type="814" open="0"/>
+              <listitem id="op_eb_complet" type="815" open="0"/>
+              <listitem id="op_eb_boite" type="815" open="0"/>
+              <listitem id="op_eb_manq" type="815" open="0"/>
+              <listitem id="a_eb_manq" type="814" open="0"/>
+            </listitem>
+            <listitem id="c_figurine" type="813" open="0">
+              <listitem id="op_fi_aff" type="815" open="0"/>
+              <listitem id="a_fi_id" type="814" open="0"/>
+              <listitem id="a_fi_nb" type="814" open="0"/>
+              <listitem id="a_fi_nom" type="814" open="0"/>
+              <listitem id="op_fi_nom" type="815" open="0"/>
+              <listitem id="op_fi_nbp" type="815" open="0"/>
+            </listitem>
+            <listitem id="c_piece" type="813" open="0">
+              <listitem id="op_p_aff" type="815" open="0"/>
+              <listitem id="a_p_nom" type="814" open="0"/>
+              <listitem id="a_p_num" type="814" open="0"/>
+              <listitem id="op_p_cat" type="815" open="0"/>
+              <listitem id="op_p_coul" type="815" open="0"/>
+              <listitem id="op_p_num" type="815" open="0"/>
+            </listitem>
+            <listitem id="c_theme" type="813" open="0">
+              <listitem id="op_th_estracine" type="815" open="0"/>
+              <listitem id="a_th_id" type="814" open="0"/>
+              <listitem id="a_th_nom" type="814" open="0"/>
+              <listitem id="op_th_nom" type="815" open="0"/>
+              <listitem id="op_th_parent" type="815" open="0"/>
+              <listitem id="op_th_sousthemes" type="815" open="0"/>
+            </listitem>
+          </listitem>
+          <listitem id="uKWQeqCZa9gnA" type="813" open="1"/>
+          <listitem id="Datatypes" type="830" open="1">
+            <listitem id="dt_boolean" type="829" open="0"/>
+            <listitem id="u3VRvBDk0ssii" type="829" open="1"/>
+            <listitem id="u2Ez7fvjbeX9h" type="829" open="1"/>
+            <listitem id="u1XSvkvkARB4t" type="829" open="1"/>
+            <listitem id="uVNaOx1ZtrmWx" type="829" open="1"/>
+            <listitem id="uZoptgzpjep8Z" type="829" open="1"/>
+            <listitem id="dt_connection" type="829" open="0"/>
+            <listitem id="u4gmWEBl3DgEf" type="829" open="1"/>
+            <listitem id="uw2xrchg9s2Am" type="829" open="1"/>
+            <listitem id="uo72JRCGyCyJa" type="829" open="1"/>
+            <listitem id="uXC6GQbO6NoGW" type="829" open="1"/>
+            <listitem id="dt_int" type="829" open="0"/>
+            <listitem id="utETwKP8WGRMw" type="829" open="1"/>
+            <listitem id="dt_list" type="829" open="0"/>
+            <listitem id="ummJl9alJWxLR" type="829" open="1"/>
+            <listitem id="upvFv1CkfqbY6" type="829" open="1"/>
+            <listitem id="ua2vLTEyqrPe8" type="829" open="1"/>
+            <listitem id="u3umCVYzeQJMD" type="829" open="1"/>
+            <listitem id="dt_string" type="829" open="0"/>
+            <listitem id="uJVsycvfQRHs2" type="829" open="1"/>
+            <listitem id="upAXkqPLKQSCx" type="829" open="1"/>
+            <listitem id="dt_void" type="829" open="0"/>
+          </listitem>
+        </listitem>
+      </listitem>
+    </listview>
+    <codegeneration>
+      <codegenerator language="Java"/>
+    </codegeneration>
+  </xmi:Extension>
+</xmi:XMI>
