@@ -1,5 +1,3 @@
-package Metier;
-
 public class Piece {
 
     private String numPiece;

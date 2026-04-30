@@ -1,5 +1,3 @@
-package Metier;
-
 import java.util.List;
 
 public class CollectionPersonnelle {

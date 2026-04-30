@@ -1,5 +1,3 @@
-package Metier;
-
 abstract public class Boite {
 
     private String numBoite;

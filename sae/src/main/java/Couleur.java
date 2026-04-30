@@ -1,5 +1,3 @@
-package Metier;
-
 public class Couleur {
 
     private int idCoul;

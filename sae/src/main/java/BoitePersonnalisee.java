@@ -1,5 +1,3 @@
-package Metier;
-
 class BoitePersonnalisee extends Boite {
 
     public BoitePersonnalisee() {

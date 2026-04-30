@@ -28,7 +28,7 @@ STRUCTURE DU DÉVELOPPEMENT : RÉPARTITION DES 12 CLASSES
 
 [ ] ELIOTT
 ------------------------------------------------------------------------
-1. Classe : ContpPiece      [Statut: ]
+1. Classe : ContpPiece      [Statut: OK]
 2. Classe : Categorie       [Statut: ]
 3. Classe : Contenu         [Statut: ]
 

@@ -1,5 +1,3 @@
-package Metier;
-
 public class Figurine {
 
     private String idFig;
