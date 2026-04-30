@@ -1,4 +1,4 @@
-package Metier;
+
 
 abstract public class Boite {
 

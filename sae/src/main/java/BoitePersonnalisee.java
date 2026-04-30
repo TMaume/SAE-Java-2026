@@ -1,4 +1,4 @@
-package Metier;
+
 
 class BoitePersonnalisee extends Boite {
 

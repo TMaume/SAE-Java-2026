@@ -1,4 +1,3 @@
-package Metier;
 
 import java.util.List;
 

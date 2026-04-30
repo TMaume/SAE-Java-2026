@@ -1,4 +1,3 @@
-package Metier;
 
 public class Categorie {
 
