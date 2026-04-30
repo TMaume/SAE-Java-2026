@@ -1,5 +1,3 @@
-
-
 public class Figurine {
 
     private String idFig;
