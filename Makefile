@@ -3,12 +3,10 @@
 #  Prérequis : être dans l'env devenv (nix develop / direnv)
 # ============================================================
 
-# ── Répertoires ──────────────────────────────────────────────
 PROJECT_DIR  := sae
 BD_DIR       := BD
 TARGET       := $(PROJECT_DIR)/target
 
-# ── Identifiants MariaDB (surchargeables via l'env ou CLI) ───
 DB_HOST      ?= 127.0.0.1
 DB_PORT      ?= 3306
 DB_NAME      ?= lego_db
@@ -16,18 +14,9 @@ DB_USER      ?= sae_user
 DB_PASS      ?= sae_pass
 DB_URL       := jdbc:mariadb://$(DB_HOST):$(DB_PORT)/$(DB_NAME)
 
-# ── Java / JavaFX ────────────────────────────────────────────
 JAVAFX_MODULES ?= javafx.controls,javafx.fxml,javafx.base,javafx.graphics
 MAIN_CLASS     ?= MainApp
 JAR_FILE       := $(TARGET)/sae-1.0.0-jar-with-dependencies.jar
-
-# ── Couleurs terminal ────────────────────────────────────────
-RESET  := \033[0m
-BOLD   := \033[1m
-GREEN  := \033[32m
-YELLOW := \033[33m
-CYAN   := \033[36m
-RED    := \033[31m
 
 # ============================================================
 .PHONY: help all build run run-mvn test clean \
@@ -41,49 +30,49 @@ all: build
 # help
 # ------------------------------------------------------------
 help:
-	@echo ""
-	@echo "$(BOLD)$(CYAN)SAE Java 2026 — commandes disponibles$(RESET)"
-	@echo "$(CYAN)══════════════════════════════════════════════$(RESET)"
-	@echo ""
-	@echo "$(BOLD)── BUILD & EXECUTION ──────────────────────────$(RESET)"
-	@echo "  $(GREEN)make build$(RESET)          Compile le projet (mvn package)"
-	@echo "  $(GREEN)make run$(RESET)            Lance l'application JavaFX (JAR)"
-	@echo "  $(GREEN)make run-mvn$(RESET)        Lance via mvn javafx:run (dev)"
-	@echo "  $(GREEN)make test$(RESET)           Execute les tests JUnit"
-	@echo "  $(GREEN)make clean$(RESET)          Supprime target/"
-	@echo "  $(GREEN)make deps$(RESET)           Telecharge les dependances Maven"
-	@echo ""
-	@echo "$(BOLD)── BASE DE DONNEES ─────────────────────────────$(RESET)"
-	@echo "  $(YELLOW)make db-start$(RESET)       Demarre MariaDB (devenv)"
-	@echo "  $(YELLOW)make db-stop$(RESET)        Arrete MariaDB"
-	@echo "  $(YELLOW)make db-status$(RESET)      Verifie l'etat du serveur"
-	@echo "  $(YELLOW)make db-create$(RESET)      Cree le schema (creation_lego.sql)"
-	@echo "  $(YELLOW)make db-drop$(RESET)        Supprime les tables (destruction_lego.sql)"
-	@echo "  $(YELLOW)make db-reset$(RESET)       Drop + Create + Import CSV"
-	@echo "  $(YELLOW)make db-import$(RESET)      Importe tous les fichiers CSV"
-	@echo "  $(YELLOW)make db-shell$(RESET)       Shell MariaDB interactif"
-	@echo ""
-	@echo "$(BOLD)── UTILITAIRES ─────────────────────────────────$(RESET)"
-	@echo "  $(CYAN)make install-jdbc$(RESET)   Installe le JAR JDBC dans ~/.m2"
-	@echo "  $(CYAN)make check-env$(RESET)      Verifie que l'environnement est OK"
-	@echo ""
-	@echo "$(BOLD)── VARIABLES SURCHARGEABLES ────────────────────$(RESET)"
-	@echo "  DB_HOST=$(DB_HOST)  DB_PORT=$(DB_PORT)"
-	@echo "  DB_NAME=$(DB_NAME)  DB_USER=$(DB_USER)  DB_PASS=***"
-	@echo ""
+	@printf "\n"
+	@printf "\033[1m\033[36mSAE Java 2026 — commandes disponibles\033[0m\n"
+	@printf "\033[36m══════════════════════════════════════════════\033[0m\n"
+	@printf "\n"
+	@printf "\033[1m── BUILD & EXECUTION ──────────────────────────\033[0m\n"
+	@printf "  \033[32mmake build\033[0m          Compile le projet (mvn package)\n"
+	@printf "  \033[32mmake run\033[0m            Lance l'application JavaFX (JAR)\n"
+	@printf "  \033[32mmake run-mvn\033[0m        Lance via mvn javafx:run (dev)\n"
+	@printf "  \033[32mmake test\033[0m           Execute les tests JUnit\n"
+	@printf "  \033[32mmake clean\033[0m          Supprime target/\n"
+	@printf "  \033[32mmake deps\033[0m           Telecharge les dependances Maven\n"
+	@printf "\n"
+	@printf "\033[1m── BASE DE DONNEES ─────────────────────────────\033[0m\n"
+	@printf "  \033[33mmake db-start\033[0m       Demarre MariaDB\n"
+	@printf "  \033[33mmake db-stop\033[0m        Arrete MariaDB\n"
+	@printf "  \033[33mmake db-status\033[0m      Verifie l'etat du serveur\n"
+	@printf "  \033[33mmake db-create\033[0m      Cree le schema (creation_lego.sql)\n"
+	@printf "  \033[33mmake db-drop\033[0m        Supprime les tables (destruction_lego.sql)\n"
+	@printf "  \033[33mmake db-reset\033[0m       Drop + Create + Import CSV\n"
+	@printf "  \033[33mmake db-import\033[0m      Importe tous les fichiers CSV\n"
+	@printf "  \033[33mmake db-shell\033[0m       Shell MariaDB interactif\n"
+	@printf "\n"
+	@printf "\033[1m── UTILITAIRES ─────────────────────────────────\033[0m\n"
+	@printf "  \033[36mmake install-jdbc\033[0m   Installe le JAR JDBC dans ~/.m2\n"
+	@printf "  \033[36mmake check-env\033[0m      Verifie que l'environnement est OK\n"
+	@printf "\n"
+	@printf "\033[1m── VARIABLES SURCHARGEABLES ────────────────────\033[0m\n"
+	@printf "  DB_HOST=$(DB_HOST)  DB_PORT=$(DB_PORT)\n"
+	@printf "  DB_NAME=$(DB_NAME)  DB_USER=$(DB_USER)  DB_PASS=***\n"
+	@printf "\n"
 
 # ============================================================
 # BUILD
 # ============================================================
 
 build: check-env
-	@echo "$(BOLD)$(GREEN)>> Compilation Maven...$(RESET)"
+	@printf "\033[1m\033[32m>> Compilation Maven...\033[0m\n"
 	cd $(PROJECT_DIR) && mvn -B package -DskipTests \
 	    -Djavafx.modules=$(JAVAFX_MODULES)
-	@echo "$(GREEN)OK Build termine : $(JAR_FILE)$(RESET)"
+	@printf "\033[32mOK Build termine : $(JAR_FILE)\033[0m\n"
 
 run: $(JAR_FILE)
-	@echo "$(BOLD)$(GREEN)>> Lancement JavaFX...$(RESET)"
+	@printf "\033[1m\033[32m>> Lancement JavaFX...\033[0m\n"
 	java \
 	  --module-path "$(JAVAFX_HOME)/lib" \
 	  --add-modules $(JAVAFX_MODULES) \
@@ -93,14 +82,14 @@ run: $(JAR_FILE)
 	  -jar $(JAR_FILE)
 
 run-mvn: check-env
-	@echo "$(BOLD)$(GREEN)>> Lancement via mvn javafx:run...$(RESET)"
+	@printf "\033[1m\033[32m>> Lancement via mvn javafx:run...\033[0m\n"
 	cd $(PROJECT_DIR) && mvn -B javafx:run \
 	  -Ddb.url="$(DB_URL)" \
 	  -Ddb.user="$(DB_USER)" \
 	  -Ddb.password="$(DB_PASS)"
 
 test: check-env
-	@echo "$(BOLD)$(GREEN)>> Tests JUnit...$(RESET)"
+	@printf "\033[1m\033[32m>> Tests JUnit...\033[0m\n"
 	cd $(PROJECT_DIR) && mvn -B test \
 	    -Djavafx.modules=$(JAVAFX_MODULES) \
 	    -Ddb.url="$(DB_URL)" \
@@ -108,12 +97,12 @@ test: check-env
 	    -Ddb.password="$(DB_PASS)"
 
 clean:
-	@echo "$(RED)>> Nettoyage...$(RESET)"
+	@printf "\033[31m>> Nettoyage...\033[0m\n"
 	cd $(PROJECT_DIR) && mvn -B clean
-	@echo "$(GREEN)OK target/ supprime$(RESET)"
+	@printf "\033[32mOK target/ supprime\033[0m\n"
 
 deps:
-	@echo "$(CYAN)>> Resolution des dependances...$(RESET)"
+	@printf "\033[36m>> Resolution des dependances...\033[0m\n"
 	cd $(PROJECT_DIR) && mvn -B dependency:resolve
 
 # ============================================================
@@ -121,7 +110,7 @@ deps:
 # ============================================================
 
 db-start:
-	@echo "$(BOLD)$(YELLOW)>> Demarrage MariaDB...$(RESET)"
+	@printf "\033[1m\033[33m>> Demarrage MariaDB...\033[0m\n"
 	devenv up -d 2>/dev/null || \
 	  mysqld_safe --datadir="$${DEVENV_STATE:-/tmp/devenv}/mysql" \
 	              --socket="$${DEVENV_STATE:-/tmp/devenv}/mysql/mysql.sock" &
@@ -129,36 +118,36 @@ db-start:
 	@$(MAKE) db-status
 
 db-stop:
-	@echo "$(YELLOW)>> Arret MariaDB...$(RESET)"
+	@printf "\033[33m>> Arret MariaDB...\033[0m\n"
 	mysqladmin -h $(DB_HOST) -P $(DB_PORT) -u root shutdown 2>/dev/null || \
 	  pkill -f mysqld || true
 
 db-status:
-	@echo "$(CYAN)>> Etat MariaDB :$(RESET)"
+	@printf "\033[36m>> Etat MariaDB :\033[0m\n"
 	@mysqladmin -h $(DB_HOST) -P $(DB_PORT) \
 	            -u $(DB_USER) -p$(DB_PASS) status 2>/dev/null \
-	  && echo "$(GREEN)OK Serveur actif$(RESET)" \
-	  || echo "$(RED)KO Serveur inaccessible$(RESET)"
+	  && printf "\033[32mOK Serveur actif\033[0m\n" \
+	  || printf "\033[31mKO Serveur inaccessible\033[0m\n"
 
 db-create:
-	@echo "$(BOLD)$(YELLOW)>> Creation du schema (creation_lego.sql)...$(RESET)"
+	@printf "\033[1m\033[33m>> Creation du schema (creation_lego.sql)...\033[0m\n"
 	mysql -h $(DB_HOST) -P $(DB_PORT) \
 	      -u $(DB_USER) -p$(DB_PASS) \
 	      $(DB_NAME) < $(BD_DIR)/creation_lego.sql
-	@echo "$(GREEN)OK Schema cree$(RESET)"
+	@printf "\033[32mOK Schema cree\033[0m\n"
 
 db-drop:
-	@echo "$(RED)>> Suppression des tables (destruction_lego.sql)...$(RESET)"
+	@printf "\033[31m>> Suppression des tables (destruction_lego.sql)...\033[0m\n"
 	mysql -h $(DB_HOST) -P $(DB_PORT) \
 	      -u $(DB_USER) -p$(DB_PASS) \
 	      $(DB_NAME) < $(BD_DIR)/destruction_lego.sql
-	@echo "$(YELLOW)OK Tables supprimees$(RESET)"
+	@printf "\033[33mOK Tables supprimees\033[0m\n"
 
 db-import:
-	@echo "$(BOLD)$(YELLOW)>> Import des fichiers CSV...$(RESET)"
+	@printf "\033[1m\033[33m>> Import des fichiers CSV...\033[0m\n"
 	@for csv in $(BD_DIR)/*.csv; do \
 	  table=$$(basename $$csv .csv); \
-	  echo "  -> Import $$table depuis $$csv"; \
+	  printf "  -> Import $$table depuis $$csv\n"; \
 	  mysql -h $(DB_HOST) -P $(DB_PORT) \
 	        -u $(DB_USER) -p$(DB_PASS) \
 	        --local-infile=1 \
@@ -170,13 +159,13 @@ db-import:
 	     LINES TERMINATED BY '\n' \
 	     IGNORE 1 ROWS;"; \
 	done
-	@echo "$(GREEN)OK Import CSV termine$(RESET)"
+	@printf "\033[32mOK Import CSV termine\033[0m\n"
 
 db-reset: db-drop db-create db-import
-	@echo "$(GREEN)OK Base reinitalisee$(RESET)"
+	@printf "\033[32mOK Base reinitialisee\033[0m\n"
 
 db-shell:
-	@echo "$(CYAN)>> Connexion a $(DB_NAME)...$(RESET)"
+	@printf "\033[36m>> Connexion a $(DB_NAME)...\033[0m\n"
 	mysql -h $(DB_HOST) -P $(DB_PORT) \
 	      -u $(DB_USER) -p$(DB_PASS) \
 	      $(DB_NAME)
@@ -186,23 +175,23 @@ db-shell:
 # ============================================================
 
 install-jdbc:
-	@echo "$(CYAN)>> Installation du JAR JDBC dans ~/.m2...$(RESET)"
+	@printf "\033[36m>> Installation du JAR JDBC dans ~/.m2...\033[0m\n"
 	@test -n "$(MARIADB_JDBC_JAR)" || \
-	  (echo "$(RED)KO MARIADB_JDBC_JAR non defini. Lancer depuis l'env devenv$(RESET)" && exit 1)
+	  (printf "\033[31mKO MARIADB_JDBC_JAR non defini. Lancer depuis nix develop\033[0m\n" && exit 1)
 	mvn install:install-file \
 	  -Dfile="$(MARIADB_JDBC_JAR)" \
 	  -DgroupId=org.mariadb.jdbc \
 	  -DartifactId=mariadb-java-client \
 	  -Dversion=3.3.3 \
 	  -Dpackaging=jar
-	@echo "$(GREEN)OK JAR installe$(RESET)"
+	@printf "\033[32mOK JAR installe\033[0m\n"
 
 check-env:
-	@command -v java  >/dev/null 2>&1 || (echo "$(RED)KO java introuvable$(RESET)"  && exit 1)
-	@command -v mvn   >/dev/null 2>&1 || (echo "$(RED)KO mvn introuvable$(RESET)"   && exit 1)
-	@command -v mysql >/dev/null 2>&1 || (echo "$(RED)KO mysql introuvable$(RESET)" && exit 1)
+	@command -v java  >/dev/null 2>&1 || (printf "\033[31mKO java introuvable\033[0m\n"  && exit 1)
+	@command -v mvn   >/dev/null 2>&1 || (printf "\033[31mKO mvn introuvable\033[0m\n"   && exit 1)
+	@command -v mysql >/dev/null 2>&1 || (printf "\033[31mKO mysql introuvable\033[0m\n" && exit 1)
 	@test -n "$(JAVAFX_HOME)" || \
-	  (echo "$(RED)KO JAVAFX_HOME non defini. Lancer depuis l'env devenv$(RESET)" && exit 1)
+	  (printf "\033[31mKO JAVAFX_HOME non defini. Lancer depuis nix develop\033[0m\n" && exit 1)
 
 $(JAR_FILE):
 	$(MAKE) build

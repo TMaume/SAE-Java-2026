@@ -15,7 +15,7 @@
         };
 
         jdk    = pkgs.jdk21;
-        javafx = pkgs.javafx21;
+        javafx = pkgs.openjfx21;
 
       in {
         devShells.default = pkgs.mkShell {
