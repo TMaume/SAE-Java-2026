@@ -39,7 +39,6 @@ public class Piece {
         couleur = newVar;
     }
 
-
     public String toString() {
         return "Pièce n°" + numPiece + " : " + nomPiece;
     }

@@ -23,6 +23,7 @@ STRUCTURE DU DÉVELOPPEMENT : RÉPARTITION DES 12 CLASSES
 1. Classe : Piece           [Statut: WIP]
 2. Classe : ContenusFig     [Statut: ]
 3. Classe : Fig             [Statut: ]
+4. Classe : EtatBoite       [Status: ]
 
 ------------------------------------------------------------------------
 
