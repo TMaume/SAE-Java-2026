@@ -1,5 +1,3 @@
-
-
 public class ContenuFigurine {
 
     private int quantite;

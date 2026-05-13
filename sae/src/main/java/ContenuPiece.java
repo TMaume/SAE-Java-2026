@@ -1,4 +1,3 @@
-
 public class ContenuPiece {
 
     private int quantite;

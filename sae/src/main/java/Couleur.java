@@ -1,5 +1,3 @@
-
-
 public class Couleur {
 
     private int idCoul;

@@ -1,4 +1,3 @@
-
 public class Categorie {
 
     private int idCat;
