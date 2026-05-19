@@ -1,5 +1,7 @@
 package BD;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Figurine {
 	private final ConnexionMySQL connexion;
@@ -21,5 +23,117 @@ public class Figurine {
 
 	protected PreparedStatement prepareStatement(String sql) throws SQLException {
 		return connexion.prepareStatement(sql);
+	}
+
+	public static final class FigurineRow {
+		private final String idFig;
+		private final String nomFig;
+		private final Integer nbParties;
+
+		public FigurineRow(String idFig, String nomFig, Integer nbParties) {
+			this.idFig = idFig;
+			this.nomFig = nomFig;
+			this.nbParties = nbParties;
+		}
+
+		public String getIdFig() {
+			return idFig;
+		}
+
+		public String getNomFig() {
+			return nomFig;
+		}
+
+		public Integer getNbParties() {
+			return nbParties;
+		}
+	}
+
+	public int insererFigurine(FigurineRow f) {
+		if (f == null) {
+			throw new IllegalArgumentException("figurine");
+		}
+		String sql = "INSERT INTO FIGURINE (idfig, nomfig, nbparties) VALUES (?, ?, ?)";
+		try (PreparedStatement ps = prepareStatement(sql)) {
+			ps.setString(1, f.getIdFig());
+			ps.setString(2, f.getNomFig());
+			if (f.getNbParties() == null) {
+				ps.setNull(3, Types.INTEGER);
+			} else {
+				ps.setInt(3, f.getNbParties());
+			}
+			return ps.executeUpdate();
+		} catch (SQLException e) {
+			System.err.println("Erreur SQL insererFigurine: " + e.getMessage());
+			return 0;
+		}
+	}
+
+	public int effacerFigurine(String idFig) {
+		String sql = "DELETE FROM FIGURINE WHERE idfig = ?";
+		try (PreparedStatement ps = prepareStatement(sql)) {
+			ps.setString(1, idFig);
+			return ps.executeUpdate();
+		} catch (SQLException e) {
+			System.err.println("Erreur SQL effacerFigurine: " + e.getMessage());
+			return 0;
+		}
+	}
+
+	public int majFigurine(FigurineRow f) {
+		if (f == null) {
+			throw new IllegalArgumentException("figurine");
+		}
+		String sql = "UPDATE FIGURINE SET nomfig = ?, nbparties = ? WHERE idfig = ?";
+		try (PreparedStatement ps = prepareStatement(sql)) {
+			ps.setString(1, f.getNomFig());
+			if (f.getNbParties() == null) {
+				ps.setNull(2, Types.INTEGER);
+			} else {
+				ps.setInt(2, f.getNbParties());
+			}
+			ps.setString(3, f.getIdFig());
+			return ps.executeUpdate();
+		} catch (SQLException e) {
+			System.err.println("Erreur SQL majFigurine: " + e.getMessage());
+			return 0;
+		}
+	}
+
+	public FigurineRow rechercherFigurine(String idFig) {
+		String sql = "SELECT idfig, nomfig, nbparties FROM FIGURINE WHERE idfig = ?";
+		try (PreparedStatement ps = prepareStatement(sql)) {
+			ps.setString(1, idFig);
+			try (ResultSet rs = ps.executeQuery()) {
+				if (!rs.next()) {
+					return null;
+				}
+				return new FigurineRow(
+					rs.getString("idfig"),
+					rs.getString("nomfig"),
+					(Integer) rs.getObject("nbparties")
+				);
+			}
+		} catch (SQLException e) {
+			System.err.println("Erreur SQL rechercherFigurine: " + e.getMessage());
+			return null;
+		}
+	}
+
+	public List<FigurineRow> listeDesFigurines() {
+		ArrayList<FigurineRow> res = new ArrayList<>();
+		String sql = "SELECT idfig, nomfig, nbparties FROM FIGURINE ORDER BY nomfig";
+		try (Statement st = createStatement(); ResultSet rs = st.executeQuery(sql)) {
+			while (rs.next()) {
+				res.add(new FigurineRow(
+					rs.getString("idfig"),
+					rs.getString("nomfig"),
+					(Integer) rs.getObject("nbparties")
+				));
+			}
+		} catch (SQLException e) {
+			System.err.println("Erreur SQL listeDesFigurines: " + e.getMessage());
+		}
+		return res;
 	}
 }
