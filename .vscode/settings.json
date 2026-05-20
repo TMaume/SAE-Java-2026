@@ -1,3 +1,8 @@
 {
-    "java.configuration.updateBuildConfiguration": "interactive"
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "java.project.sourcePaths": [
+        "sae/src/main/java",
+        "sae/src/test/java"
+    ],
+    "java.project.outputPath": "target/classes"
 }

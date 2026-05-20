@@ -1,51 +1,48 @@
-public class Couleur {
+package App;
 
-    private int idCoul;
-    private String nomCoul;
+public class Couleur {
+    private final int idCouleur;
+    private String nom;
     private String rgb;
     private boolean transparent;
 
-    public Couleur() {
+    public Couleur(int idCouleur, String nom, String rgb, boolean transparent) {
+        this.idCouleur = idCouleur;
+        this.nom = nom == null ? "" : nom;
+        this.rgb = rgb == null ? "" : rgb;
+        this.transparent = transparent;
     }
 
-    public void setIdCoul(int newVar) {
-        idCoul = newVar;
+    public int getIdCouleur() {
+        return idCouleur;
     }
 
-    public int getIdCoul() {
-        return idCoul;
+    public String getNom() {
+        return nom;
     }
 
-    public void setNomCoul(String newVar) {
-        nomCoul = newVar;
-    }
-
-    public String getNomCoul() {
-        return nomCoul;
-    }
-
-    public void setRgb(String newVar) {
-        rgb = newVar;
+    public void setNom(String nom) {
+        this.nom = nom == null ? "" : nom;
     }
 
     public String getRgb() {
         return rgb;
     }
 
-    public void setTransparent(boolean newVar) {
-        transparent = newVar;
+    public void setRgb(String rgb) {
+        this.rgb = rgb == null ? "" : rgb;
     }
 
-    public boolean getTransparent() {
+    public boolean isTransparent() {
         return transparent;
     }
 
-    public String obtenirNom() {
+    public void setTransparent(boolean transparent) {
+        this.transparent = transparent;
     }
 
-    public boolean estTransparente() {
-    }
-
-    public String afficher() {
+    @Override
+    public String toString() {
+        return idCouleur + " - " + nom + " (" + rgb + ")";
     }
 }

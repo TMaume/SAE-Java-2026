@@ -1,47 +1,38 @@
-import java.util.List;
+package App;
 
 public class Theme {
+    private final int idTheme;
+    private String nom;
+    private Integer idThemePere;
 
-    private int idTheme;
-    private String nomTheme;
-    private Theme parentTheme;
-
-    public Theme() {
-    }
-
-    public void setIdTheme(int newVar) {
-        idTheme = newVar;
+    public Theme(int idTheme, String nom, Integer idThemePere) {
+        this.idTheme = idTheme;
+        this.nom = nom == null ? "" : nom;
+        this.idThemePere = idThemePere;
     }
 
     public int getIdTheme() {
         return idTheme;
     }
 
-    public void setNomTheme(String newVar) {
-        nomTheme = newVar;
+    public String getNom() {
+        return nom;
     }
 
-    public String getNomTheme() {
-        return nomTheme;
+    public void setNom(String nom) {
+        this.nom = nom == null ? "" : nom;
     }
 
-    public void setParentTheme(Theme newVar) {
-        parentTheme = newVar;
+    public Integer getIdThemePere() {
+        return idThemePere;
     }
 
-    public Theme getParentTheme() {
-        return parentTheme;
+    public void setIdThemePere(Integer idThemePere) {
+        this.idThemePere = idThemePere;
     }
 
-    public List obtenirSousThemes() {
-    }
-
-    public boolean estRacine() {
-    }
-
-    public String obtenirNom() {
-    }
-
-    public Theme obtenirParent() {
+    @Override
+    public String toString() {
+        return idTheme + " - " + nom;
     }
 }

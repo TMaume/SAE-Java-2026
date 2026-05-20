@@ -1,30 +1,28 @@
+package App;
+
 public class Categorie {
+    private final int idCategorie;
+    private String nom;
 
-    private int idCat;
-    private String nomCat;
-
-    public Categorie() {
+    public Categorie(int idCategorie, String nom) {
+        this.idCategorie = idCategorie;
+        this.nom = nom == null ? "" : nom;
     }
 
-    public void setIdCat(int newVar) {
-        idCat = newVar;
+    public int getIdCategorie() {
+        return idCategorie;
     }
 
-    public int getIdCat() {
-        return idCat;
+    public String getNom() {
+        return nom;
     }
 
-    public void setNomCat(String newVar) {
-        nomCat = newVar;
+    public void setNom(String nom) {
+        this.nom = nom == null ? "" : nom;
     }
 
-    public String getNomCat() {
-        return nomCat;
-    }
-
-    public String obtenirNom() {
-    }
-
-    public String afficher() {
+    @Override
+    public String toString() {
+        return idCategorie + " - " + nom;
     }
 }
