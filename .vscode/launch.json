@@ -3,6 +3,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "Main",
+            "projectName": "sae"
+        },
+        {
+            "type": "java",
             "name": "Lancer App.Main",
             "request": "launch",
             "mainClass": "App.Main",
