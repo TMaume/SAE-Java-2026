@@ -10,10 +10,10 @@ import java.util.Map;
 import java.util.Set;
 
 public class CatalogueService {
-    private final CatalogueRepository depot;
+    private final CatalogueInterface depot;
     private final GestionConfirmation confirmation;
 
-    public CatalogueService(CatalogueRepository depot, GestionConfirmation confirmation) {
+    public CatalogueService(CatalogueInterface depot, GestionConfirmation confirmation) {
         if (depot == null) {
             throw new IllegalArgumentException("depot");
         }

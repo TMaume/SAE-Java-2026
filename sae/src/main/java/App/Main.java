@@ -22,7 +22,7 @@ public class Main {
             return;
         }
 
-        CatalogueRepository depot = creerDepotBase(ui);
+        CatalogueInterface depot = creerDepotBase(ui);
         if (depot == null) {
             scanner.close();
             return;
@@ -81,12 +81,12 @@ public class Main {
         scanner.close();
     }
 
-    private static CatalogueRepository creerDepotBase(ConsoleUi ui) {
+    private static CatalogueInterface creerDepotBase(ConsoleUi ui) {
         try {
             ConnexionMySQL connexion = new ConnexionMySQL();
             connexion.connecter(null, null, null, null);
             ui.afficherLigne("Connexion a la base etablie.");
-            return new DbCatalogueRepository(connexion);
+            return new DbCatalogueInterface(connexion);
         } catch (Exception e) {
             ui.afficherLigne("Connexion impossible a la base: " + e.getMessage());
             return null;

@@ -2,7 +2,7 @@ package App;
 
 import java.util.List;
 
-public interface CatalogueRepository {
+public interface CatalogueInterface {
     List<Boite> listerBoites();
 
     Boite rechercherBoiteParNumero(String numero);
