@@ -24,7 +24,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DbCatalogueRepository implements CatalogueRepository {
+public class DbCatalogueInterface implements CatalogueInterface {
     private final BoiteBD boiteBD;
     private final ThemeBD themeBD;
     private final CategorieBD categorieBD;
@@ -36,7 +36,7 @@ public class DbCatalogueRepository implements CatalogueRepository {
     private final ContenirfBD contenirfBD;
     private final ContenirbBD contenirbBD;
 
-    public DbCatalogueRepository(ConnexionMySQL connexion) {
+    public DbCatalogueInterface(ConnexionMySQL connexion) {
         if (connexion == null) {
             throw new IllegalArgumentException("connexion");
         }
