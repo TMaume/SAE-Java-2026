@@ -2,7 +2,6 @@ package BD;
 
 import App.Piece;
 import App.Categorie;
-import App.Couleur; 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;

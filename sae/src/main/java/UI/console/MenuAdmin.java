@@ -34,8 +34,8 @@ public class MenuAdmin {
         }
         
         Boite b = new Boite(numero, nom, annee, theme);
-        // On suppose que tu vas implémenter ajouterBoite dans BoiteService (qui appelle insererBoite de BoiteBD)
-        boiteService.rechercherBoiteParNumero(numero); // Check rapide existance
+
+        boiteService.rechercherBoiteParNumero(numero); 
         ui.afficherLigne("Fonctionnalité d'ajout à lier avec ton BoiteService.");
     }
 
@@ -71,6 +71,16 @@ public class MenuAdmin {
             ui.afficherLigne("Thème créé !");
         } else {
             ui.afficherLigne("Erreur lors de la création.");
+        }
+    }
+
+    static void majContenuBoite(ConsoleUi ui, BoiteService boiteService) {
+        String numBoite = ui.lireTexte("Numéro de la boîte à modifier : ");
+        App.Boite b = boiteService.rechercherBoiteParNumero(numBoite);
+        if (b != null) {
+            ui.afficherLigne("Boîte trouvée. (L'ajout/suppression de pièces est à implémenter)");
+        } else {
+            ui.afficherLigne("Boîte introuvable.");
         }
     }
 }

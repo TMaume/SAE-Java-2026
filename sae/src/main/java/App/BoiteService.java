@@ -35,18 +35,15 @@ public class BoiteService {
         return boiteBD.listeBoitesParTheme(idTheme);
     }
 
-    // Méthode de création de boîte personnalisée respectant les règles métier
+    // Méthode de création de boîte personnalisée
     public Boite composerBoitePersonnalisee(String nom, Theme themePersonnalise, List<PieceQuantite> pieces, boolean forcerCreation) throws BoiteIdentiqueException {
         
         // 1. Vérification si une boîte identique existe déjà
         if (!forcerCreation && boiteIdentiqueExiste(pieces)) {
-            // Au lieu d'utiliser ConsoleConfirmation, on lève une erreur métier
-            // Le menu UI attrapera cette erreur, demandera confirmation à l'utilisateur, 
-            // et relancera cette méthode avec forcerCreation = true si l'utilisateur dit oui.
             throw new BoiteIdentiqueException("Une boîte contenant exactement ces pièces existe déjà.");
         }
 
-        // 2. Génération d'un identifiant unique (règle métier)
+        // 2. Génération d'un identifiant unique
         String numeroUnique = "PERSO-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
 
         // 3. Création de l'objet
@@ -56,17 +53,60 @@ public class BoiteService {
             nouvelleBoite.ajouterPiece(pq);
         }
         
-        // 4. Sauvegarde en BD (il faudra d'abord insérer la boite, puis son contenu dans les tables d'association)
+        // 4. Sauvegarde en BD 
         boiteBD.insererBoite(nouvelleBoite);
-        // Note: Ici, tu ajouteras tes appels à insererContenu, insererContenirp, etc.
         
         return nouvelleBoite;
     }
 
-    // Logique de vérification (à compléter selon tes besoins)
+    // 1. Charger une boîte AVEC tout son contenu (Pièces, Figurines)
+    public Boite chargerBoiteComplete(String numero) {
+        Boite b = boiteBD.rechercherBoite(numero);
+        if (b == null) return null;
+
+        // On cherche le(s) contenu(s) lié(s) à cette boîte
+        List<Contenu.ContenuDetail> listContenus = contenuBD.listeContenusParBoite(numero);
+        for (Contenu.ContenuDetail c : listContenus) {
+            int idContenu = c.getIdCont();
+
+            // On ajoute les pièces
+            List<PieceQuantite> pieces = contenirpBD.listeContenirpParContenu(idContenu);
+            for (PieceQuantite pq : pieces) {
+                b.ajouterPiece(pq);
+            }
+
+            // On ajoute les figurines
+            List<FigurineQuantite> figurines = contenirfBD.listeContenirfParContenu(idContenu);
+            for (FigurineQuantite fq : figurines) {
+                b.ajouterFigurine(fq);
+            }
+        }
+        return b;
+    }
+
+    // 2. Calculer les statistiques d'une boîte
+    public App.BoiteStats calculerStatsBoite(String numero) {
+        Boite b = chargerBoiteComplete(numero);
+        if (b == null) return null;
+
+        int totalPieces = 0;
+        int totalSupplements = 0;
+        java.util.Map<App.Couleur, Integer> repartitionCouleurs = new java.util.LinkedHashMap<>();
+
+        for (PieceQuantite pq : b.getPieces()) {
+            totalPieces += pq.getQuantite();
+            if (pq.isEnSupplement()) {
+                totalSupplements += pq.getQuantite();
+            }
+            App.Couleur c = pq.getPiece().getCouleur();
+            if (c != null) {
+                repartitionCouleurs.put(c, repartitionCouleurs.getOrDefault(c, 0) + pq.getQuantite());
+            }
+        }
+        return new App.BoiteStats(totalPieces, totalSupplements, repartitionCouleurs);
+    }
+
     private boolean boiteIdentiqueExiste(List<PieceQuantite> pieces) {
-        // Ta logique pour vérifier si une boîte possède déjà ces pièces
-        // Tu peux rapatrier ton code de l'ancien DbCatalogueInterface ici.
         return false; 
     }
 }
