@@ -1,13 +1,13 @@
-package ui.console;
+package UI.console;
 
 import java.util.Scanner;
 
 import App.AuthentificationService;
-import App.CatalogueRepository;
+import App.CatalogueInterface;
 import App.CatalogueService;
 import App.CollectionService;
 import App.ConsoleConfirmation;
-import App.DbCatalogueRepository;
+import App.DbCatalogueInterface;
 import App.GestionUtilisateurs;
 import App.RoleUtilisateur;
 import App.Utilisateur;
@@ -30,7 +30,7 @@ public class MenuConsole {
             return;
         }
 
-        CatalogueRepository depot = creerDepotBase(ui);
+        CatalogueInterface depot = creerDepotBase(ui);
         if (depot == null) {
             scanner.close();
             return;
@@ -89,12 +89,12 @@ public class MenuConsole {
         scanner.close();
     }
 
-    private static CatalogueRepository creerDepotBase(ConsoleUi ui) {
+    private static CatalogueInterface creerDepotBase(ConsoleUi ui) {
         try {
             ConnexionMySQL connexion = new ConnexionMySQL();
             connexion.connecter(null, null, null, null);
             ui.afficherLigne("Connexion a la base etablie.");
-            return new DbCatalogueRepository(connexion);
+            return new DbCatalogueInterface(connexion);
         } catch (Exception e) {
             ui.afficherLigne("Connexion impossible a la base: " + e.getMessage());
             return null;

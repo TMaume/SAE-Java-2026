@@ -1,4 +1,4 @@
-package ui.console;
+package UI.console;
 
 import java.util.ArrayList;
 import java.util.List;

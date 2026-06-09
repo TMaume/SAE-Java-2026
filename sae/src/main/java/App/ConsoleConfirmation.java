@@ -1,6 +1,6 @@
 package App;
 
-import ui.console.ConsoleUi;
+import UI.console.ConsoleUi;
 
 public class ConsoleConfirmation implements GestionConfirmation {
     private final ConsoleUi ui;

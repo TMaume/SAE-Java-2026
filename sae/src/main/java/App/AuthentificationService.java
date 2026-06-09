@@ -1,6 +1,6 @@
 package App;
 
-import ui.console.ConsoleUi;
+import UI.console.ConsoleUi;
 
 public class AuthentificationService {
     private final ConsoleUi ui;
