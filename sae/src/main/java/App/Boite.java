@@ -1,75 +1,113 @@
-abstract public class Boite {
+package App;
 
-    private String numBoite;
-    private String nomBoite;
-    private int annee;
-    private int nbPieces;
-    private EtatBoite etatBoite;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Boite {
+    private final String numero;
+    private String nom;
+    private Integer annee;
     private Theme theme;
+    private Integer nbPieces;
+    private boolean personnalisee;
+    private final List<PieceQuantite> pieces = new ArrayList<>();
+    private final List<FigurineQuantite> figurines = new ArrayList<>();
+    private final List<BoiteQuantite> boitesIncluses = new ArrayList<>();
 
-    public Boite() {
+    public Boite(String numero, String nom, Integer annee, Theme theme) {
+        if (numero == null || numero.isBlank()) {
+            throw new IllegalArgumentException("numero");
+        }
+        this.numero = numero;
+        this.nom = nom == null ? "" : nom;
+        this.annee = annee;
+        this.theme = theme;
     }
 
-    public void setNumBoite(String newVar) {
-        numBoite = newVar;
+    public String getNumero() {
+        return numero;
     }
 
-    public String getNumBoite() {
-        return numBoite;
+    public String getNom() {
+        return nom;
     }
 
-    public void setNomBoite(String newVar) {
-        nomBoite = newVar;
+    public void setNom(String nom) {
+        this.nom = nom == null ? "" : nom;
     }
 
-    public String getNomBoite() {
-        return nomBoite;
-    }
-
-    public void setAnnee(int newVar) {
-        annee = newVar;
-    }
-
-    public int getAnnee() {
+    public Integer getAnnee() {
         return annee;
     }
 
-    public void setNbPieces(int newVar) {
-        nbPieces = newVar;
-    }
-
-    public int getNbPieces() {
-        return nbPieces;
-    }
-
-    public void setEtatBoite(EtatBoite newVar) {
-        etatBoite = newVar;
-    }
-
-    public EtatBoite getEtatBoite() {
-        return etatBoite;
-    }
-
-    public void setTheme(Theme newVar) {
-        theme = newVar;
+    public void setAnnee(Integer annee) {
+        this.annee = annee;
     }
 
     public Theme getTheme() {
         return theme;
     }
 
-    public Contenu obtenirContenu() {
+    public void setTheme(Theme theme) {
+        this.theme = theme;
     }
 
-    public String obtenirStatistiques() {
+    public Integer getNbPieces() {
+        return nbPieces == null ? calculerNbPieces() : nbPieces;
     }
 
-    public String obtenirNumero() {
+    public void setNbPieces(Integer nbPieces) {
+        this.nbPieces = nbPieces;
     }
 
-    public String obtenirNom() {
+    public boolean isPersonnalisee() {
+        return personnalisee;
     }
 
-    public Theme obtenirTheme() {
+    public void setPersonnalisee(boolean personnalisee) {
+        this.personnalisee = personnalisee;
+    }
+
+    public List<PieceQuantite> getPieces() {
+        return pieces;
+    }
+
+    public List<FigurineQuantite> getFigurines() {
+        return figurines;
+    }
+
+    public List<BoiteQuantite> getBoitesIncluses() {
+        return boitesIncluses;
+    }
+
+    public void ajouterPiece(PieceQuantite piece) {
+        if (piece != null) {
+            pieces.add(piece);
+        }
+    }
+
+    public void ajouterFigurine(FigurineQuantite figurine) {
+        if (figurine != null) {
+            figurines.add(figurine);
+        }
+    }
+
+    public void ajouterBoiteIncluse(BoiteQuantite boite) {
+        if (boite != null) {
+            boitesIncluses.add(boite);
+        }
+    }
+
+    public int calculerNbPieces() {
+        int total = 0;
+        for (PieceQuantite piece : pieces) {
+            total += piece.getQuantite();
+        }
+        return total;
+    }
+
+    @Override
+    public String toString() {
+        return numero + " - " + nom;
     }
 }

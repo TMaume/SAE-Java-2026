@@ -1,42 +1,41 @@
+package App;
+
 public class Figurine {
+    private final String idFigurine;
+    private String nom;
+    private Integer nbParties;
 
-    private String idFig;
-    private String nomFig;
-    private int nbParties;
-
-    public Figurine() {
+    public Figurine(String idFigurine, String nom, Integer nbParties) {
+        if (idFigurine == null || idFigurine.isBlank()) {
+            throw new IllegalArgumentException("idFigurine");
+        }
+        this.idFigurine = idFigurine;
+        this.nom = nom == null ? "" : nom;
+        this.nbParties = nbParties;
     }
 
-    public void setIdFig(String newVar) {
-        idFig = newVar;
+    public String getIdFigurine() {
+        return idFigurine;
     }
 
-    public String getIdFig() {
-        return idFig;
+    public String getNom() {
+        return nom;
     }
 
-    public void setNomFig(String newVar) {
-        nomFig = newVar;
+    public void setNom(String nom) {
+        this.nom = nom == null ? "" : nom;
     }
 
-    public String getNomFig() {
-        return nomFig;
-    }
-
-    public void setNbParties(int newVar) {
-        nbParties = newVar;
-    }
-
-    public int getNbParties() {
+    public Integer getNbParties() {
         return nbParties;
     }
 
-    public String obtenirNom() {
+    public void setNbParties(Integer nbParties) {
+        this.nbParties = nbParties;
     }
 
-    public int obtenirNombreParties() {
-    }
-
-    public String afficher() {
+    @Override
+    public String toString() {
+        return idFigurine + " - " + nom;
     }
 }
