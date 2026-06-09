@@ -1,5 +1,7 @@
 package App;
 
+import ui.console.ConsoleUi;
+
 public class AuthentificationService {
     private final ConsoleUi ui;
     private final GestionUtilisateurs gestion;
