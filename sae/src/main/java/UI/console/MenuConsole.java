@@ -1,103 +1,86 @@
 package UI.console;
 
 import java.util.Scanner;
-
-import App.AuthentificationService;
-import App.CatalogueInterface;
-import App.CatalogueService;
+import App.BoiteService;
+import App.PieceService;
+import App.ThemeService;
 import App.CollectionService;
-import App.ConsoleConfirmation;
-import App.DbCatalogueInterface;
 import App.GestionUtilisateurs;
 import App.RoleUtilisateur;
 import App.Utilisateur;
-import BD.ConnexionMySQL;
+import BD.*;
 
 public class MenuConsole {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         ConsoleUi ui = new ConsoleUi(scanner);
-        ConsoleConfirmation confirmation = new ConsoleConfirmation(ui);
 
         ui.afficherTitre("Bienvenue dans Briqu'IUTO - Gestionnaire de Lego");
 
         GestionUtilisateurs gestionUtilisateurs = new GestionUtilisateurs(GestionUtilisateurs.cheminParDefaut());
         AuthentificationService authentification = new AuthentificationService(ui, gestionUtilisateurs);
         Utilisateur utilisateur = authentification.demarrer();
+        
         if (utilisateur == null) {
             ui.afficherLigne("Au revoir !");
             scanner.close();
             return;
         }
 
-        CatalogueInterface depot = creerDepotBase(ui);
-        if (depot == null) {
-            scanner.close();
-            return;
-        }
-        CatalogueService catalogue = new CatalogueService(depot, confirmation);
-        CollectionService collection = new CollectionService();
-
-        boolean estAdmin = utilisateur.getRole() == RoleUtilisateur.ADMIN;
-
-        boolean continuer = true;
-        while (continuer) {
-            ui.afficherTitre("Menu Principal");
-            ui.afficherLigne("Connecte : " + utilisateur.getIdentifiant() + " (" + utilisateur.getRole() + ")");
-            ui.afficherLigne("--- Utilisateur (Collectionneur) ---");
-            ui.afficherLigne("1. Rechercher une boîte (numéro ou nom)");
-            ui.afficherLigne("2. Consulter le détail d'une boîte");
-            ui.afficherLigne("3. Explorer les boîtes par thème");
-            ui.afficherLigne("4. Afficher les statistiques d'une boîte");
-            ui.afficherLigne("5. Rechercher les boîtes contenant une pièce précise");
-            ui.afficherLigne("6. Gérer ma collection personnelle (Ajout, État, Pièces manquantes)");
-            ui.afficherLigne("7. Composer une boîte personnalisée");
-            if (estAdmin) {
-                ui.afficherLigne("--- Administrateur ---");
-                ui.afficherLigne("8. Ajouter une boîte dans la base");
-                ui.afficherLigne("9. Ajouter une pièce");
-                ui.afficherLigne("10. Créer un thème");
-                ui.afficherLigne("11. Mettre à jour le contenu d'une boîte (Ajout pièce/figurine)");
-            }
-            ui.afficherLigne("0. Quitter");
-
-            int maxChoix = estAdmin ? 11 : 7;
-            int choix = ui.lireChoix("Votre choix : ", 0, maxChoix);
-
-            try {
-                switch (choix) {
-                    case 0:
-                        continuer = false;
-                        ui.afficherLigne("Au revoir !");
-                        break;
-                    case 1: MenuUser.rechercherBoite(ui, catalogue); break;
-                    case 2: MenuUser.consulterDetailBoite(ui, catalogue); break;
-                    case 3: MenuUser.explorerParTheme(ui, catalogue); break;
-                    case 4: MenuUser.afficherStatsBoite(ui, catalogue); break;
-                    case 5: MenuUser.rechercherParPiece(ui, catalogue); break;
-                    case 6: MenuUser.gererCollection(ui, catalogue, collection); break;
-                    case 7: MenuUser.composerBoitePerso(ui, catalogue); break;
-                    case 8: MenuAdmin.ajouterBoite(ui, catalogue); break;
-                    case 9: MenuAdmin.ajouterPiece(ui, catalogue); break;
-                    case 10: MenuAdmin.creerTheme(ui, catalogue); break;
-                    case 11: MenuAdmin.majContenuBoite(ui, catalogue); break;
-                }
-            } catch (Exception e) {
-                ui.afficherLigne("Erreur inattendue : " + e.getMessage());
-            }
-        }
-        scanner.close();
-    }
-
-    private static CatalogueInterface creerDepotBase(ConsoleUi ui) {
         try {
+            // 1. Initialisation de la connexion BD
             ConnexionMySQL connexion = new ConnexionMySQL();
             connexion.connecter(null, null, null, null);
-            ui.afficherLigne("Connexion a la base etablie.");
-            return new DbCatalogueInterface(connexion);
+            ui.afficherLigne("Connexion à la base établie.");
+
+            // 2. Initialisation des classes d'accès aux données (BD)
+            BoiteBD boiteBD = new BoiteBD(connexion);
+            ThemeBD themeBD = new ThemeBD(connexion);
+            ThemeParentBD themeParentBD = new ThemeParentBD(connexion);
+            PieceBD pieceBD = new PieceBD(connexion);
+            CategorieBD categorieBD = new CategorieBD(connexion);
+            CouleurBD couleurBD = new CouleurBD(connexion);
+            Contenu contenuBD = new Contenu(connexion);
+            ContenirpBD contenirpBD = new ContenirpBD(connexion);
+            ContenirfBD contenirfBD = new ContenirfBD(connexion);
+            ContenirbBD contenirbBD = new ContenirbBD(connexion);
+
+            // 3. Initialisation des Services Métier (App)
+            ThemeService themeService = new ThemeService(themeBD, themeParentBD);
+            PieceService pieceService = new PieceService(pieceBD, categorieBD, couleurBD);
+            BoiteService boiteService = new BoiteService(boiteBD, contenuBD, contenirpBD, contenirfBD, contenirbBD);
+            
+            CollectionService collection = new CollectionService();
+
+            boolean estAdmin = utilisateur.getRole() == RoleUtilisateur.ADMIN;
+            boolean continuer = true;
+
+            while (continuer) {
+                ui.afficherTitre("Menu Principal");
+                if (estAdmin) {
+                    ui.afficherLigne("8. [Admin] Ajouter une boîte");
+                    ui.afficherLigne("9. [Admin] Ajouter une pièce");
+                    ui.afficherLigne("10. [Admin] Créer un thème");
+                } else {
+                    ui.afficherLigne("1. Rechercher une boîte");
+                    ui.afficherLigne("7. Composer une boîte personnalisée");
+                }
+                ui.afficherLigne("0. Quitter");
+
+                int choix = ui.lireChoix("Choix : ", 0, 11);
+                switch (choix) {
+                    case 0: continuer = false; break;
+                    case 1: MenuUser.rechercherBoite(ui, boiteService); break;
+                    case 7: MenuUser.composerBoitePerso(ui, boiteService, pieceService); break;
+                    case 8: if(estAdmin) MenuAdmin.ajouterBoite(ui, boiteService, themeService); break;
+                    case 9: if(estAdmin) MenuAdmin.ajouterPiece(ui, pieceService); break;
+                    case 10: if(estAdmin) MenuAdmin.creerTheme(ui, themeService); break;
+                }
+            }
+            connexion.close();
         } catch (Exception e) {
-            ui.afficherLigne("Connexion impossible a la base: " + e.getMessage());
-            return null;
+            ui.afficherLigne("Erreur inattendue : " + e.getMessage());
         }
+        scanner.close();
     }
 }

@@ -3,12 +3,12 @@ package App;
 public class Theme {
     private final int idTheme;
     private String nom;
-    private Integer idThemePere;
+    private Theme parent;
 
-    public Theme(int idTheme, String nom, Integer idThemePere) {
+    public Theme(int idTheme, String nom, Theme parent) {
         this.idTheme = idTheme;
         this.nom = nom == null ? "" : nom;
-        this.idThemePere = idThemePere;
+        this.parent = parent;
     }
 
     public int getIdTheme() {
@@ -23,12 +23,16 @@ public class Theme {
         this.nom = nom == null ? "" : nom;
     }
 
-    public Integer getIdThemePere() {
-        return idThemePere;
+    public Theme getParent() {
+        return parent;
     }
 
-    public void setIdThemePere(Integer idThemePere) {
-        this.idThemePere = idThemePere;
+    public void setParent(Theme parent) {
+        this.parent = parent;
+    }
+
+    public Integer getIdThemePere() {
+        return parent == null ? null : parent.getIdTheme();
     }
 
     @Override
