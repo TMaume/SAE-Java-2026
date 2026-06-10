@@ -44,10 +44,6 @@ public class ConnexionMySQL {
 	}
 
     	public boolean isConnecte() { return this.connecte;}
-
-		public Connection getConnection() {
-			return this.mysql;
-		}
 	public Statement createStatement() throws SQLException {
 		if (this.mysql == null) {
 			throw new SQLException("Connexion non initialisée");

@@ -5,8 +5,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import BD.CollectionBD;
-
 public class CollectionService {
     private final Map<String, CollectionItem> collection = new LinkedHashMap<>();
 
@@ -55,12 +53,5 @@ public class CollectionService {
 
     public List<CollectionItem> listerCollection() {
         return new ArrayList<>(collection.values());
-    }
-
-    public boolean sauvegarderCollection(String identifiant, CollectionBD depot) {
-        if (depot == null) {
-            throw new IllegalArgumentException("depot");
-        }
-        return depot.sauvegarderCollection(identifiant, listerCollection());
     }
 }
