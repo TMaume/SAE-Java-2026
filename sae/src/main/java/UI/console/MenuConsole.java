@@ -28,12 +28,10 @@ public class MenuConsole {
         }
 
         try {
-            // 1. Initialisation de la connexion BD
             ConnexionMySQL connexion = new ConnexionMySQL();
             connexion.connecter(null, null, null, null);
             ui.afficherLigne("Connexion à la base établie.");
 
-            // 2. Initialisation des classes d'accès aux données (BD)
             BoiteBD boiteBD = new BoiteBD(connexion);
             ThemeBD themeBD = new ThemeBD(connexion);
             ThemeParentBD themeParentBD = new ThemeParentBD(connexion);
@@ -45,10 +43,9 @@ public class MenuConsole {
             ContenirfBD contenirfBD = new ContenirfBD(connexion);
             ContenirbBD contenirbBD = new ContenirbBD(connexion);
 
-            // 3. Initialisation des Services Métier (App)
             ThemeService themeService = new ThemeService(themeBD, themeParentBD);
             PieceService pieceService = new PieceService(pieceBD, categorieBD, couleurBD);
-            BoiteService boiteService = new BoiteService(boiteBD, contenuBD, contenirpBD, contenirfBD, contenirbBD);
+            BoiteService boiteService = new BoiteService(boiteBD, contenuBD, contenirpBD, contenirfBD, contenirbBD, themeService);
             
             CollectionService collection = new CollectionService();
 
@@ -81,19 +78,16 @@ public class MenuConsole {
                 switch (choix) {
                     case 0: continuer = false; break;
                     case 1: MenuUser.rechercherBoite(ui, boiteService); break;
-                    
-                    // TODO: Méthodes à adapter à la nouvelle architecture N-Tiers
-                    // case 2: MenuUser.consulterDetailBoite(ui, boiteService); break;
-                    // case 3: MenuUser.explorerParTheme(ui, themeService, boiteService); break;
-                    // case 4: MenuUser.afficherStatsBoite(ui, boiteService); break;
-                    // case 5: MenuUser.rechercherParPiece(ui, pieceService, boiteService); break;
-                    // case 6: MenuUser.gererCollection(ui, collection, boiteService); break;
-                    
+                    case 2: MenuUser.consulterDetailBoite(ui, boiteService); break;
+                    case 3: MenuUser.explorerParTheme(ui, themeService, boiteService); break;
+                    case 4: MenuUser.afficherStatsBoite(ui, boiteService); break;
+                    case 5: MenuUser.rechercherParPiece(ui, pieceService, boiteService); break;
+                    case 6: MenuUser.gererCollection(ui, collection, boiteService); break;
                     case 7: MenuUser.composerBoitePerso(ui, boiteService, pieceService); break;
                     case 8: if(estAdmin) MenuAdmin.ajouterBoite(ui, boiteService, themeService); break;
                     case 9: if(estAdmin) MenuAdmin.ajouterPiece(ui, pieceService); break;
                     case 10: if(estAdmin) MenuAdmin.creerTheme(ui, themeService); break;
-                    // case 11: if(estAdmin) MenuAdmin.majContenuBoite(ui, boiteService); break;
+                    case 11: if(estAdmin) MenuAdmin.majContenuBoite(ui, boiteService, pieceService); break;
                 }
             }
             connexion.close();

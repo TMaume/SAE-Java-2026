@@ -74,13 +74,38 @@ public class MenuAdmin {
         }
     }
 
-    static void majContenuBoite(ConsoleUi ui, BoiteService boiteService) {
+    public static void majContenuBoite(ConsoleUi ui, BoiteService boiteService, PieceService pieceService) {
         String numBoite = ui.lireTexte("Numéro de la boîte à modifier : ");
-        App.Boite b = boiteService.rechercherBoiteParNumero(numBoite);
-        if (b != null) {
-            ui.afficherLigne("Boîte trouvée. (L'ajout/suppression de pièces est à implémenter)");
-        } else {
+        Boite b = boiteService.chargerBoiteComplete(numBoite);
+        
+        if (b == null) {
             ui.afficherLigne("Boîte introuvable.");
+            return;
+        }
+        
+        ui.afficherLigne("Modification du contenu de la boîte : " + b.getNom() + " (" + b.getNumero() + ")");
+        ui.afficherLigne("1. Ajouter une pièce");
+        ui.afficherLigne("2. Annuler");
+        int choix = ui.lireChoix("Choix : ", 1, 2);
+        
+        if (choix == 1) {
+            String numPiece = ui.lireTexte("Numéro de la pièce à ajouter : ");
+            Piece p = pieceService.rechercherPiece(numPiece);
+            
+            if (p != null) {
+                int qte = ui.lireEntier("Quantité : ");
+                boolean supp = ui.lireOuiNon("Est-ce une pièce en supplément (Extra) ? (o/n) : ");
+                
+                PieceQuantite pq = new PieceQuantite(p, qte, supp);
+                
+                if (boiteService.ajouterPieceABoite(numBoite, pq)) {
+                    ui.afficherLigne("Succès : Pièce ajoutée au contenu de la boîte !");
+                } else {
+                    ui.afficherLigne("Erreur : Impossible de lier la pièce. La boîte ne possède pas d'identifiant de contenu (Table CONTENU).");
+                }
+            } else {
+                ui.afficherLigne("Erreur : Pièce introuvable dans le catalogue. Veuillez d'abord la créer.");
+            }
         }
     }
 }

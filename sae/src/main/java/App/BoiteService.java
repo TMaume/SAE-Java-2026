@@ -14,13 +14,15 @@ public class BoiteService {
     private final ContenirpBD contenirpBD;
     private final ContenirfBD contenirfBD;
     private final ContenirbBD contenirbBD;
+    private final ThemeService themeService;
 
-    public BoiteService(BoiteBD boiteBD, Contenu contenuBD, ContenirpBD contenirpBD, ContenirfBD contenirfBD, ContenirbBD contenirbBD) {
+    public BoiteService(BoiteBD boiteBD, Contenu contenuBD, ContenirpBD contenirpBD, ContenirfBD contenirfBD, ContenirbBD contenirbBD, ThemeService themeService) {
         this.boiteBD = boiteBD;
         this.contenuBD = contenuBD;
         this.contenirpBD = contenirpBD;
         this.contenirfBD = contenirfBD;
         this.contenirbBD = contenirbBD;
+        this.themeService = themeService;
     }
 
     public List<Boite> listerBoites() {
@@ -31,11 +33,21 @@ public class BoiteService {
         return boiteBD.rechercherBoite(numero);
     }
 
-    public List<Boite> rechercherBoitesParTheme(int idTheme) {
-        return boiteBD.listeBoitesParTheme(idTheme);
+    public List<Boite> rechercherBoitesParTheme(Theme theme) {
+        List<Boite> resultat = new ArrayList<>();
+        if (theme == null) return resultat;
+
+        resultat.addAll(boiteBD.listeBoitesParTheme(theme.getIdTheme()));
+
+        List<Theme> sousThemes = themeService.listerSousThemes(theme.getIdTheme());
+
+        for (Theme sousTheme : sousThemes) {
+            resultat.addAll(rechercherBoitesParTheme(sousTheme));
+        }
+
+        return resultat;
     }
 
-    // Méthode de création de boîte personnalisée
     public Boite composerBoitePersonnalisee(String nom, Theme themePersonnalise, List<PieceQuantite> pieces, boolean forcerCreation) throws BoiteIdentiqueException {
         
         // 1. Vérification si une boîte identique existe déjà
@@ -59,12 +71,11 @@ public class BoiteService {
         return nouvelleBoite;
     }
 
-    // 1. Charger une boîte AVEC tout son contenu (Pièces, Figurines)
     public Boite chargerBoiteComplete(String numero) {
         Boite b = boiteBD.rechercherBoite(numero);
         if (b == null) return null;
 
-        // On cherche le(s) contenu(s) lié(s) à cette boîte
+        // On cherche les contenus liés à cette boîte
         List<Contenu.ContenuDetail> listContenus = contenuBD.listeContenusParBoite(numero);
         for (Contenu.ContenuDetail c : listContenus) {
             int idContenu = c.getIdCont();
@@ -76,15 +87,19 @@ public class BoiteService {
             }
 
             // On ajoute les figurines
-            List<FigurineQuantite> figurines = contenirfBD.listeContenirfParContenu(idContenu);
-            for (FigurineQuantite fq : figurines) {
+            List<App.FigurineQuantite> figurines = contenirfBD.listeContenirfParContenu(idContenu);
+            for (App.FigurineQuantite fq : figurines) {
                 b.ajouterFigurine(fq);
+            }
+            
+            List<App.BoiteQuantite> sousBoites = contenirbBD.listeContenirbParContenu(idContenu);
+            for (App.BoiteQuantite bq : sousBoites) {
+                b.ajouterBoiteIncluse(bq);
             }
         }
         return b;
     }
 
-    // 2. Calculer les statistiques d'une boîte
     public App.BoiteStats calculerStatsBoite(String numero) {
         Boite b = chargerBoiteComplete(numero);
         if (b == null) return null;
@@ -108,5 +123,25 @@ public class BoiteService {
 
     private boolean boiteIdentiqueExiste(List<PieceQuantite> pieces) {
         return false; 
+    }
+
+    public List<Boite> rechercherBoitesParNom(String nom) {
+        return boiteBD.rechercherBoitesParNom(nom);
+    }
+
+    public List<Boite> rechercherBoitesParPiece(String numPiece) {
+        return boiteBD.rechercherBoitesParPiece(numPiece);
+    }
+
+    public boolean ajouterPieceABoite(String numBoite, PieceQuantite pq) {
+        List<Contenu.ContenuDetail> contenus = contenuBD.listeContenusParBoite(numBoite);
+        
+        if (contenus.isEmpty()) {
+            return false;
+        }
+        
+        int idCont = contenus.get(0).getIdCont();
+
+        return contenirpBD.insererContenirp(idCont, pq) > 0;
     }
 }

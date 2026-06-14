@@ -20,32 +20,56 @@ import App.BoiteIdentiqueException;
 public class MenuUser {
 
     public static void rechercherBoite(ConsoleUi ui, BoiteService boiteService) {
-        String recherche = ui.lireTexte("Entrez le numéro de la boîte : ");
+        String recherche = ui.lireTexte("Entrez le numéro ou le nom de la boîte : ");
+        
+        // 1. On teste d'abord la recherche par numéro exact
         Boite b = boiteService.rechercherBoiteParNumero(recherche);
         if (b != null) {
-            ui.afficherLigne("Boîte trouvée : " + b.getNom());
+            ui.afficherLigne("Boîte trouvée par numéro : " + b.getNumero() + " - " + b.getNom());
         } else {
-            ui.afficherLigne("Aucune boîte trouvée avec ce numéro.");
+            // 2. Si pas de numéro, on cherche par nom
+            List<Boite> boites = boiteService.rechercherBoitesParNom(recherche);
+            if (boites.isEmpty()) {
+                ui.afficherLigne("Aucune boîte trouvée avec ce numéro ou ce nom.");
+            } else {
+                ui.afficherLigne("Boîtes trouvées contenant '" + recherche + "' :");
+                for (Boite boite : boites) {
+                    ui.afficherLigne("- " + boite.getNumero() + " : " + boite.getNom() + " (" + boite.getAnnee() + ")");
+                }
+            }
         }
     }
 
     public static void consulterDetailBoite(ConsoleUi ui, BoiteService boiteService) {
         String num = ui.lireTexte("Numéro de la boîte : ");
         Boite b = boiteService.chargerBoiteComplete(num);
+        
         if (b == null) {
             ui.afficherLigne("Boîte introuvable.");
             return;
         }
+        
         ui.afficherLigne("=== Détails de " + b.getNom() + " (" + b.getNumero() + ") ===");
         ui.afficherLigne("Année : " + b.getAnnee() + " | Thème : " + (b.getTheme() != null ? b.getTheme().getNom() : "Aucun"));
+        
+        if (!b.getBoitesIncluses().isEmpty()) {
+            ui.afficherLigne("\nBoîtes incluses (Pack) :");
+            for (App.BoiteQuantite bq : b.getBoitesIncluses()) {
+                ui.afficherLigne(" - " + bq.getQuantite() + "x " + bq.getBoite().getNom() + " (" + bq.getBoite().getNumero() + ")");
+            }
+        }
+
         ui.afficherLigne("\nPièces incluses :");
         for (PieceQuantite pq : b.getPieces()) {
             String supp = pq.isEnSupplement() ? " [Extra]" : "";
             ui.afficherLigne(" - " + pq.getQuantite() + "x " + pq.getPiece().getNom() + supp);
         }
-        ui.afficherLigne("\nFigurines incluses :");
-        for (FigurineQuantite fq : b.getFigurines()) {
-            ui.afficherLigne(" - " + fq.getQuantite() + "x " + fq.getFigurine().getNom());
+        
+        if (!b.getFigurines().isEmpty()) {
+            ui.afficherLigne("\nFigurines incluses :");
+            for (App.FigurineQuantite fq : b.getFigurines()) {
+                ui.afficherLigne(" - " + fq.getQuantite() + "x " + fq.getFigurine().getNom());
+            }
         }
     }
 
@@ -54,12 +78,21 @@ public class MenuUser {
         for (Theme t : themeService.listerThemes()) {
             ui.afficherLigne("ID " + t.getIdTheme() + " : " + t.getNom());
         }
+        
         int idTheme = ui.lireEntier("Entrez l'ID du thème à explorer : ");
-        List<Boite> boites = boiteService.rechercherBoitesParTheme(idTheme);
+        Theme themeChoisi = themeService.rechercherTheme(idTheme);
+        
+        if (themeChoisi == null) {
+            ui.afficherLigne("Thème introuvable.");
+            return;
+        }
+
+        List<Boite> boites = boiteService.rechercherBoitesParTheme(themeChoisi);
+        
         if (boites.isEmpty()) {
-            ui.afficherLigne("Aucune boîte pour ce thème.");
+            ui.afficherLigne("Aucune boîte pour ce thème (ni pour ses éventuels sous-thèmes).");
         } else {
-            ui.afficherLigne("Boîtes trouvées :");
+            ui.afficherLigne("Boîtes trouvées pour le thème '" + themeChoisi.getNom() + "' et ses sous-thèmes :");
             for (Boite b : boites) {
                 ui.afficherLigne("- " + b.getNumero() + " : " + b.getNom());
             }
@@ -85,17 +118,29 @@ public class MenuUser {
     public static void rechercherParPiece(ConsoleUi ui, PieceService pieceService, BoiteService boiteService) {
         String numPiece = ui.lireTexte("Numéro de la pièce : ");
         Piece p = pieceService.rechercherPiece(numPiece);
+        
         if (p != null) {
-            ui.afficherLigne("Pièce trouvée : " + p.getNom());
+            ui.afficherLigne("Pièce trouvée : " + p.getNom() + " (" + p.getNumero() + ")");
+            
+            List<Boite> boites = boiteService.rechercherBoitesParPiece(numPiece);
+            
+            if (boites.isEmpty()) {
+                ui.afficherLigne("Cette pièce n'est présente dans aucune boîte de notre base de données.");
+            } else {
+                ui.afficherLigne("Boîtes contenant cette pièce :");
+                for (Boite b : boites) {
+                    ui.afficherLigne("- " + b.getNumero() + " : " + b.getNom() + " (" + b.getAnnee() + ")");
+                }
+            }
         } else {
-            ui.afficherLigne("Pièce introuvable.");
+            ui.afficherLigne("Pièce introuvable dans le catalogue général.");
         }
     }
-
     public static void gererCollection(ConsoleUi ui, CollectionService collection, BoiteService boiteService) {
         ui.afficherLigne("1. Voir ma collection");
         ui.afficherLigne("2. Ajouter une boîte à ma collection");
         int choix = ui.lireChoix("Choix : ", 1, 2);
+        
         if (choix == 1) {
             List<CollectionItem> items = collection.listerCollection();
             if (items.isEmpty()) {
@@ -106,17 +151,42 @@ public class MenuUser {
                     if (!item.getPiecesManquantes().isEmpty()) {
                         ui.afficherLigne("    Pièces manquantes :");
                         for (PieceQuantite pq : item.getPiecesManquantes()) {
-                            ui.afficherLigne("     > " + pq.getQuantite() + "x " + pq.getPiece().getNom());
+                            ui.afficherLigne("     > Il manque " + pq.getQuantite() + "x " + pq.getPiece().getNom() + " (" + pq.getPiece().getNumero() + ")");
                         }
                     }
                 }
             }
         } else if (choix == 2) {
             String num = ui.lireTexte("Numéro de la boîte possédée : ");
-            Boite b = boiteService.rechercherBoiteParNumero(num);
+            
+            Boite b = boiteService.chargerBoiteComplete(num);
+            
             if (b != null) {
-                collection.ajouterBoite(b, EtatBoite.COMPLETE);
-                ui.afficherLigne("Boîte ajoutée à votre collection !");
+                boolean complete = ui.lireOuiNon("Cette boîte est-elle complète ? (o/n) : ");
+                
+                if (complete) {
+                    collection.ajouterBoite(b, EtatBoite.COMPLETE);
+                    ui.afficherLigne("Boîte complète ajoutée à votre collection !");
+                } else {
+                    collection.ajouterBoite(b, EtatBoite.INCOMPLETE);
+                    ui.afficherLigne("Faisons le point sur les pièces manquantes...");
+                    
+                    List<PieceQuantite> manquantes = new ArrayList<>();
+                    
+                    for (PieceQuantite pq : b.getPieces()) {
+                        if (pq.isEnSupplement()) continue;
+                        
+                        int qtePossedee = ui.lireEntier("Combien possédez-vous de '" + pq.getPiece().getNom() + "' (Attendues : " + pq.getQuantite() + ") ? : ");
+                        
+                        if (qtePossedee < pq.getQuantite()) {
+                            int calculManque = pq.getQuantite() - qtePossedee;
+                            manquantes.add(new PieceQuantite(pq.getPiece(), calculManque, false));
+                        }
+                    }
+                    
+                    collection.definirPiecesManquantes(b.getNumero(), manquantes);
+                    ui.afficherLigne("Boîte incomplète ajoutée ! Liste des pièces manquantes générée et sauvegardée.");
+                }
             } else {
                 ui.afficherLigne("Boîte inconnue dans la base de données.");
             }

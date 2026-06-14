@@ -173,4 +173,69 @@ public class BoiteBD {
         }
         return res;
     }
+
+    public List<Boite> rechercherBoitesParNom(String nomPartiel) {
+        ArrayList<Boite> res = new ArrayList<>();
+        String sql = "SELECT b.numboite, b.nomboite, b.annee, b.nbpieces, t.idtheme, t.nomtheme " +
+                     "FROM BOITE b " +
+                     "JOIN THEME t ON b.idtheme = t.idtheme " +
+                     "WHERE b.nomboite LIKE ? ORDER BY b.nomboite";
+        try (PreparedStatement ps = prepareStatement(sql)) {
+            ps.setString(1, "%" + nomPartiel + "%");
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Theme theme = new Theme(
+                        rs.getInt("idtheme"),
+                        rs.getString("nomtheme"),
+                        null
+                    );
+                    Boite boite = new Boite(
+                        rs.getString("numboite"),
+                        rs.getString("nomboite"),
+                        (Integer) rs.getObject("annee"),
+                        theme
+                    );
+                    boite.setNbPieces((Integer) rs.getObject("nbpieces"));
+                    res.add(boite);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la recherche des boîtes par nom : " + e.getMessage());
+        }
+        return res;
+    }
+
+    public List<Boite> rechercherBoitesParPiece(String numPiece) {
+        ArrayList<Boite> res = new ArrayList<>();
+        String sql = "SELECT DISTINCT b.numboite, b.nomboite, b.annee, b.nbpieces, t.idtheme, t.nomtheme " +
+                     "FROM BOITE b " +
+                     "JOIN THEME t ON b.idtheme = t.idtheme " +
+                     "JOIN CONTENU c ON b.numboite = c.numboite " +
+                     "JOIN CONTENIRP cp ON c.idcont = cp.idcont " +
+                     "WHERE cp.numpiece = ? ORDER BY b.nomboite";
+                     
+        try (PreparedStatement ps = prepareStatement(sql)) {
+            ps.setString(1, numPiece);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Theme theme = new Theme(
+                        rs.getInt("idtheme"),
+                        rs.getString("nomtheme"),
+                        null
+                    );
+                    Boite boite = new Boite(
+                        rs.getString("numboite"),
+                        rs.getString("nomboite"),
+                        (Integer) rs.getObject("annee"),
+                        theme
+                    );
+                    boite.setNbPieces((Integer) rs.getObject("nbpieces"));
+                    res.add(boite);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la recherche des boîtes par pièce : " + e.getMessage());
+        }
+        return res;
+    }
 }
