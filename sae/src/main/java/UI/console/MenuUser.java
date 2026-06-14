@@ -19,6 +19,12 @@ import App.BoiteIdentiqueException;
 
 public class MenuUser {
 
+    /**
+     * Recherche une boîte par numéro ou par nom et affiche les résultats.
+     *
+     * @param ui l'interface console
+     * @param boiteService le service de gestion des boîtes
+     */
     public static void rechercherBoite(ConsoleUi ui, BoiteService boiteService) {
         String recherche = ui.lireTexte("Entrez le numéro ou le nom de la boîte : ");
         
@@ -40,6 +46,12 @@ public class MenuUser {
         }
     }
 
+    /**
+     * Affiche les détails complets d'une boîte (pièces, figurines, boîtes incluses).
+     *
+     * @param ui l'interface console
+     * @param boiteService le service de gestion des boîtes
+     */
     public static void consulterDetailBoite(ConsoleUi ui, BoiteService boiteService) {
         String num = ui.lireTexte("Numéro de la boîte : ");
         Boite b = boiteService.chargerBoiteComplete(num);
@@ -73,6 +85,13 @@ public class MenuUser {
         }
     }
 
+    /**
+     * Affiche les boîtes disponibles pour un thème choisi par l'utilisateur.
+     *
+     * @param ui l'interface console
+     * @param themeService le service de gestion des thèmes
+     * @param boiteService le service de gestion des boîtes
+     */
     public static void explorerParTheme(ConsoleUi ui, ThemeService themeService, BoiteService boiteService) {
         ui.afficherLigne("Thèmes disponibles :");
         for (Theme t : themeService.listerThemes()) {
@@ -99,6 +118,12 @@ public class MenuUser {
         }
     }
 
+    /**
+     * Affiche les statistiques d'une boîte (total pièces, suppléments, répartition couleurs).
+     *
+     * @param ui l'interface console
+     * @param boiteService le service de gestion des boîtes
+     */
     public static void afficherStatsBoite(ConsoleUi ui, BoiteService boiteService) {
         String num = ui.lireTexte("Numéro de la boîte : ");
         BoiteStats stats = boiteService.calculerStatsBoite(num);
@@ -115,6 +140,13 @@ public class MenuUser {
         }
     }
 
+    /**
+     * Recherche une pièce et affiche toutes les boîtes qui la contiennent.
+     *
+     * @param ui l'interface console
+     * @param pieceService le service de gestion des pièces
+     * @param boiteService le service de gestion des boîtes
+     */
     public static void rechercherParPiece(ConsoleUi ui, PieceService pieceService, BoiteService boiteService) {
         String numPiece = ui.lireTexte("Numéro de la pièce : ");
         Piece p = pieceService.rechercherPiece(numPiece);
@@ -136,6 +168,14 @@ public class MenuUser {
             ui.afficherLigne("Pièce introuvable dans le catalogue général.");
         }
     }
+
+    /**
+     * Permet à l'utilisateur de consulter ou d'alimenter sa collection de boîtes.
+     *
+     * @param ui l'interface console
+     * @param collection le service de gestion de la collection
+     * @param boiteService le service de gestion des boîtes
+     */
     public static void gererCollection(ConsoleUi ui, CollectionService collection, BoiteService boiteService) {
         ui.afficherLigne("1. Voir ma collection");
         ui.afficherLigne("2. Ajouter une boîte à ma collection");
@@ -193,6 +233,13 @@ public class MenuUser {
         }
     }
 
+    /**
+     * Permet à l'utilisateur de composer une boîte personnalisée à partir de pièces choisies.
+     *
+     * @param ui l'interface console
+     * @param boiteService le service de gestion des boîtes
+     * @param pieceService le service de gestion des pièces
+     */
     public static void composerBoitePerso(ConsoleUi ui, BoiteService boiteService, PieceService pieceService) {
         String nom = ui.lireTexte("Nom de votre nouvelle boîte personnalisée : ");
         List<PieceQuantite> piecesChoisies = new ArrayList<>();
