@@ -12,7 +12,7 @@ public class BoiteQuantite {
      *
      * @param boite la boîte (non null)
      * @param quantite la quantité (>= 0)
-     * @throws IllegalArgumentException si boite est null ou quantite < 0
+     * @throws IllegalArgumentException si boite est null ou quantite &lt; 0
      */
     public BoiteQuantite(Boite boite, int quantite) {
         if (boite == null) {

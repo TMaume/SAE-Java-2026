@@ -14,7 +14,7 @@ public class PieceQuantite {
      * @param piece la pièce (non null)
      * @param quantite la quantité (>= 0)
      * @param enSupplement true si la pièce est en supplément
-     * @throws IllegalArgumentException si piece est null ou quantite < 0
+     * @throws IllegalArgumentException si piece est null ou quantite &lt; 0
      */
     public PieceQuantite(Piece piece, int quantite, boolean enSupplement) {
         if (piece == null) {

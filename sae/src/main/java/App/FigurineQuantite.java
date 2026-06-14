@@ -12,7 +12,7 @@ public class FigurineQuantite {
      *
      * @param figurine la figurine (non null)
      * @param quantite la quantité (>= 0)
-     * @throws IllegalArgumentException si figurine est null ou quantite < 0
+     * @throws IllegalArgumentException si figurine est null ou quantite &lt; 0
      */
     public FigurineQuantite(Figurine figurine, int quantite) {
         if (figurine == null) {
