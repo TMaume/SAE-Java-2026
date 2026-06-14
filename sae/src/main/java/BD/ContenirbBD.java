@@ -6,9 +6,21 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Gère l'accès aux données d'association entre contenu et boîtes en base de données.
+ * <p>
+ * Fournit les méthodes CRUD pour gérer les boîtes contenues dans les boîtes.
+ * </p>
+ */
 public class ContenirbBD {
     private final ConnexionMySQL connexion;
 
+    /**
+     * Crée un gestionnaire du contenu en boîtes.
+     *
+     * @param connexion la connexion MySQL (non null)
+     * @throws IllegalArgumentException si connexion est null
+     */
     public ContenirbBD(ConnexionMySQL connexion) {
         if (connexion == null) {
             throw new IllegalArgumentException("connexion");
@@ -16,18 +28,44 @@ public class ContenirbBD {
         this.connexion = connexion;
     }
 
+    /**
+     * Retourne la connexion MySQL.
+     *
+     * @return la connexion
+     */
     public ConnexionMySQL getConnexion() {
         return connexion;
     }
 
+    /**
+     * Crée une nouvelle instruction SQL.
+     *
+     * @return une instruction SQL
+     * @throws SQLException si l'opération échoue
+     */
     protected Statement createStatement() throws SQLException {
         return connexion.createStatement();
     }
 
+    /**
+     * Prépare une requête SQL paramétrée.
+     *
+     * @param sql la requête SQL
+     * @return une instruction SQL préparée
+     * @throws SQLException si l'opération échoue
+     */
     protected PreparedStatement prepareStatement(String sql) throws SQLException {
         return connexion.prepareStatement(sql);
     }
 
+    /**
+     * Insère une association boîte-contenu dans la base de données.
+     *
+     * @param idCont l'identifiant du contenu
+     * @param bq la boîte avec quantité (non null)
+     * @return le nombre de lignes affectées
+     * @throws IllegalArgumentException si bq est null
+     */
     public int insererContenirb(int idCont, BoiteQuantite bq) {
         if (bq == null) {
             throw new IllegalArgumentException("contenirb");
@@ -43,6 +81,13 @@ public class ContenirbBD {
         }
     }
 
+    /**
+     * Supprime une association boîte-contenu de la base de données.
+     *
+     * @param idCont l'identifiant du contenu
+     * @param numBoite le numéro de la boîte
+     * @return le nombre de lignes affectées
+     */
     public int effacerContenirb(int idCont, String numBoite) {
         String sql = "DELETE FROM CONTENIRB WHERE idcont = ? AND numboite = ?";
         try (PreparedStatement ps = prepareStatement(sql)) {
@@ -54,6 +99,14 @@ public class ContenirbBD {
         }
     }
 
+    /**
+     * Met à jour une association boîte-contenu dans la base de données.
+     *
+     * @param idCont l'identifiant du contenu
+     * @param bq la boîte avec quantité mise à jour (non null)
+     * @return le nombre de lignes affectées
+     * @throws IllegalArgumentException si bq est null
+     */
     public int majContenirb(int idCont, BoiteQuantite bq) {
         if (bq == null) {
             throw new IllegalArgumentException("contenirb");
@@ -69,6 +122,13 @@ public class ContenirbBD {
         }
     }
 
+    /**
+     * Recherche une association boîte-contenu spécifique.
+     *
+     * @param idCont l'identifiant du contenu
+     * @param numBoite le numéro de la boîte
+     * @return la boîte avec quantité, ou null si non trouvée
+     */
     public BoiteQuantite rechercherContenirb(int idCont, String numBoite) {
         String sql = "SELECT cb.quantiteb, b.numboite, b.nomboite, b.annee, b.nbpieces, t.idtheme, t.nomtheme " +
                      "FROM CONTENIRB cb " +
@@ -101,6 +161,12 @@ public class ContenirbBD {
         }
     }
 
+    /**
+     * Retourne les boîtes contenues dans un contenu spécifique.
+     *
+     * @param idCont l'identifiant du contenu
+     * @return liste des boîtes avec quantités
+     */
     public List<BoiteQuantite> listeContenirbParContenu(int idCont) {
         ArrayList<BoiteQuantite> res = new ArrayList<>();
         String sql = "SELECT cb.quantiteb, b.numboite, b.nomboite, b.annee, b.nbpieces, t.idtheme, t.nomtheme " +

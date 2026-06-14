@@ -11,6 +11,13 @@ import App.Utilisateur;
 import BD.*;
 
 public class MenuConsole {
+
+    /**
+     * Point d'entrée principal de l'application.
+     * Gère l'authentification, la connexion à la base de données et le menu principal.
+     *
+     * @param args les arguments de la ligne de commande (non utilisés)
+     */
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         ConsoleUi ui = new ConsoleUi(scanner);

@@ -4,9 +4,21 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Gère l'accès aux données d'association entre contenu et figurines en base de données.
+ * <p>
+ * Fournit les méthodes CRUD pour gérer les figurines contenues dans les boîtes.
+ * </p>
+ */
 public class ContenirfBD {
     private final ConnexionMySQL connexion;
 
+    /**
+     * Crée un gestionnaire du contenu en figurines.
+     *
+     * @param connexion la connexion MySQL (non null)
+     * @throws IllegalArgumentException si connexion est null
+     */
     public ContenirfBD(ConnexionMySQL connexion) {
         if (connexion == null) {
             throw new IllegalArgumentException("connexion");
@@ -14,18 +26,44 @@ public class ContenirfBD {
         this.connexion = connexion;
     }
 
+    /**
+     * Retourne la connexion MySQL.
+     *
+     * @return la connexion
+     */
     public ConnexionMySQL getConnexion() {
         return connexion;
     }
 
+    /**
+     * Crée une nouvelle instruction SQL.
+     *
+     * @return une instruction SQL
+     * @throws SQLException si l'opération échoue
+     */
     protected Statement createStatement() throws SQLException {
         return connexion.createStatement();
     }
 
+    /**
+     * Prépare une requête SQL paramétrée.
+     *
+     * @param sql la requête SQL
+     * @return une instruction SQL préparée
+     * @throws SQLException si l'opération échoue
+     */
     protected PreparedStatement prepareStatement(String sql) throws SQLException {
         return connexion.prepareStatement(sql);
     }
 
+    /**
+     * Insère une association figurine-contenu dans la base de données.
+     *
+     * @param idCont l'identifiant du contenu
+     * @param fq la figurine avec quantité (non null)
+     * @return le nombre de lignes affectées
+     * @throws IllegalArgumentException si fq est null
+     */
     public int insererContenirf(int idCont, FigurineQuantite fq) {
         if (fq == null) {
             throw new IllegalArgumentException("contenirf");
@@ -41,6 +79,13 @@ public class ContenirfBD {
         }
     }
 
+    /**
+     * Supprime une association figurine-contenu de la base de données.
+     *
+     * @param idCont l'identifiant du contenu
+     * @param idFig l'identifiant de la figurine
+     * @return le nombre de lignes affectées
+     */
     public int effacerContenirf(int idCont, String idFig) {
         String sql = "DELETE FROM CONTENIRF WHERE idcont = ? AND idfig = ?";
         try (PreparedStatement ps = prepareStatement(sql)) {
@@ -52,6 +97,14 @@ public class ContenirfBD {
         }
     }
 
+    /**
+     * Met à jour une association figurine-contenu dans la base de données.
+     *
+     * @param idCont l'identifiant du contenu
+     * @param fq la figurine avec quantité mise à jour (non null)
+     * @return le nombre de lignes affectées
+     * @throws IllegalArgumentException si fq est null
+     */
     public int majContenirf(int idCont, FigurineQuantite fq) {
         if (fq == null) {
             throw new IllegalArgumentException("contenirf");
@@ -67,6 +120,13 @@ public class ContenirfBD {
         }
     }
 
+    /**
+     * Recherche une association figurine-contenu spécifique.
+     *
+     * @param idCont l'identifiant du contenu
+     * @param idFig l'identifiant de la figurine
+     * @return la figurine avec quantité, ou null si non trouvée
+     */
     public FigurineQuantite rechercherContenirf(int idCont, String idFig) {
         String sql = "SELECT cf.quantitef, f.idfig, f.nomfig, f.nbparties " +
                      "FROM CONTENIRF cf " +
@@ -91,6 +151,12 @@ public class ContenirfBD {
         }
     }
 
+    /**
+     * Retourne les figurines contenues dans un contenu spécifique.
+     *
+     * @param idCont l'identifiant du contenu
+     * @return liste des figurines avec quantités
+     */
     public List<FigurineQuantite> listeContenirfParContenu(int idCont) {
         ArrayList<FigurineQuantite> res = new ArrayList<>();
         String sql = "SELECT cf.quantitef, f.idfig, f.nomfig, f.nbparties " +

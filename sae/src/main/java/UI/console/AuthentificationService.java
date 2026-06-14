@@ -7,6 +7,13 @@ public class AuthentificationService {
     private final ConsoleUi ui;
     private final GestionUtilisateurs gestion;
 
+    /**
+     * Crée un service d'authentification.
+     *
+     * @param ui l'interface console (non null)
+     * @param gestion le gestionnaire d'utilisateurs (non null)
+     * @throws IllegalArgumentException si ui ou gestion est null
+     */
     public AuthentificationService(ConsoleUi ui, GestionUtilisateurs gestion) {
         if (ui == null) {
             throw new IllegalArgumentException("ui");
@@ -18,6 +25,12 @@ public class AuthentificationService {
         this.gestion = gestion;
     }
 
+    /**
+     * Lance la boucle d'authentification et retourne l'utilisateur connecté.
+     * Propose la connexion, la création de compte ou la sortie.
+     *
+     * @return l'utilisateur authentifié, ou null si l'utilisateur choisit de quitter
+     */
     public Utilisateur demarrer() {
         while (true) {
             ui.afficherTitre("Authentification");
@@ -44,12 +57,23 @@ public class AuthentificationService {
         }
     }
 
+    /**
+     * Demande l'identifiant et le mot de passe, puis tente l'authentification.
+     *
+     * @return l'utilisateur authentifié, ou null si les identifiants sont invalides
+     */
     private Utilisateur connecter() {
         String identifiant = ui.lireTexte("Identifiant : ");
         String motDePasse = ui.lireTexte("Mot de passe : ");
         return gestion.authentifier(identifiant, motDePasse);
     }
 
+    /**
+     * Guide l'utilisateur dans la création d'un nouveau compte.
+     * Vérifie la disponibilité de l'identifiant et la correspondance des mots de passe.
+     *
+     * @return le nouvel utilisateur créé, ou null en cas d'erreur de saisie
+     */
     private Utilisateur creerCompte() {
         String identifiant = ui.lireTexte("Choisissez un identifiant : ");
         if (identifiant == null || identifiant.isBlank()) {

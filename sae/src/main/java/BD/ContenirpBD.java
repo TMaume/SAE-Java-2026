@@ -7,9 +7,21 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Gère l'accès aux données d'association entre contenu et pièces en base de données.
+ * <p>
+ * Fournit les méthodes CRUD pour gérer les pièces contenues dans les boîtes.
+ * </p>
+ */
 public class ContenirpBD {
     private final ConnexionMySQL connexion;
 
+    /**
+     * Crée un gestionnaire du contenu en pièces.
+     *
+     * @param connexion la connexion MySQL (non null)
+     * @throws IllegalArgumentException si connexion est null
+     */
     public ContenirpBD(ConnexionMySQL connexion) {
         if (connexion == null) {
             throw new IllegalArgumentException("connexion");
@@ -17,26 +29,64 @@ public class ContenirpBD {
         this.connexion = connexion;
     }
 
+    /**
+     * Retourne la connexion MySQL.
+     *
+     * @return la connexion
+     */
     public ConnexionMySQL getConnexion() {
         return connexion;
     }
 
+    /**
+     * Crée une nouvelle instruction SQL.
+     *
+     * @return une instruction SQL
+     * @throws SQLException si l'opération échoue
+     */
     protected Statement createStatement() throws SQLException {
         return connexion.createStatement();
     }
 
+    /**
+     * Prépare une requête SQL paramétrée.
+     *
+     * @param sql la requête SQL
+     * @return une instruction SQL préparée
+     * @throws SQLException si l'opération échoue
+     */
     protected PreparedStatement prepareStatement(String sql) throws SQLException {
         return connexion.prepareStatement(sql);
     }
 
+    /**
+     * Convertit un String "t" ou "f" en booléen.
+     *
+     * @param value la valeur à convertir
+     * @return true si value commence par 't', 'T' ou '1'
+     */
     private static boolean tfToBool(String value) {
         return value != null && !value.isEmpty() && (value.charAt(0) == 't' || value.charAt(0) == 'T' || value.charAt(0) == '1');
     }
 
+    /**
+     * Convertit un booléen en String "t" ou "f".
+     *
+     * @param value le booléen à convertir
+     * @return "t" si value est true, "f" sinon
+     */
     private static String boolToTf(boolean value) {
         return value ? "t" : "f";
     }
 
+    /**
+     * Insère une association pièce-contenu dans la base de données.
+     *
+     * @param idCont l'identifiant du contenu
+     * @param pq la pièce avec quantité (non null)
+     * @return le nombre de lignes affectées
+     * @throws IllegalArgumentException si pq est null
+     */
     public int insererContenirp(int idCont, PieceQuantite pq) {
         if (pq == null) {
             throw new IllegalArgumentException("contenirp");
@@ -54,6 +104,15 @@ public class ContenirpBD {
         }
     }
 
+    /**
+     * Supprime une association pièce-contenu de la base de données.
+     *
+     * @param idCont l'identifiant du contenu
+     * @param numPiece le numéro de la pièce
+     * @param idCoul l'identifiant de la couleur
+     * @param enSupplement si la pièce est supplémentaire
+     * @return le nombre de lignes affectées
+     */
     public int effacerContenirp(int idCont, String numPiece, int idCoul, boolean enSupplement) {
         String sql = "DELETE FROM CONTENIRP WHERE idcont = ? AND numpiece = ? AND idcoul = ? AND en_supplement = ?";
         try (PreparedStatement ps = prepareStatement(sql)) {
@@ -67,6 +126,14 @@ public class ContenirpBD {
         }
     }
 
+    /**
+     * Met à jour une association pièce-contenu dans la base de données.
+     *
+     * @param idCont l'identifiant du contenu
+     * @param pq la pièce avec quantité mise à jour (non null)
+     * @return le nombre de lignes affectées
+     * @throws IllegalArgumentException si pq est null
+     */
     public int majContenirp(int idCont, PieceQuantite pq) {
         if (pq == null) {
             throw new IllegalArgumentException("contenirp");
@@ -84,6 +151,15 @@ public class ContenirpBD {
         }
     }
 
+    /**
+     * Recherche une association pièce-contenu spécifique.
+     *
+     * @param idCont l'identifiant du contenu
+     * @param numPiece le numéro de la pièce
+     * @param idCoul l'identifiant de la couleur
+     * @param enSupplement si la pièce est supplémentaire
+     * @return la pièce avec quantité, ou null si non trouvée
+     */
     public PieceQuantite rechercherContenirp(int idCont, String numPiece, int idCoul, boolean enSupplement) {
         String sql = "SELECT cp.quantitep, cp.en_supplement, p.numpiece, p.nompiece, c.idcat, c.nomcat, coul.idcoul, coul.nomcoul, coul.RGB, coul.transparent " +
                      "FROM CONTENIRP cp " +
@@ -123,6 +199,12 @@ public class ContenirpBD {
         }
     }
 
+    /**
+     * Retourne les pièces contenues dans un contenu spécifique.
+     *
+     * @param idCont l'identifiant du contenu
+     * @return liste des pièces avec quantités
+     */
     public List<PieceQuantite> listeContenirpParContenu(int idCont) {
         ArrayList<PieceQuantite> res = new ArrayList<>();
         String sql = "SELECT cp.quantitep, cp.en_supplement, p.numpiece, p.nompiece, c.idcat, c.nomcat, coul.idcoul, coul.nomcoul, coul.RGB, coul.transparent " +

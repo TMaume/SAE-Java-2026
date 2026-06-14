@@ -5,9 +5,21 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Gère l'accès aux données des thèmes LEGO en base de données.
+ * <p>
+ * Fournit les méthodes CRUD pour les thèmes avec gestion de la hiérarchie parent-enfant.
+ * </p>
+ */
 public class ThemeBD {
     private final ConnexionMySQL connexion;
 
+    /**
+     * Crée un accès aux données des thèmes.
+     *
+     * @param connexion la connexion MySQL (non null)
+     * @throws IllegalArgumentException si connexion est null
+     */
     public ThemeBD(ConnexionMySQL connexion) {
         if (connexion == null) {
             throw new IllegalArgumentException("connexion");
@@ -15,18 +27,43 @@ public class ThemeBD {
         this.connexion = connexion;
     }
 
+    /**
+     * Retourne la connexion MySQL.
+     *
+     * @return la connexion
+     */
     public ConnexionMySQL getConnexion() {
         return connexion;
     }
 
+    /**
+     * Crée une nouvelle instruction SQL.
+     *
+     * @return une instruction SQL
+     * @throws SQLException si l'opération échoue
+     */
     protected Statement createStatement() throws SQLException {
         return connexion.createStatement();
     }
 
+    /**
+     * Prépare une requête SQL paramétrée.
+     *
+     * @param sql la requête SQL
+     * @return une instruction SQL préparée
+     * @throws SQLException si l'opération échoue
+     */
     protected PreparedStatement prepareStatement(String sql) throws SQLException {
         return connexion.prepareStatement(sql);
     }
 
+    /**
+     * Insère un thème dans la base de données.
+     *
+     * @param t le thème à insérer (non null)
+     * @return le nombre de lignes affectées
+     * @throws IllegalArgumentException si t est null
+     */
     public int insererTheme(Theme t) {
         if (t == null) {
             throw new IllegalArgumentException("theme");
@@ -48,6 +85,12 @@ public class ThemeBD {
         }
     }
 
+    /**
+     * Supprime un thème de la base de données.
+     *
+     * @param idTheme l'identifiant du thème
+     * @return le nombre de lignes affectées
+     */
     public int effacerTheme(int idTheme) {
         String sql = "DELETE FROM THEME WHERE idtheme = ?";
         try (PreparedStatement ps = prepareStatement(sql)) {
@@ -59,6 +102,13 @@ public class ThemeBD {
         }
     }
 
+    /**
+     * Met à jour un thème dans la base de données.
+     *
+     * @param t le thème à mettre à jour (non null)
+     * @return le nombre de lignes affectées
+     * @throws IllegalArgumentException si t est null
+     */
     public int majTheme(Theme t) {
         if (t == null) {
             throw new IllegalArgumentException("theme");
@@ -79,6 +129,12 @@ public class ThemeBD {
         }
     }
 
+    /**
+     * Recherche un thème par son identifiant.
+     *
+     * @param idTheme l'identifiant du thème
+     * @return le thème trouvé, ou null si introuvable
+     */
     public Theme rechercherTheme(int idTheme) {
         String sql = "SELECT idtheme, nomtheme, idtheme_pere FROM THEME WHERE idtheme = ?";
         try (PreparedStatement ps = prepareStatement(sql)) {
@@ -102,6 +158,11 @@ public class ThemeBD {
         }
     }
 
+    /**
+     * Retourne la liste de tous les thèmes.
+     *
+     * @return liste des thèmes
+     */
     public List<Theme> listeDesThemes() {
         ArrayList<Theme> res = new ArrayList<>();
         String sql = "SELECT idtheme, nomtheme, idtheme_pere FROM THEME ORDER BY nomtheme";
@@ -122,6 +183,12 @@ public class ThemeBD {
         return res;
     }
 
+    /**
+     * Retourne les sous-thèmes d'un thème parent.
+     *
+     * @param idThemePere l'identifiant du thème parent
+     * @return liste des sous-thèmes
+     */
     public List<Theme> listeSousThemes(int idThemePere) {
         ArrayList<Theme> res = new ArrayList<>();
         String sql = "SELECT idtheme, nomtheme, idtheme_pere FROM THEME WHERE idtheme_pere = ? ORDER BY nomtheme";

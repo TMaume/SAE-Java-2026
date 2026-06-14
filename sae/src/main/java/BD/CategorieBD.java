@@ -4,9 +4,21 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Gère l'accès aux données des catégories de pièces en base de données.
+ * <p>
+ * Fournit les méthodes CRUD pour les catégories.
+ * </p>
+ */
 public class CategorieBD {
     private final ConnexionMySQL connexion;
 
+    /**
+     * Crée un accès aux données des catégories.
+     *
+     * @param connexion la connexion MySQL (non null)
+     * @throws IllegalArgumentException si connexion est null
+     */
     public CategorieBD(ConnexionMySQL connexion) {
         if (connexion == null) {
             throw new IllegalArgumentException("connexion");
@@ -14,18 +26,43 @@ public class CategorieBD {
         this.connexion = connexion;
     }
 
+    /**
+     * Retourne la connexion MySQL.
+     *
+     * @return la connexion
+     */
     public ConnexionMySQL getConnexion() {
         return connexion;
     }
 
+    /**
+     * Crée une nouvelle instruction SQL.
+     *
+     * @return une instruction SQL
+     * @throws SQLException si l'opération échoue
+     */
     protected Statement createStatement() throws SQLException {
         return connexion.createStatement();
     }
 
+    /**
+     * Prépare une requête SQL paramétrée.
+     *
+     * @param sql la requête SQL
+     * @return une instruction SQL préparée
+     * @throws SQLException si l'opération échoue
+     */
     protected PreparedStatement prepareStatement(String sql) throws SQLException {
         return connexion.prepareStatement(sql);
     }
 
+    /**
+     * Insère une catégorie dans la base de données.
+     *
+     * @param c la catégorie à insérer (non null)
+     * @return le nombre de lignes affectées
+     * @throws IllegalArgumentException si c est null
+     */
     public int insererCategorie(Categorie c) {
         if (c == null) {
             throw new IllegalArgumentException("categorie");
@@ -40,6 +77,12 @@ public class CategorieBD {
         }
     }
 
+    /**
+     * Supprime une catégorie de la base de données.
+     *
+     * @param idCat l'identifiant de la catégorie
+     * @return le nombre de lignes affectées
+     */
     public int effacerCategorie(int idCat) {
         String sql = "DELETE FROM CATEGORIE WHERE idcat = ?";
         try (PreparedStatement ps = prepareStatement(sql)) {
@@ -50,6 +93,13 @@ public class CategorieBD {
         }
     }
 
+    /**
+     * Met à jour une catégorie dans la base de données.
+     *
+     * @param c la catégorie à mettre à jour (non null)
+     * @return le nombre de lignes affectées
+     * @throws IllegalArgumentException si c est null
+     */
     public int majCategorie(Categorie c) {
         if (c == null) {
             throw new IllegalArgumentException("categorie");
@@ -64,6 +114,12 @@ public class CategorieBD {
         }
     }
 
+    /**
+     * Recherche une catégorie par son identifiant.
+     *
+     * @param idCat l'identifiant de la catégorie
+     * @return la catégorie trouvée, ou null si introuvable
+     */
     public Categorie rechercherCategorie(int idCat) {
         String sql = "SELECT idcat, nomcat FROM CATEGORIE WHERE idcat = ?";
         try (PreparedStatement ps = prepareStatement(sql)) {
@@ -79,6 +135,11 @@ public class CategorieBD {
         }
     }
 
+    /**
+     * Retourne la liste de toutes les catégories.
+     *
+     * @return liste des catégories
+     */
     public List<Categorie> listeDesCategories() {
         ArrayList<Categorie> res = new ArrayList<>();
         String sql = "SELECT idcat, nomcat FROM CATEGORIE ORDER BY nomcat";

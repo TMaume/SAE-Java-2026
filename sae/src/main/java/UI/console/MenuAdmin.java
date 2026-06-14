@@ -11,6 +11,13 @@ import App.Theme;
 
 public class MenuAdmin {
 
+    /**
+     * Permet à un administrateur de saisir et d'enregistrer une nouvelle boîte.
+     *
+     * @param ui l'interface console
+     * @param boiteService le service de gestion des boîtes
+     * @param themeService le service de gestion des thèmes
+     */
     static void ajouterBoite(ConsoleUi ui, BoiteService boiteService, ThemeService themeService) {
         String numero = ui.lireTexte("Numéro de la boîte : ");
         String nom = ui.lireTexte("Nom de la boîte : ");
@@ -39,6 +46,12 @@ public class MenuAdmin {
         ui.afficherLigne("Fonctionnalité d'ajout à lier avec ton BoiteService.");
     }
 
+    /**
+     * Permet à un administrateur de saisir et d'enregistrer une nouvelle pièce.
+     *
+     * @param ui l'interface console
+     * @param pieceService le service de gestion des pièces
+     */
     static void ajouterPiece(ConsoleUi ui, PieceService pieceService) {
         String numPiece = ui.lireTexte("Numéro de la nouvelle pièce : ");
         String nomPiece = ui.lireTexte("Nom de la pièce : ");
@@ -62,6 +75,12 @@ public class MenuAdmin {
         }
     }
 
+    /**
+     * Permet à un administrateur de créer un nouveau thème.
+     *
+     * @param ui l'interface console
+     * @param themeService le service de gestion des thèmes
+     */
     static void creerTheme(ConsoleUi ui, ThemeService themeService) {
         int idTheme = ui.lireEntier("ID du nouveau thème : ");
         String nomTheme = ui.lireTexte("Nom du thème : ");
@@ -74,6 +93,13 @@ public class MenuAdmin {
         }
     }
 
+    /**
+     * Permet à un administrateur d'ajouter une pièce au contenu d'une boîte existante.
+     *
+     * @param ui l'interface console
+     * @param boiteService le service de gestion des boîtes
+     * @param pieceService le service de gestion des pièces
+     */
     public static void majContenuBoite(ConsoleUi ui, BoiteService boiteService, PieceService pieceService) {
         String numBoite = ui.lireTexte("Numéro de la boîte à modifier : ");
         Boite b = boiteService.chargerBoiteComplete(numBoite);
