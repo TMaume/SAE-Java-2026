@@ -9,7 +9,7 @@ public class Categorie {
         this.nom = nom == null ? "" : nom;
     }
 
-    public int getIdCategorie() {
+    public int getId() {
         return idCategorie;
     }
 

@@ -1,4 +1,6 @@
 package BD;
+import App.Boite;
+import App.Theme;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,50 +27,14 @@ public class BoiteBD {
         return connexion.prepareStatement(sql);
     }
 
-    public static final class BoiteRow {
-        private final String numBoite;
-        private final String nomBoite;
-        private final Integer annee;
-        private final Integer nbPieces;
-        private final int idTheme;
-
-        public BoiteRow(String numBoite, String nomBoite, Integer annee, Integer nbPieces, int idTheme) {
-            this.numBoite = numBoite;
-            this.nomBoite = nomBoite;
-            this.annee = annee;
-            this.nbPieces = nbPieces;
-            this.idTheme = idTheme;
-        }
-
-        public String getNumBoite() {
-            return numBoite;
-        }
-
-        public String getNomBoite() {
-            return nomBoite;
-        }
-
-        public Integer getAnnee() {
-            return annee;
-        }
-
-        public Integer getNbPieces() {
-            return nbPieces;
-        }
-
-        public int getIdTheme() {
-            return idTheme;
-        }
-    }
-
-    public int insererBoite(BoiteRow b) {
+    public int insererBoite(Boite b) {
         if (b == null) {
             throw new IllegalArgumentException("boite");
         }
         String sql = "INSERT INTO BOITE (numboite, nomboite, annee, nbpieces, idtheme) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement ps = prepareStatement(sql)) {
-            ps.setString(1, b.getNumBoite());
-            ps.setString(2, b.getNomBoite());
+            ps.setString(1, b.getNumero());
+            ps.setString(2, b.getNom());
             if (b.getAnnee() == null) {
                 ps.setNull(3, Types.INTEGER);
             } else {
@@ -79,10 +45,9 @@ public class BoiteBD {
             } else {
                 ps.setInt(4, b.getNbPieces());
             }
-            ps.setInt(5, b.getIdTheme());
+            ps.setInt(5, b.getTheme().getIdTheme());
             return ps.executeUpdate();
         } catch (SQLException e) {
-            System.err.println("Erreur SQL insererBoite: " + e.getMessage());
             return 0;
         }
     }
@@ -93,18 +58,17 @@ public class BoiteBD {
             ps.setString(1, numBoite);
             return ps.executeUpdate();
         } catch (SQLException e) {
-            System.err.println("Erreur SQL effacerBoite: " + e.getMessage());
             return 0;
         }
     }
 
-    public int majBoite(BoiteRow b) {
+    public int majBoite(Boite b) {
         if (b == null) {
             throw new IllegalArgumentException("boite");
         }
         String sql = "UPDATE BOITE SET nomboite = ?, annee = ?, nbpieces = ?, idtheme = ? WHERE numboite = ?";
         try (PreparedStatement ps = prepareStatement(sql)) {
-            ps.setString(1, b.getNomBoite());
+            ps.setString(1, b.getNom());
             if (b.getAnnee() == null) {
                 ps.setNull(2, Types.INTEGER);
             } else {
@@ -115,76 +79,162 @@ public class BoiteBD {
             } else {
                 ps.setInt(3, b.getNbPieces());
             }
-            ps.setInt(4, b.getIdTheme());
-            ps.setString(5, b.getNumBoite());
+            ps.setInt(4, b.getTheme().getIdTheme());
+            ps.setString(5, b.getNumero());
             return ps.executeUpdate();
         } catch (SQLException e) {
-            System.err.println("Erreur SQL majBoite: " + e.getMessage());
             return 0;
         }
     }
 
-    public BoiteRow rechercherBoite(String numBoite) {
-        String sql = "SELECT numboite, nomboite, annee, nbpieces, idtheme FROM BOITE WHERE numboite = ?";
+    public Boite rechercherBoite(String numBoite) {
+        String sql = "SELECT b.numboite, b.nomboite, b.annee, b.nbpieces, t.idtheme, t.nomtheme " +
+                     "FROM BOITE b " +
+                     "JOIN THEME t ON b.idtheme = t.idtheme " +
+                     "WHERE b.numboite = ?";
         try (PreparedStatement ps = prepareStatement(sql)) {
             ps.setString(1, numBoite);
             try (ResultSet rs = ps.executeQuery()) {
                 if (!rs.next()) {
                     return null;
                 }
-                Integer annee = (Integer) rs.getObject("annee");
-                Integer nbPieces = (Integer) rs.getObject("nbpieces");
-                return new BoiteRow(
+                Theme theme = new Theme(
+                    rs.getInt("idtheme"),
+                    rs.getString("nomtheme"),
+                    null
+                );
+                Boite boite = new Boite(
                     rs.getString("numboite"),
                     rs.getString("nomboite"),
-                    annee,
-                    nbPieces,
-                    rs.getInt("idtheme")
+                    (Integer) rs.getObject("annee"),
+                    theme
                 );
+                boite.setNbPieces((Integer) rs.getObject("nbpieces"));
+                return boite;
             }
         } catch (SQLException e) {
-            System.err.println("Erreur SQL rechercherBoite: " + e.getMessage());
             return null;
         }
     }
 
-    public List<BoiteRow> listeDesBoites() {
-        ArrayList<BoiteRow> res = new ArrayList<>();
-        String sql = "SELECT numboite, nomboite, annee, nbpieces, idtheme FROM BOITE ORDER BY nomboite";
+    public List<Boite> listeDesBoites() {
+        ArrayList<Boite> res = new ArrayList<>();
+        String sql = "SELECT b.numboite, b.nomboite, b.annee, b.nbpieces, t.idtheme, t.nomtheme " +
+                     "FROM BOITE b " +
+                     "JOIN THEME t ON b.idtheme = t.idtheme " +
+                     "ORDER BY b.nomboite";
         try (Statement st = createStatement(); ResultSet rs = st.executeQuery(sql)) {
             while (rs.next()) {
-                res.add(new BoiteRow(
+                Theme theme = new Theme(
+                    rs.getInt("idtheme"),
+                    rs.getString("nomtheme"),
+                    null
+                );
+                Boite boite = new Boite(
                     rs.getString("numboite"),
                     rs.getString("nomboite"),
                     (Integer) rs.getObject("annee"),
-                    (Integer) rs.getObject("nbpieces"),
-                    rs.getInt("idtheme")
-                ));
+                    theme
+                );
+                boite.setNbPieces((Integer) rs.getObject("nbpieces"));
+                res.add(boite);
             }
         } catch (SQLException e) {
-            System.err.println("Erreur SQL listeDesBoites: " + e.getMessage());
         }
         return res;
     }
 
-    public List<BoiteRow> listeBoitesParTheme(int idTheme) {
-        ArrayList<BoiteRow> res = new ArrayList<>();
-        String sql = "SELECT numboite, nomboite, annee, nbpieces, idtheme FROM BOITE WHERE idtheme = ? ORDER BY nomboite";
+    public List<Boite> listeBoitesParTheme(int idTheme) {
+        ArrayList<Boite> res = new ArrayList<>();
+        String sql = "SELECT b.numboite, b.nomboite, b.annee, b.nbpieces, t.idtheme, t.nomtheme " +
+                     "FROM BOITE b " +
+                     "JOIN THEME t ON b.idtheme = t.idtheme " +
+                     "WHERE b.idtheme = ? ORDER BY b.nomboite";
         try (PreparedStatement ps = prepareStatement(sql)) {
             ps.setInt(1, idTheme);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    res.add(new BoiteRow(
+                    Theme theme = new Theme(
+                        rs.getInt("idtheme"),
+                        rs.getString("nomtheme"),
+                        null
+                    );
+                    Boite boite = new Boite(
                         rs.getString("numboite"),
                         rs.getString("nomboite"),
                         (Integer) rs.getObject("annee"),
-                        (Integer) rs.getObject("nbpieces"),
-                        rs.getInt("idtheme")
-                    ));
+                        theme
+                    );
+                    boite.setNbPieces((Integer) rs.getObject("nbpieces"));
+                    res.add(boite);
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Erreur SQL listeBoitesParTheme: " + e.getMessage());
+        }
+        return res;
+    }
+
+    public List<Boite> rechercherBoitesParNom(String nomPartiel) {
+        ArrayList<Boite> res = new ArrayList<>();
+        String sql = "SELECT b.numboite, b.nomboite, b.annee, b.nbpieces, t.idtheme, t.nomtheme " +
+                     "FROM BOITE b " +
+                     "JOIN THEME t ON b.idtheme = t.idtheme " +
+                     "WHERE b.nomboite LIKE ? ORDER BY b.nomboite";
+        try (PreparedStatement ps = prepareStatement(sql)) {
+            ps.setString(1, "%" + nomPartiel + "%");
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Theme theme = new Theme(
+                        rs.getInt("idtheme"),
+                        rs.getString("nomtheme"),
+                        null
+                    );
+                    Boite boite = new Boite(
+                        rs.getString("numboite"),
+                        rs.getString("nomboite"),
+                        (Integer) rs.getObject("annee"),
+                        theme
+                    );
+                    boite.setNbPieces((Integer) rs.getObject("nbpieces"));
+                    res.add(boite);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la recherche des boîtes par nom : " + e.getMessage());
+        }
+        return res;
+    }
+
+    public List<Boite> rechercherBoitesParPiece(String numPiece) {
+        ArrayList<Boite> res = new ArrayList<>();
+        String sql = "SELECT DISTINCT b.numboite, b.nomboite, b.annee, b.nbpieces, t.idtheme, t.nomtheme " +
+                     "FROM BOITE b " +
+                     "JOIN THEME t ON b.idtheme = t.idtheme " +
+                     "JOIN CONTENU c ON b.numboite = c.numboite " +
+                     "JOIN CONTENIRP cp ON c.idcont = cp.idcont " +
+                     "WHERE cp.numpiece = ? ORDER BY b.nomboite";
+                     
+        try (PreparedStatement ps = prepareStatement(sql)) {
+            ps.setString(1, numPiece);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Theme theme = new Theme(
+                        rs.getInt("idtheme"),
+                        rs.getString("nomtheme"),
+                        null
+                    );
+                    Boite boite = new Boite(
+                        rs.getString("numboite"),
+                        rs.getString("nomboite"),
+                        (Integer) rs.getObject("annee"),
+                        theme
+                    );
+                    boite.setNbPieces((Integer) rs.getObject("nbpieces"));
+                    res.add(boite);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la recherche des boîtes par pièce : " + e.getMessage());
         }
         return res;
     }
