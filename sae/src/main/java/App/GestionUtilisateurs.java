@@ -9,9 +9,22 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Gère l'authentification et la création des utilisateurs.
+ * <p>
+ * Stocke les utilisateurs dans un fichier CSV et fournit des méthodes
+ * pour l'authentification et la gestion des comptes.
+ * </p>
+ */
 public class GestionUtilisateurs {
     private final Path cheminFichier;
 
+    /**
+     * Crée un gestionnaire d'utilisateurs.
+     *
+     * @param cheminFichier le chemin du fichier CSV (non null)
+     * @throws IllegalArgumentException si cheminFichier est null
+     */
     public GestionUtilisateurs(Path cheminFichier) {
         if (cheminFichier == null) {
             throw new IllegalArgumentException("cheminFichier");
@@ -20,6 +33,11 @@ public class GestionUtilisateurs {
         initialiserFichier();
     }
 
+    /**
+     * Retourne le chemin par défaut du fichier utilisateurs.
+     *
+     * @return le chemin du fichier
+     */
     public static Path cheminParDefaut() {
         Path direct = Paths.get("utilisateurs.csv");
         if (Files.exists(direct)) {
@@ -32,10 +50,22 @@ public class GestionUtilisateurs {
         return direct;
     }
 
+    /**
+     * Retourne le chemin du fichier utilisateurs.
+     *
+     * @return le chemin
+     */
     public Path getCheminFichier() {
         return cheminFichier;
     }
 
+    /**
+     * Authentifie un utilisateur.
+     *
+     * @param identifiant l'identifiant de l'utilisateur
+     * @param motDePasse le mot de passe
+     * @return l'utilisateur authentifié ou null
+     */
     public Utilisateur authentifier(String identifiant, String motDePasse) {
         if (identifiant == null || motDePasse == null) {
             return null;
@@ -49,6 +79,12 @@ public class GestionUtilisateurs {
         return null;
     }
 
+    /**
+     * Vérifie si un identifiant existe.
+     *
+     * @param identifiant l'identifiant à vérifier
+     * @return true si l'identifiant existe
+     */
     public boolean identifiantExiste(String identifiant) {
         if (identifiant == null || identifiant.isBlank()) {
             return false;
@@ -61,10 +97,25 @@ public class GestionUtilisateurs {
         return false;
     }
 
+    /**
+     * Crée un nouvel utilisateur avec le rôle UTILISATEUR.
+     *
+     * @param identifiant l'identifiant de l'utilisateur
+     * @param motDePasse le mot de passe
+     * @return l'utilisateur créé ou null si erreur
+     */
     public Utilisateur creerUtilisateur(String identifiant, String motDePasse) {
         return creerUtilisateur(identifiant, motDePasse, RoleUtilisateur.UTILISATEUR);
     }
 
+    /**
+     * Crée un nouvel utilisateur avec un rôle spécifique.
+     *
+     * @param identifiant l'identifiant de l'utilisateur
+     * @param motDePasse le mot de passe
+     * @param role le rôle de l'utilisateur
+     * @return l'utilisateur créé ou null si erreur
+     */
     public Utilisateur creerUtilisateur(String identifiant, String motDePasse, RoleUtilisateur role) {
         if (identifiant == null || identifiant.isBlank()) {
             return null;
@@ -81,6 +132,11 @@ public class GestionUtilisateurs {
         return null;
     }
 
+    /**
+     * Liste tous les utilisateurs.
+     *
+     * @return la liste des utilisateurs
+     */
     public List<Utilisateur> listerUtilisateurs() {
         List<Utilisateur> res = new ArrayList<>();
         List<String> lignes = lireLignes();

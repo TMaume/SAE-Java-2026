@@ -5,9 +5,21 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Gère l'accès aux données des boîtes LEGO en base de données.
+ * <p>
+ * Fournit les méthodes CRUD (Create, Read, Update, Delete) pour les boîtes.
+ * </p>
+ */
 public class BoiteBD {
     private final ConnexionMySQL connexion;
 
+    /**
+     * Crée un accès aux données des boîtes.
+     *
+     * @param connexion la connexion MySQL (non null)
+     * @throws IllegalArgumentException si connexion est null
+     */
     public BoiteBD(ConnexionMySQL connexion) {
         if (connexion == null) {
             throw new IllegalArgumentException("connexion");
@@ -15,18 +27,43 @@ public class BoiteBD {
         this.connexion = connexion;
     }
 
+    /**
+     * Retourne la connexion MySQL.
+     *
+     * @return la connexion
+     */
     public ConnexionMySQL getConnexion() {
         return connexion;
     }
 
+    /**
+     * Crée une nouvelle instruction SQL.
+     *
+     * @return une instruction SQL
+     * @throws SQLException si l'opération échoue
+     */
     protected Statement createStatement() throws SQLException {
         return connexion.createStatement();
     }
 
+    /**
+     * Prépare une requête SQL paramétrée.
+     *
+     * @param sql la requête SQL
+     * @return une instruction SQL préparée
+     * @throws SQLException si l'opération échoue
+     */
     protected PreparedStatement prepareStatement(String sql) throws SQLException {
         return connexion.prepareStatement(sql);
     }
 
+    /**
+     * Insère une boîte dans la base de données.
+     *
+     * @param b la boîte à insérer (non null)
+     * @return le nombre de lignes affectées
+     * @throws IllegalArgumentException si b est null
+     */
     public int insererBoite(Boite b) {
         if (b == null) {
             throw new IllegalArgumentException("boite");
@@ -52,6 +89,12 @@ public class BoiteBD {
         }
     }
 
+    /**
+     * Supprime une boîte de la base de données.
+     *
+     * @param numBoite le numéro de la boîte (non null)
+     * @return le nombre de lignes affectées
+     */
     public int effacerBoite(String numBoite) {
         String sql = "DELETE FROM BOITE WHERE numboite = ?";
         try (PreparedStatement ps = prepareStatement(sql)) {
@@ -62,6 +105,13 @@ public class BoiteBD {
         }
     }
 
+    /**
+     * Met à jour une boîte dans la base de données.
+     *
+     * @param b la boîte à mettre à jour (non null)
+     * @return le nombre de lignes affectées
+     * @throws IllegalArgumentException si b est null
+     */
     public int majBoite(Boite b) {
         if (b == null) {
             throw new IllegalArgumentException("boite");
@@ -87,6 +137,12 @@ public class BoiteBD {
         }
     }
 
+    /**
+     * Recherche une boîte par son numéro.
+     *
+     * @param numBoite le numéro de la boîte (non null)
+     * @return la boîte trouvée, ou null si introuvable
+     */
     public Boite rechercherBoite(String numBoite) {
         String sql = "SELECT b.numboite, b.nomboite, b.annee, b.nbpieces, t.idtheme, t.nomtheme " +
                      "FROM BOITE b " +
@@ -117,6 +173,11 @@ public class BoiteBD {
         }
     }
 
+    /**
+     * Retourne la liste de toutes les boîtes.
+     *
+     * @return liste des boîtes
+     */
     public List<Boite> listeDesBoites() {
         ArrayList<Boite> res = new ArrayList<>();
         String sql = "SELECT b.numboite, b.nomboite, b.annee, b.nbpieces, t.idtheme, t.nomtheme " +
@@ -144,6 +205,12 @@ public class BoiteBD {
         return res;
     }
 
+    /**
+     * Retourne les boîtes d'un thème.
+     *
+     * @param idTheme l'identifiant du thème
+     * @return liste des boîtes du thème
+     */
     public List<Boite> listeBoitesParTheme(int idTheme) {
         ArrayList<Boite> res = new ArrayList<>();
         String sql = "SELECT b.numboite, b.nomboite, b.annee, b.nbpieces, t.idtheme, t.nomtheme " +
@@ -174,6 +241,12 @@ public class BoiteBD {
         return res;
     }
 
+    /**
+     * Recherche les boîtes par nom partiel.
+     *
+     * @param nomPartiel le nom ou partie du nom à rechercher
+     * @return liste des boîtes correspondantes
+     */
     public List<Boite> rechercherBoitesParNom(String nomPartiel) {
         ArrayList<Boite> res = new ArrayList<>();
         String sql = "SELECT b.numboite, b.nomboite, b.annee, b.nbpieces, t.idtheme, t.nomtheme " +
@@ -205,6 +278,12 @@ public class BoiteBD {
         return res;
     }
 
+    /**
+     * Recherche les boîtes contenant une pièce.
+     *
+     * @param numPiece le numéro de la pièce
+     * @return liste des boîtes contenant la pièce
+     */
     public List<Boite> rechercherBoitesParPiece(String numPiece) {
         ArrayList<Boite> res = new ArrayList<>();
         String sql = "SELECT DISTINCT b.numboite, b.nomboite, b.annee, b.nbpieces, t.idtheme, t.nomtheme " +
