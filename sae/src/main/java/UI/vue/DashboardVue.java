@@ -26,7 +26,68 @@ public class DashboardVue {
     public void afficher() {
         BorderPane root = new BorderPane();
 
+        // La banniere
+        HBox header = new HBox(15);
+        header.setPadding(new Insets(15, 20, 15, 20));
+        header.setStyle("-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-width: 0 0 1 0;");
+        header.setAlignment(Pos.CENTER_LEFT);
 
+        // Menu au centre
+        StackPane conteneurCentral = new StackPane();
+        conteneurCentral.setPadding(new Insets(30));
+        conteneurCentral.setStyle("-fx-background-color: #fafbfc;");
+
+        // Sidebar
+        VBox sidebar = sidebar(conteneurCentral);
+        
+        root.setLeft(sidebar);
+
+        // Bouton pour plier le menu
+        Button btnToggleMenu = new Button("☰");
+        btnToggleMenu.setStyle("-fx-background-color: transparent; -fx-font-size: 18px; -fx-cursor: hand; -fx-text-fill: #2c3e50;");
+        btnToggleMenu.setOnAction(e -> {
+            boolean estVisible = sidebar.isVisible();
+            sidebar.setVisible(!estVisible);
+            sidebar.setManaged(!estVisible); 
+        });
+
+        Label lblBienvenue = new Label("Bienvenue, " + controller.getUtilisateurConnecte().getIdentifiant());
+        lblBienvenue.setStyle("-fx-font-size: 14px; -fx-text-fill: #555555;");
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        Button btnDeconnexion = new Button("Déconnexion");
+        btnDeconnexion.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold;");
+        btnDeconnexion.setOnAction(e -> {
+            LoginVue loginVue = new LoginVue(stage, authController);
+            loginVue.afficher();
+        });
+
+        header.getChildren().addAll(btnToggleMenu, lblBienvenue, spacer, btnDeconnexion);
+        root.setTop(header);
+
+        VBox vueDefaut = new VBox(10);
+        vueDefaut.setAlignment(Pos.CENTER);
+        Label lblMessage1 = new Label("Bienvenue sur le tableau de bord.");
+        lblMessage1.setStyle("-fx-font-size: 18px; -fx-text-fill: #2c3e50; -fx-font-weight: bold;");
+        Label lblMessage2 = new Label("Utilisez le menu de gauche pour naviguer.");
+        lblMessage2.setStyle("-fx-font-size: 14px; -fx-text-fill: #7f8c8d;");
+        vueDefaut.getChildren().addAll(lblMessage1, lblMessage2);
+        
+        conteneurCentral.getChildren().add(vueDefaut);
+        root.setCenter(conteneurCentral);
+
+        // Taille ecran dynamique
+        Scene sceneActuelle = stage.getScene();
+        if (sceneActuelle == null) {
+            stage.setScene(new Scene(root, 1024, 768));
+        } else {
+            sceneActuelle.setRoot(root);
+        }
+    }
+
+    public VBox sidebar(StackPane conteneurCentral){
         VBox sidebar = new VBox(10);
         sidebar.setPadding(new Insets(20));
         sidebar.setPrefWidth(240);
@@ -63,56 +124,6 @@ public class DashboardVue {
 
             sidebar.getChildren().addAll(separator, lblMenuAdmin, btnAddBoite, btnAddPiece, btnAddTheme, btnModContenu);
         }
-
-        root.setLeft(sidebar);
-
-        // La banniere
-        HBox header = new HBox(15);
-        header.setPadding(new Insets(15, 20, 15, 20));
-        header.setStyle("-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-width: 0 0 1 0;");
-        header.setAlignment(Pos.CENTER_LEFT);
-
-        // Bouton pour plier le menu
-        Button btnToggleMenu = new Button("☰");
-        btnToggleMenu.setStyle("-fx-background-color: transparent; -fx-font-size: 18px; -fx-cursor: hand; -fx-text-fill: #2c3e50;");
-        btnToggleMenu.setOnAction(e -> {
-            boolean estVisible = sidebar.isVisible();
-            sidebar.setVisible(!estVisible);
-            sidebar.setManaged(!estVisible); 
-        });
-
-        Label lblBienvenue = new Label("Bienvenue, " + controller.getUtilisateurConnecte().getIdentifiant());
-        lblBienvenue.setStyle("-fx-font-size: 14px; -fx-text-fill: #555555;");
-
-        Region spacer = new Region();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
-
-        Button btnDeconnexion = new Button("Déconnexion");
-        btnDeconnexion.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold;");
-        btnDeconnexion.setOnAction(e -> {
-            LoginVue loginVue = new LoginVue(stage, authController);
-            loginVue.afficher();
-        });
-
-        header.getChildren().addAll(btnToggleMenu, lblBienvenue, spacer, btnDeconnexion);
-        root.setTop(header);
-
-        // Menu au centre
-        StackPane conteneurCentral = new StackPane();
-        conteneurCentral.setPadding(new Insets(30));
-        conteneurCentral.setStyle("-fx-background-color: #fafbfc;");
-
-        VBox vueDefaut = new VBox(10);
-        vueDefaut.setAlignment(Pos.CENTER);
-        Label lblMessage1 = new Label("Bienvenue sur le tableau de bord.");
-        lblMessage1.setStyle("-fx-font-size: 18px; -fx-text-fill: #2c3e50; -fx-font-weight: bold;");
-        Label lblMessage2 = new Label("Utilisez le menu de gauche pour naviguer.");
-        lblMessage2.setStyle("-fx-font-size: 14px; -fx-text-fill: #7f8c8d;");
-        vueDefaut.getChildren().addAll(lblMessage1, lblMessage2);
-        
-        conteneurCentral.getChildren().add(vueDefaut);
-        root.setCenter(conteneurCentral);
-
         
         // Trucs Client
         btnCatalogue.setOnAction(e -> controller.chargerContenu(conteneurCentral, new Label("Vue : Catalogue des boîtes LEGO (À faire)")));
@@ -130,13 +141,8 @@ public class DashboardVue {
             btnModContenu.setOnAction(e -> controller.chargerContenu(conteneurCentral, new Label("Formulaire : Modifier le contenu d'une boîte (À faire)")));
         }
 
-        // Taille ecran dynamique
-        Scene sceneActuelle = stage.getScene();
-        if (sceneActuelle == null) {
-            stage.setScene(new Scene(root, 1024, 768));
-        } else {
-            sceneActuelle.setRoot(root);
-        }
+        return sidebar;
+
     }
 
     /**
