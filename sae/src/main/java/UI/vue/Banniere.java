@@ -35,7 +35,7 @@ public class Banniere extends HBox {
         btn_SeDeconnecter.setGraphic(createIcon("/images/logout.png"));
         this.getChildren().add(btn_SeDeconnecter);
 
-        btn_Arreter = new Button("Arrêter");
+        btn_Arreter = new Button("quitter");
         btn_Arreter.setGraphic(createIcon("/images/stop.png"));
         this.getChildren().add(btn_Arreter);
     }
