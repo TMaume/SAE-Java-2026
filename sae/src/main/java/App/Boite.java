@@ -125,6 +125,15 @@ public class Boite {
     }
 
     /**
+     * Retourne l'URL de l'image de la boîte.
+     *
+     * @return l'URL de l'image
+     */
+    public String getImageBoite() {
+        return imageBoite;
+    }
+
+    /**
      * Indique si la boîte est personnalisée.
      *
      * @return true si la boîte est personnalisée, false sinon

@@ -216,7 +216,7 @@ public class BoiteBD {
      */
     public List<Boite> listeDesBoitesPaginee(int limite, int offset) {
         ArrayList<Boite> res = new ArrayList<>();
-        String sql = "SELECT b.numboite, b.nomboite, b.annee, b.nbpieces, t.idtheme, t.nomtheme, b.image" +
+        String sql = "SELECT b.numboite, b.nomboite, b.annee, b.nbpieces, t.idtheme, t.nomtheme, b.image " +
                      "FROM BOITE b " +
                      "JOIN THEME t ON b.idtheme = t.idtheme " +
                      "ORDER BY b.nomboite " +

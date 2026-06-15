@@ -8,6 +8,8 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import java.util.List;
 
@@ -69,11 +71,11 @@ public class CatalogueVue {
         scrollPane.setFitToWidth(true);
         scrollPane.setStyle("-fx-background-color: transparent; -fx-background: transparent; -fx-border-color: transparent;");
 
-        conteneurGrille = new FlowPane(15, 15);
+        conteneurGrille = new FlowPane(20, 20);
         conteneurGrille.setPadding(new Insets(10));
         conteneurGrille.setAlignment(Pos.TOP_LEFT);
 
-        conteneurListe = new VBox(10);
+        conteneurListe = new VBox(15);
         conteneurListe.setPadding(new Insets(10));
 
         root.setCenter(scrollPane);
@@ -108,24 +110,19 @@ public class CatalogueVue {
     private void chargerPage() {
         if (boiteService == null) return; 
 
-        // 1. Calculs globaux
         int totalBoites = boiteService.obtenirNombreTotalBoites();
         int totalPages = (int) Math.ceil((double) totalBoites / taillePage);
         if (totalPages == 0) totalPages = 1;
 
-        // Sécurité si on dépasse
         if (pageCourante > totalPages) pageCourante = totalPages;
 
-        // 2. Mise à jour de l'UI (Textes et Boutons)
         lblInfosTotal.setText(totalBoites + " boîtes trouvées");
         lblPagination.setText("Page " + pageCourante + " sur " + totalPages);
         btnPrecedent.setDisable(pageCourante <= 1);
         btnSuivant.setDisable(pageCourante >= totalPages);
 
-        // 3. Récupération des données paginées en Base de Données
         List<Boite> boites = boiteService.listerBoitesPaginees(pageCourante, taillePage);
 
-        // 4. Affichage selon le mode choisi
         if (estVueGrille) {
             conteneurGrille.getChildren().clear();
             for (Boite b : boites) {
@@ -142,14 +139,30 @@ public class CatalogueVue {
     }
 
     /**
-     * Crée un affichage de type "Carte" (Vue Grille)
+     * Crée un affichage de type "Carte" (Vue Grille) avec image.
      */
     private VBox creerCarteBoite(Boite b) {
-        VBox carte = new VBox(8);
+        VBox carte = new VBox(10);
         carte.setPadding(new Insets(15));
         carte.setStyle("-fx-background-color: white; -fx-border-color: #dcdde1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 5, 0, 0, 2);");
         carte.setPrefWidth(220);
-        carte.setMinHeight(160);
+        carte.setMinHeight(250); 
+
+
+        ImageView imageView = new ImageView();
+        imageView.setFitWidth(180);
+        imageView.setFitHeight(130);
+        imageView.setPreserveRatio(true);
+
+        String url = b.getImageBoite();
+        if (url != null && !url.isBlank()) {
+            Image image = new Image(url, true);
+            imageView.setImage(image);
+        }
+
+        VBox conteneurImage = new VBox(imageView);
+        conteneurImage.setAlignment(Pos.CENTER);
+        conteneurImage.setPrefHeight(140);
 
         Label lblNumero = new Label("#" + b.getNumero());
         lblNumero.setStyle("-fx-text-fill: #e67e22; -fx-font-weight: bold; -fx-font-size: 12px;");
@@ -157,6 +170,7 @@ public class CatalogueVue {
         Label lblNom = new Label(b.getNom());
         lblNom.setStyle("-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
         lblNom.setWrapText(true);
+        lblNom.setMaxHeight(40); // Limite la taille du titre si très long
 
         String nomTheme = (b.getTheme() != null) ? b.getTheme().getNom() : "Inconnu";
         Label lblTheme = new Label("Thème : " + nomTheme);
@@ -167,35 +181,53 @@ public class CatalogueVue {
         Label lblDetails = new Label(strAnnee + " • " + strPieces + " pièces");
         lblDetails.setStyle("-fx-text-fill: #34495e; -fx-font-size: 13px;");
 
-        carte.getChildren().addAll(lblNumero, lblNom, lblTheme, lblDetails);
+        carte.getChildren().addAll(conteneurImage, lblNumero, lblNom, lblTheme, lblDetails);
         return carte;
     }
 
     /**
-     * Crée un affichage de type "Ligne" (Vue Liste)
+     * Crée un affichage de type "Ligne" (Vue Liste) avec miniature.
      */
     private HBox creerLigneBoite(Boite b) {
         HBox ligne = new HBox(20);
-        ligne.setPadding(new Insets(15));
+        ligne.setPadding(new Insets(10, 15, 10, 15));
         ligne.setStyle("-fx-background-color: white; -fx-border-color: #dcdde1; -fx-border-radius: 5; -fx-background-radius: 5;");
         ligne.setAlignment(Pos.CENTER_LEFT);
+
+        ImageView imageView = new ImageView();
+        imageView.setFitWidth(60);
+        imageView.setFitHeight(45);
+        imageView.setPreserveRatio(true);
+
+        String url = b.getImageBoite();
+        if (url != null && !url.isBlank()) {
+            Image image = new Image(url, true);
+            imageView.setImage(image);
+        }
+        
+        VBox conteneurImage = new VBox(imageView);
+        conteneurImage.setAlignment(Pos.CENTER);
+        conteneurImage.setPrefWidth(70);
 
         Label lblNumero = new Label("#" + b.getNumero());
         lblNumero.setStyle("-fx-text-fill: #e67e22; -fx-font-weight: bold; -fx-pref-width: 80px;");
 
         Label lblNom = new Label(b.getNom());
-        lblNom.setStyle("-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #2c3e50; -fx-pref-width: 300px;");
+        lblNom.setStyle("-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #2c3e50; -fx-pref-width: 250px;");
 
         String nomTheme = (b.getTheme() != null) ? b.getTheme().getNom() : "Inconnu";
         Label lblTheme = new Label(nomTheme);
-        lblTheme.setStyle("-fx-text-fill: #7f8c8d; -fx-pref-width: 200px;");
+        lblTheme.setStyle("-fx-text-fill: #7f8c8d; -fx-pref-width: 180px;");
 
         String strAnnee = (b.getAnnee() != null) ? String.valueOf(b.getAnnee()) : "N/A";
         String strPieces = (b.getNbPieces() != null) ? String.valueOf(b.getNbPieces()) : "?";
         Label lblDetails = new Label(strAnnee + "  |  " + strPieces + " pcs");
-        lblDetails.setStyle("-fx-text-fill: #34495e; -fx-alignment: center-right;");
+        lblDetails.setStyle("-fx-text-fill: #34495e;");
 
-        ligne.getChildren().addAll(lblNumero, lblNom, lblTheme, lblDetails);
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        ligne.getChildren().addAll(conteneurImage, lblNumero, lblNom, lblTheme, spacer, lblDetails);
         return ligne;
     }
 }
