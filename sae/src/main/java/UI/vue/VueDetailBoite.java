@@ -9,34 +9,30 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
-// On fait hériter directement de BorderPane
 public class VueDetailBoite extends BorderPane {
     
     public VueDetailBoite() {
         super();
 
-        // 1. CONTENEUR GLOBAL (qui est maintenant la classe elle-même : "this")
+        // 1. CONTENEUR GLOBAL
         this.setPadding(new Insets(20));
-        this.setStyle("-fx-background-color: #121212;"); // Fond sombre pour la maquette
+        this.setStyle("-fx-background-color: #121212;");
 
         // 2. GAUCHE : L'IMAGE
         ImageView imageView = new ImageView();
-        try {
             Image image = new Image(getClass().getResourceAsStream(""));
             imageView.setImage(image);
             imageView.setFitWidth(230);
             imageView.setFitHeight(230);
             imageView.setPreserveRatio(true);
-        } catch (Exception e) {
-            System.err.println("Image introuvable. Vérifie le chemin d'accès.");
-        }
+        
         
         VBox imageWrapper = new VBox(imageView);
         imageWrapper.setAlignment(Pos.CENTER);
         imageWrapper.setPrefSize(250, 250);
         imageWrapper.setStyle("-fx-border-color: white; -fx-border-width: 1;");
 
-        // On place l'image à gauche du conteneur principal
+        // On place l'image à gauche
         this.setLeft(imageWrapper);
 
         // 3. DROITE : LE BORDERPANE DES DETAILS
