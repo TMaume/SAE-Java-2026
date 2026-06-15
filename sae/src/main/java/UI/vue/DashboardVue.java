@@ -17,6 +17,8 @@ public class DashboardVue {
     private final DashboardController controller;
     private final AuthController authController;
 
+    private Button boutonActif = null;
+
     public DashboardVue(Stage stage, DashboardController controller, AuthController authController) {
         this.stage = stage;
         this.controller = controller;
@@ -84,30 +86,30 @@ public class DashboardVue {
 
         sidebar.getChildren().addAll(btnCatalogue, btnTheme, btnStats, btnPiece, btnCollection, btnComposer);
 
-        // Actions Client
+        // Actions Client modifiées
         btnCatalogue.setOnAction(e -> {
             controller.chargerContenu(conteneurCentral, new Label("Vue : Catalogue des boîtes LEGO (À faire)"));
-            btnCatalogue.setStyle("-fx-background-color: #3498db;");
+            activerBouton(btnCatalogue);
         });
         btnTheme.setOnAction(e -> {
             controller.chargerContenu(conteneurCentral, new Label("Vue : Exploration par thèmes (À faire)"));
-            btnTheme.setStyle("-fx-background-color: #3498db;");
+            activerBouton(btnTheme);
         });
         btnStats.setOnAction(e -> {
             controller.chargerContenu(conteneurCentral, new Label("Vue : Statistiques détaillées (À faire)"));
-            btnStats.setStyle("-fx-background-color: #3498db;");
+            activerBouton(btnStats);
         });
         btnPiece.setOnAction(e -> {
             controller.chargerContenu(conteneurCentral, new Label("Vue : Recherche par pièces (À faire)"));
-            btnPiece.setStyle("-fx-background-color: #3498db;");
+            activerBouton(btnPiece);
         });
         btnCollection.setOnAction(e -> {
             controller.chargerContenu(conteneurCentral, new Label("Vue : Ma Collection personnelle (À faire)"));
-            btnCollection.setStyle("-fx-background-color: #3498db;");
+            activerBouton(btnCollection);
         });
         btnComposer.setOnAction(e -> {
             controller.chargerContenu(conteneurCentral, new Label("Vue : Outil de composition personnalisée (À faire)"));
-            btnComposer.setStyle("-fx-background-color: #3498db;");
+            activerBouton(btnComposer);
         });
 
        // --- Section Admin ---
@@ -125,14 +127,36 @@ public class DashboardVue {
 
             sidebar.getChildren().addAll(separator, lblMenuAdmin, btnAddBoite, btnAddPiece, btnAddTheme, btnModContenu);
 
-            // Actions Admin
-            btnAddBoite.setOnAction(e -> controller.chargerContenu(conteneurCentral, new Label("Formulaire : Ajouter une boîte (À faire)")));
-            btnAddPiece.setOnAction(e -> controller.chargerContenu(conteneurCentral, new Label("Formulaire : Ajouter une pièce (À faire)")));
-            btnAddTheme.setOnAction(e -> controller.chargerContenu(conteneurCentral, new Label("Formulaire : Créer un thème (À faire)")));
-            btnModContenu.setOnAction(e -> controller.chargerContenu(conteneurCentral, new Label("Formulaire : Modifier le contenu d'une boîte (À faire)")));
+            btnAddBoite.setOnAction(e -> {
+                controller.chargerContenu(conteneurCentral, new Label("Formulaire : Ajouter une boîte (À faire)"));
+                activerBouton(btnAddBoite);
+            });
+            btnAddPiece.setOnAction(e -> {
+                controller.chargerContenu(conteneurCentral, new Label("Formulaire : Ajouter une pièce (À faire)"));
+                activerBouton(btnAddPiece);
+            });
+            btnAddTheme.setOnAction(e -> {
+                controller.chargerContenu(conteneurCentral, new Label("Formulaire : Créer un thème (À faire)"));
+                activerBouton(btnAddTheme);
+            });
+            btnModContenu.setOnAction(e -> {
+                controller.chargerContenu(conteneurCentral, new Label("Formulaire : Modifier le contenu d'une boîte (À faire)"));
+                activerBouton(btnModContenu);
+            });
         }
 
         return sidebar;
+    }
+
+    public void activerBouton(Button nouveauBouton) {
+        if (boutonActif != null) {
+            boutonActif.setStyle("-fx-background-color: transparent; -fx-text-fill: #4f5f6f; -fx-font-size: 13px; -fx-cursor: hand;");
+        }
+        
+        nouveauBouton.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 13px; -fx-cursor: hand; -fx-font-weight: bold;");
+        
+
+        boutonActif = nouveauBouton;
     }
 
     private HBox creerHeader(VBox sidebar) {
@@ -163,7 +187,6 @@ public class DashboardVue {
             loginVue.afficher();
         });
 
-        // On ajoute tous les éléments dans le header
         header.getChildren().addAll(btnToggleMenu, lblBienvenue, spacer, btnDeconnexion);
         
         return header;
@@ -174,10 +197,20 @@ public class DashboardVue {
         btn.setAlignment(Pos.CENTER_LEFT);
         btn.setMaxWidth(Double.MAX_VALUE);
         btn.setPadding(new Insets(8, 12, 8, 12));
+
         btn.setStyle("-fx-background-color: transparent; -fx-text-fill: #4f5f6f; -fx-font-size: 13px; -fx-cursor: hand;");
         
-        btn.setOnMouseEntered(e -> btn.setStyle("-fx-background-color: #f0f2f5; -fx-text-fill: #2c3e50; -fx-font-size: 13px; -fx-cursor: hand;"));
-        btn.setOnMouseExited(e -> btn.setStyle("-fx-background-color: transparent; -fx-text-fill: #4f5f6f; -fx-font-size: 13px; -fx-cursor: hand;"));
+        btn.setOnMouseEntered(e -> {
+            if (btn != boutonActif) {
+                btn.setStyle("-fx-background-color: #f0f2f5; -fx-text-fill: #2c3e50; -fx-font-size: 13px; -fx-cursor: hand;");
+            }
+        });
+        
+        btn.setOnMouseExited(e -> {
+            if (btn != boutonActif) {
+                btn.setStyle("-fx-background-color: transparent; -fx-text-fill: #4f5f6f; -fx-font-size: 13px; -fx-cursor: hand;");
+            }
+        });
         
         return btn;
     }
