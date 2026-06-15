@@ -1,0 +1,26 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "MenuConsole",
+            "request": "launch",
+            "mainClass": "UI.console.MenuConsole",
+            "projectName": "sae"
+        },
+        {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "Main",
+            "projectName": "sae"
+        },
+        {
+            "type": "java",
+            "name": "Lancer App.Main",
+            "request": "launch",
+            "mainClass": "App.Main",
+            "projectName": "sae"
+        }
+    ]
+}
