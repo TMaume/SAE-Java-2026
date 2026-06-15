@@ -206,6 +206,37 @@ public class BoiteBD {
     }
 
     /**
+     * Retourne une page de boîtes.
+     *
+     * @param limite le nombre maximum de boîtes à récupérer
+     * @param offset le point de départ 
+     */
+    public List<Boite> listeDesBoitesPaginee(int limite, int offset) {
+        ArrayList<Boite> res = new ArrayList<>();
+        String sql = "SELECT b.numboite, b.nomboite, b.annee, b.nbpieces, t.idtheme, t.nomtheme " +
+                    "FROM BOITE b " +
+                    "JOIN THEME t ON b.idtheme = t.idtheme " +
+                    "ORDER BY b.nomboite " +
+                    "LIMIT ? OFFSET ?";
+                    
+        try (PreparedStatement ps = prepareStatement(sql)) {
+            ps.setInt(1, limite);
+            ps.setInt(2, offset);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Theme theme = new Theme(rs.getInt("idtheme"), rs.getString("nomtheme"), null);
+                    Boite boite = new Boite(rs.getString("numboite"), rs.getString("nomboite"), (Integer) rs.getObject("annee"), theme);
+                    boite.setNbPieces((Integer) rs.getObject("nbpieces"));
+                    res.add(boite);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur de pagination : " + e.getMessage());
+        }
+        return res;
+    }
+
+    /**
      * Retourne les boîtes d'un thème.
      *
      * @param idTheme l'identifiant du thème

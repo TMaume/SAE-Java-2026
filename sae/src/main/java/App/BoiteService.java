@@ -48,8 +48,9 @@ public class BoiteService {
      *
      * @return la liste des boîtes
      */
-    public List<Boite> listerBoites() {
-        return boiteBD.listeDesBoites();
+    public List<Boite> listerBoites(int page, int taillePage) {
+        int offset = (page - 1) * taillePage;
+        return boiteBD.listeDesBoitesPaginee(taillePage, offset);
     }
 
     /**
