@@ -16,7 +16,6 @@ public class DashboardVue {
     private final Stage stage;
     private final DashboardController controller;
     private final AuthController authController;
-
     private Button boutonActif = null;
 
     public DashboardVue(Stage stage, DashboardController controller, AuthController authController) {
@@ -86,12 +85,11 @@ public class DashboardVue {
 
         sidebar.getChildren().addAll(btnCatalogue, btnTheme, btnStats, btnPiece, btnCollection, btnComposer);
 
-        // Actions Client modifiées
         btnCatalogue.setOnAction(e -> {
-            controller.chargerContenu(conteneurCentral, new Label("Vue : Catalogue des boîtes LEGO (À faire)"));
+            CatalogueVue catalogueVue = new CatalogueVue(controller.getBoiteService());
+            controller.chargerContenu(conteneurCentral, catalogueVue.getVue());
             activerBouton(btnCatalogue);
         });
-        this.boutonActif = btnCatalogue;
         btnTheme.setOnAction(e -> {
             controller.chargerContenu(conteneurCentral, new Label("Vue : Exploration par thèmes (À faire)"));
             activerBouton(btnTheme);
@@ -128,6 +126,7 @@ public class DashboardVue {
 
             sidebar.getChildren().addAll(separator, lblMenuAdmin, btnAddBoite, btnAddPiece, btnAddTheme, btnModContenu);
 
+            // Actions Admin
             btnAddBoite.setOnAction(e -> {
                 controller.chargerContenu(conteneurCentral, new Label("Formulaire : Ajouter une boîte (À faire)"));
                 activerBouton(btnAddBoite);
@@ -153,10 +152,7 @@ public class DashboardVue {
         if (boutonActif != null) {
             boutonActif.setStyle("-fx-background-color: transparent; -fx-text-fill: #4f5f6f; -fx-font-size: 13px; -fx-cursor: hand;");
         }
-        
         nouveauBouton.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 13px; -fx-cursor: hand; -fx-font-weight: bold;");
-        
-
         boutonActif = nouveauBouton;
     }
 
@@ -166,7 +162,6 @@ public class DashboardVue {
         header.setStyle("-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-width: 0 0 1 0;");
         header.setAlignment(Pos.CENTER_LEFT);
 
-        // Bouton pour plier le menu
         Button btnToggleMenu = new Button("☰");
         btnToggleMenu.setStyle("-fx-background-color: transparent; -fx-font-size: 18px; -fx-cursor: hand; -fx-text-fill: #2c3e50;");
         btnToggleMenu.setOnAction(e -> {
@@ -198,7 +193,7 @@ public class DashboardVue {
         btn.setAlignment(Pos.CENTER_LEFT);
         btn.setMaxWidth(Double.MAX_VALUE);
         btn.setPadding(new Insets(8, 12, 8, 12));
-
+        
         btn.setStyle("-fx-background-color: transparent; -fx-text-fill: #4f5f6f; -fx-font-size: 13px; -fx-cursor: hand;");
         
         btn.setOnMouseEntered(e -> {

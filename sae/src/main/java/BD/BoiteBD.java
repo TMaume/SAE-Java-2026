@@ -174,7 +174,7 @@ public class BoiteBD {
     }
 
     /**
-     * Retourne la liste de toutes les boîtes.
+     * Retourne la liste de toutes les boîtes (Attention : non paginée).
      *
      * @return liste des boîtes
      */
@@ -206,34 +206,60 @@ public class BoiteBD {
     }
 
     /**
-     * Retourne une page de boîtes.
+     * Récupère une portion restreinte de boîtes (Pagination).
      *
-     * @param limite le nombre maximum de boîtes à récupérer
-     * @param offset le point de départ 
+     * @param limite nombre maximum de résultats
+     * @param offset décalage initial
+     * @return la liste paginée des boîtes
      */
     public List<Boite> listeDesBoitesPaginee(int limite, int offset) {
         ArrayList<Boite> res = new ArrayList<>();
         String sql = "SELECT b.numboite, b.nomboite, b.annee, b.nbpieces, t.idtheme, t.nomtheme " +
-                    "FROM BOITE b " +
-                    "JOIN THEME t ON b.idtheme = t.idtheme " +
-                    "ORDER BY b.nomboite " +
-                    "LIMIT ? OFFSET ?";
-                    
+                     "FROM BOITE b " +
+                     "JOIN THEME t ON b.idtheme = t.idtheme " +
+                     "ORDER BY b.nomboite " +
+                     "LIMIT ? OFFSET ?";
         try (PreparedStatement ps = prepareStatement(sql)) {
             ps.setInt(1, limite);
             ps.setInt(2, offset);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    Theme theme = new Theme(rs.getInt("idtheme"), rs.getString("nomtheme"), null);
-                    Boite boite = new Boite(rs.getString("numboite"), rs.getString("nomboite"), (Integer) rs.getObject("annee"), theme);
+                    Theme theme = new Theme(
+                        rs.getInt("idtheme"),
+                        rs.getString("nomtheme"),
+                        null
+                    );
+                    Boite boite = new Boite(
+                        rs.getString("numboite"),
+                        rs.getString("nomboite"),
+                        (Integer) rs.getObject("annee"),
+                        theme
+                    );
                     boite.setNbPieces((Integer) rs.getObject("nbpieces"));
                     res.add(boite);
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Erreur de pagination : " + e.getMessage());
+            System.err.println("Erreur lors de la récupération paginée : " + e.getMessage());
         }
         return res;
+    }
+
+    /**
+     * Compte le nombre total de boîtes dans la base de données.
+     *
+     * @return le nombre de boîtes total
+     */
+    public int compterBoites() {
+        String sql = "SELECT COUNT(*) AS total FROM BOITE";
+        try (Statement st = createStatement(); ResultSet rs = st.executeQuery(sql)) {
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur lors du comptage des boîtes : " + e.getMessage());
+        }
+        return 0;
     }
 
     /**
