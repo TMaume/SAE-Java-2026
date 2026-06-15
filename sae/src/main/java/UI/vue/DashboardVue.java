@@ -26,17 +26,14 @@ public class DashboardVue {
     public void afficher() {
         BorderPane root = new BorderPane();
 
-        // La banniere
-        HBox header = new HBox(15);
-        header.setPadding(new Insets(15, 20, 15, 20));
-        header.setStyle("-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-width: 0 0 1 0;");
-        header.setAlignment(Pos.CENTER_LEFT);
 
         // Menu au centre
         StackPane conteneurCentral = new StackPane();
         conteneurCentral.setPadding(new Insets(30));
         conteneurCentral.setStyle("-fx-background-color: #fafbfc;");
 
+        // Header
+        HBox header = header();
         // Sidebar
         VBox sidebar = sidebar(conteneurCentral);
         
@@ -143,6 +140,14 @@ public class DashboardVue {
 
         return sidebar;
 
+    }
+
+    public HBox header() {
+        HBox header = new HBox(15);
+        header.setPadding(new Insets(15, 20, 15, 20));
+        header.setStyle("-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-width: 0 0 1 0;");
+        header.setAlignment(Pos.CENTER_LEFT);
+        return header;
     }
 
     /**
