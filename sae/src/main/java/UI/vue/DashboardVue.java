@@ -1,6 +1,11 @@
 package UI.vue;
 
+import App.BoiteService;
+import App.CollectionService;
+import App.PieceService;
 import App.RoleUtilisateur;
+import App.ThemeService;
+import App.Utilisateur;
 import UI.Controller.AuthController;
 import UI.Controller.DashboardController;
 import javafx.geometry.Insets;
@@ -16,10 +21,13 @@ public class DashboardVue {
     private final Stage stage;
     private final DashboardController controller;
     private final AuthController authController;
+    private Button ancien;
 
-    public DashboardVue(Stage stage, DashboardController controller, AuthController authController) {
+    public DashboardVue(Stage stage, Utilisateur utilisateur, BoiteService boiteService, 
+                               PieceService pieceService, ThemeService themeService, 
+                               CollectionService collectionService, AuthController authController) {
         this.stage = stage;
-        this.controller = controller;
+        this.controller = new DashboardController(utilisateur, boiteService, pieceService, themeService, collectionService, this);
         this.authController = authController;
     }
 
@@ -76,6 +84,7 @@ public class DashboardVue {
         sidebar.getChildren().add(lblMenuClient);
 
         Button btnCatalogue = creerBoutonMenu("Consulter le catalogue");
+        this.ancien = btnCatalogue;
         Button btnTheme = creerBoutonMenu("Explorer par thème");
         Button btnStats = creerBoutonMenu("Statistiques d'une boîte");
         Button btnPiece = creerBoutonMenu("Rechercher par pièce");
@@ -85,30 +94,12 @@ public class DashboardVue {
         sidebar.getChildren().addAll(btnCatalogue, btnTheme, btnStats, btnPiece, btnCollection, btnComposer);
 
         // Actions Client
-        btnCatalogue.setOnAction(e -> {
-            controller.chargerContenu(conteneurCentral, new Label("Vue : Catalogue des boîtes LEGO (À faire)"));
-            btnCatalogue.setStyle("-fx-background-color: #3498db;");
-        });
-        btnTheme.setOnAction(e -> {
-            controller.chargerContenu(conteneurCentral, new Label("Vue : Exploration par thèmes (À faire)"));
-            btnTheme.setStyle("-fx-background-color: #3498db;");
-        });
-        btnStats.setOnAction(e -> {
-            controller.chargerContenu(conteneurCentral, new Label("Vue : Statistiques détaillées (À faire)"));
-            btnStats.setStyle("-fx-background-color: #3498db;");
-        });
-        btnPiece.setOnAction(e -> {
-            controller.chargerContenu(conteneurCentral, new Label("Vue : Recherche par pièces (À faire)"));
-            btnPiece.setStyle("-fx-background-color: #3498db;");
-        });
-        btnCollection.setOnAction(e -> {
-            controller.chargerContenu(conteneurCentral, new Label("Vue : Ma Collection personnelle (À faire)"));
-            btnCollection.setStyle("-fx-background-color: #3498db;");
-        });
-        btnComposer.setOnAction(e -> {
-            controller.chargerContenu(conteneurCentral, new Label("Vue : Outil de composition personnalisée (À faire)"));
-            btnComposer.setStyle("-fx-background-color: #3498db;");
-        });
+        btnCatalogue.setOnAction(controller);
+        btnTheme.setOnAction(controller);
+        btnStats.setOnAction(controller);
+        btnPiece.setOnAction(controller);
+        btnCollection.setOnAction(controller);
+        btnComposer.setOnAction(controller);
 
        // --- Section Admin ---
         if (controller.getUtilisateurConnecte().getRole() == RoleUtilisateur.ADMIN) {
@@ -126,13 +117,19 @@ public class DashboardVue {
             sidebar.getChildren().addAll(separator, lblMenuAdmin, btnAddBoite, btnAddPiece, btnAddTheme, btnModContenu);
 
             // Actions Admin
-            btnAddBoite.setOnAction(e -> controller.chargerContenu(conteneurCentral, new Label("Formulaire : Ajouter une boîte (À faire)")));
-            btnAddPiece.setOnAction(e -> controller.chargerContenu(conteneurCentral, new Label("Formulaire : Ajouter une pièce (À faire)")));
-            btnAddTheme.setOnAction(e -> controller.chargerContenu(conteneurCentral, new Label("Formulaire : Créer un thème (À faire)")));
-            btnModContenu.setOnAction(e -> controller.chargerContenu(conteneurCentral, new Label("Formulaire : Modifier le contenu d'une boîte (À faire)")));
+            btnAddBoite.setOnAction(controller);
+            btnAddPiece.setOnAction(controller);
+            btnAddTheme.setOnAction(controller);
+            btnModContenu.setOnAction(controller);
         }
 
         return sidebar;
+    }
+
+    public void changecouleur(Button b){
+        ancien.setStyle("-fx-background-color: transparent; -fx-text-fill: #4f5f6f; -fx-font-size: 13px; -fx-cursor: hand;");
+        b.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold;");
+        this.ancien = b;
     }
 
 

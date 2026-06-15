@@ -49,8 +49,7 @@ public class LoginVue {
         btnConnexion.setOnAction(e -> {
             Utilisateur u = authController.connecter(txtIdentifiant.getText(), txtMotDePasse.getText(), lblErreur);
             if (u != null) {
-                DashboardController dashboardController = new DashboardController(u, null, null, null, null);
-                DashboardVue dashboardVue = new DashboardVue(stage, dashboardController, authController);
+                DashboardVue dashboardVue = new DashboardVue(stage, u, null, null, null, null, authController);
                 dashboardVue.afficher(); 
             }
         });
