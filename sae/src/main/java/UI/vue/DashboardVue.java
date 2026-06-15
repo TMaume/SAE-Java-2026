@@ -56,13 +56,14 @@ public class DashboardVue {
         VBox vueDefaut = new VBox(10);
         vueDefaut.setAlignment(Pos.CENTER);
         
-        Label lblMessage1 = new Label("Bienvenue sur le tableau de bord.");
-        lblMessage1.setStyle("-fx-font-size: 18px; -fx-text-fill: #2c3e50; -fx-font-weight: bold;");
+        // Label lblMessage1 = new Label("Bienvenue sur le tableau de bord.");
+        // lblMessage1.setStyle("-fx-font-size: 18px; -fx-text-fill: #2c3e50; -fx-font-weight: bold;");
         
-        Label lblMessage2 = new Label("Utilisez le menu de gauche pour naviguer.");
-        lblMessage2.setStyle("-fx-font-size: 14px; -fx-text-fill: #7f8c8d;");
+        // Label lblMessage2 = new Label("Utilisez le menu de gauche pour naviguer.");
+        // lblMessage2.setStyle("-fx-font-size: 14px; -fx-text-fill: #7f8c8d;");
         
-        vueDefaut.getChildren().addAll(lblMessage1, lblMessage2);
+        //vueDefaut.getChildren().addAll(lblMessage1, lblMessage2);
+        controller.chargerContenu(new StackPane(),new Label("Vue : Catalogue des boîtes LEGO (À faire)"));
         return vueDefaut;
     }
 
@@ -145,7 +146,7 @@ public class DashboardVue {
                 activerBouton(btnModContenu);
             });
         }
-
+        this.boutonActif.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 13px; -fx-cursor: hand; -fx-font-weight: bold;");
         return sidebar;
     }
 
