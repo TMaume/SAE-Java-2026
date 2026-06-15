@@ -85,12 +85,30 @@ public class DashboardVue {
         sidebar.getChildren().addAll(btnCatalogue, btnTheme, btnStats, btnPiece, btnCollection, btnComposer);
 
         // Actions Client
-        btnCatalogue.setOnAction(e -> controller.chargerContenu(conteneurCentral, new Label("Vue : Catalogue des boîtes LEGO (À faire)")));
-        btnTheme.setOnAction(e -> controller.chargerContenu(conteneurCentral, new Label("Vue : Exploration par thèmes (À faire)")));
-        btnStats.setOnAction(e -> controller.chargerContenu(conteneurCentral, new Label("Vue : Statistiques détaillées (À faire)")));
-        btnPiece.setOnAction(e -> controller.chargerContenu(conteneurCentral, new Label("Vue : Recherche par pièces (À faire)")));
-        btnCollection.setOnAction(e -> controller.chargerContenu(conteneurCentral, new Label("Vue : Ma Collection personnelle (À faire)")));
-        btnComposer.setOnAction(e -> controller.chargerContenu(conteneurCentral, new Label("Vue : Outil de composition personnalisée (À faire)")));
+        btnCatalogue.setOnAction(e -> {
+            controller.chargerContenu(conteneurCentral, new Label("Vue : Catalogue des boîtes LEGO (À faire)"));
+            btnCatalogue.setStyle("-fx-background-color: #3498db;");
+        });
+        btnTheme.setOnAction(e -> {
+            controller.chargerContenu(conteneurCentral, new Label("Vue : Exploration par thèmes (À faire)"));
+            btnTheme.setStyle("-fx-background-color: #3498db;");
+        });
+        btnStats.setOnAction(e -> {
+            controller.chargerContenu(conteneurCentral, new Label("Vue : Statistiques détaillées (À faire)"));
+            btnStats.setStyle("-fx-background-color: #3498db;");
+        });
+        btnPiece.setOnAction(e -> {
+            controller.chargerContenu(conteneurCentral, new Label("Vue : Recherche par pièces (À faire)"));
+            btnPiece.setStyle("-fx-background-color: #3498db;");
+        });
+        btnCollection.setOnAction(e -> {
+            controller.chargerContenu(conteneurCentral, new Label("Vue : Ma Collection personnelle (À faire)"));
+            btnCollection.setStyle("-fx-background-color: #3498db;");
+        });
+        btnComposer.setOnAction(e -> {
+            controller.chargerContenu(conteneurCentral, new Label("Vue : Outil de composition personnalisée (À faire)"));
+            btnComposer.setStyle("-fx-background-color: #3498db;");
+        });
 
        // --- Section Admin ---
         if (controller.getUtilisateurConnecte().getRole() == RoleUtilisateur.ADMIN) {
