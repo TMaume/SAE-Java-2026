@@ -135,6 +135,7 @@ public class DashboardVue {
         return sidebar;
     }
 
+
     private HBox creerHeader(VBox sidebar) {
         HBox header = new HBox(15);
         header.setPadding(new Insets(15, 20, 15, 20));
