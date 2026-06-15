@@ -78,6 +78,7 @@ public class DashboardVue {
         sidebar.getChildren().add(lblMenuClient);
 
         Button btnCatalogue = creerBoutonMenu("Consulter le catalogue");
+        this.boutonActif = btnCatalogue;
         Button btnTheme = creerBoutonMenu("Explorer par thème");
         Button btnStats = creerBoutonMenu("Statistiques d'une boîte");
         Button btnPiece = creerBoutonMenu("Rechercher par pièce");
