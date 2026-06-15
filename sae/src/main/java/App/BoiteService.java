@@ -48,9 +48,29 @@ public class BoiteService {
      *
      * @return la liste des boîtes
      */
-    public List<Boite> listerBoites(int page, int taillePage) {
+    public List<Boite> listerBoites() {
+        return boiteBD.listeDesBoites();
+    }
+
+    /**
+     * Liste un sous-ensemble de boîtes pour la page courante.
+     *
+     * @param page numéro de la page active (indexé à partir de 1)
+     * @param taillePage nombre d'éléments maximum par page
+     * @return liste restreinte de boîtes
+     */
+    public List<Boite> listerBoitesPaginees(int page, int taillePage) {
         int offset = (page - 1) * taillePage;
         return boiteBD.listeDesBoitesPaginee(taillePage, offset);
+    }
+
+    /**
+     * Retourne le nombre total de boîtes disponibles en BD.
+     *
+     * @return total de lignes dans BOITE
+     */
+    public int obtenirNombreTotalBoites() {
+        return boiteBD.compterBoites();
     }
 
     /**

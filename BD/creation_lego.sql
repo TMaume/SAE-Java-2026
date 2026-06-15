@@ -5,7 +5,8 @@ CREATE TABLE BOITE (
   nomboite varchar(100),
   annee    int,
   nbpieces int,
-  idtheme  int NOT NULL
+  idtheme  int NOT NULL,
+  image    varchar(200)
 );
 
 CREATE TABLE CATEGORIE (

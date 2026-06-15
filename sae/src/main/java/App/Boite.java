@@ -20,6 +20,7 @@ public class Boite {
     private final List<PieceQuantite> pieces = new ArrayList<>();
     private final List<FigurineQuantite> figurines = new ArrayList<>();
     private final List<BoiteQuantite> boitesIncluses = new ArrayList<>();
+    private String imageBoite;
 
     /**
      * Crée une nouvelle boîte LEGO.
@@ -28,9 +29,10 @@ public class Boite {
      * @param nom le nom de la boîte
      * @param annee l'année de sortie de la boîte
      * @param theme le thème associé à la boîte
+     * @param imageBoite l'URL de l'image de la boîte
      * @throws IllegalArgumentException si le numero est null ou vide
      */
-    public Boite(String numero, String nom, Integer annee, Theme theme) {
+    public Boite(String numero, String nom, Integer annee, Theme theme, String imageBoite) {
         if (numero == null || numero.isBlank()) {
             throw new IllegalArgumentException("numero");
         }
@@ -38,6 +40,7 @@ public class Boite {
         this.nom = nom == null ? "" : nom;
         this.annee = annee;
         this.theme = theme;
+        this.imageBoite = imageBoite == null ? "" : imageBoite;
     }
 
     /**
@@ -119,6 +122,15 @@ public class Boite {
      */
     public void setNbPieces(Integer nbPieces) {
         this.nbPieces = nbPieces;
+    }
+
+    /**
+     * Retourne l'URL de l'image de la boîte.
+     *
+     * @return l'URL de l'image
+     */
+    public String getImageBoite() {
+        return imageBoite;
     }
 
     /**
