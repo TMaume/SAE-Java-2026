@@ -27,22 +27,18 @@ public class DashboardVue {
     public void afficher() {
         BorderPane root = new BorderPane();
 
-        // 1. Initialisation de la zone centrale
         StackPane conteneurCentral = new StackPane();
         conteneurCentral.setPadding(new Insets(30));
         conteneurCentral.setStyle("-fx-background-color: #fafbfc;");
         conteneurCentral.getChildren().add(creerVueDefaut()); 
 
-        // 2. Initialisation des menus
         VBox sidebar = creerSidebar(conteneurCentral);
         HBox header = creerHeader(sidebar);
 
-        // 3. Assemblage
         root.setTop(header);
         root.setLeft(sidebar);
         root.setCenter(conteneurCentral);
 
-        // 4. Gestion de la taille d'écran dynamique
         Scene sceneActuelle = stage.getScene();
         if (sceneActuelle == null) {
             stage.setScene(new Scene(root, 1024, 768));
@@ -55,14 +51,13 @@ public class DashboardVue {
         VBox vueDefaut = new VBox(10);
         vueDefaut.setAlignment(Pos.CENTER);
         
-        // Label lblMessage1 = new Label("Bienvenue sur le tableau de bord.");
-        // lblMessage1.setStyle("-fx-font-size: 18px; -fx-text-fill: #2c3e50; -fx-font-weight: bold;");
+        Label lblMessage1 = new Label("Bienvenue sur le tableau de bord.");
+        lblMessage1.setStyle("-fx-font-size: 18px; -fx-text-fill: #2c3e50; -fx-font-weight: bold;");
         
-        // Label lblMessage2 = new Label("Utilisez le menu de gauche pour naviguer.");
-        // lblMessage2.setStyle("-fx-font-size: 14px; -fx-text-fill: #7f8c8d;");
+        Label lblMessage2 = new Label("Utilisez le menu de gauche pour naviguer.");
+        lblMessage2.setStyle("-fx-font-size: 14px; -fx-text-fill: #7f8c8d;");
         
-        //vueDefaut.getChildren().addAll(lblMessage1, lblMessage2);
-        controller.chargerContenu(new StackPane(),new Label("Vue : Catalogue des boîtes LEGO (À faire)"));
+        vueDefaut.getChildren().addAll(lblMessage1, lblMessage2);
         return vueDefaut;
     }
 
@@ -72,13 +67,11 @@ public class DashboardVue {
         sidebar.setPrefWidth(240);
         sidebar.setStyle("-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-width: 0 1 0 0;");
 
-        // --- Section Client ---
         Label lblMenuClient = new Label("Menu Client");
         lblMenuClient.setStyle("-fx-font-weight: bold; -fx-font-size: 15px; -fx-text-fill: #2c3e50;");
         sidebar.getChildren().add(lblMenuClient);
 
         Button btnCatalogue = creerBoutonMenu("Consulter le catalogue");
-        this.boutonActif = btnCatalogue;
         Button btnTheme = creerBoutonMenu("Explorer par thème");
         Button btnStats = creerBoutonMenu("Statistiques d'une boîte");
         Button btnPiece = creerBoutonMenu("Rechercher par pièce");
@@ -88,7 +81,7 @@ public class DashboardVue {
         sidebar.getChildren().addAll(btnCatalogue, btnTheme, btnStats, btnPiece, btnCollection, btnComposer);
 
         btnCatalogue.setOnAction(e -> {
-            CatalogueVue catalogueVue = new CatalogueVue(controller.getBoiteService());
+            CatalogueVue catalogueVue = new CatalogueVue(controller.getBoiteService(), controller.getThemeService());
             controller.chargerContenu(conteneurCentral, catalogueVue.getVue());
             activerBouton(btnCatalogue);
         });
@@ -113,7 +106,6 @@ public class DashboardVue {
             activerBouton(btnComposer);
         });
 
-       // --- Section Admin ---
         if (controller.getUtilisateurConnecte().getRole() == RoleUtilisateur.ADMIN) {
             Separator separator = new Separator();
             separator.setPadding(new Insets(10, 0, 10, 0));
@@ -128,7 +120,6 @@ public class DashboardVue {
 
             sidebar.getChildren().addAll(separator, lblMenuAdmin, btnAddBoite, btnAddPiece, btnAddTheme, btnModContenu);
 
-            // Actions Admin
             btnAddBoite.setOnAction(e -> {
                 controller.chargerContenu(conteneurCentral, new Label("Formulaire : Ajouter une boîte (À faire)"));
                 activerBouton(btnAddBoite);
@@ -146,7 +137,7 @@ public class DashboardVue {
                 activerBouton(btnModContenu);
             });
         }
-        this.boutonActif.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 13px; -fx-cursor: hand; -fx-font-weight: bold;");
+
         return sidebar;
     }
 
