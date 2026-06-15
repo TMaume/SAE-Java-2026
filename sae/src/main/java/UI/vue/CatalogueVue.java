@@ -41,9 +41,6 @@ public class CatalogueVue {
         root = new BorderPane();
         root.setStyle("-fx-background-color: transparent;");
 
-        // --------------------------------------------------------
-        // EN-TÊTE : Titre et Bouton de bascule (Grille / Liste)
-        // --------------------------------------------------------
         HBox header = new HBox(20);
         header.setAlignment(Pos.CENTER_LEFT);
         header.setPadding(new Insets(0, 0, 20, 0));
@@ -62,15 +59,12 @@ public class CatalogueVue {
         btnChangerVue.setOnAction(e -> {
             estVueGrille = !estVueGrille;
             btnChangerVue.setText(estVueGrille ? "Affichage : Grille" : "Affichage : Liste");
-            chargerPage(); // Recharge la vue courante avec le nouveau style
+            chargerPage(); 
         });
 
         header.getChildren().addAll(lblTitre, spacer, lblInfosTotal, btnChangerVue);
         root.setTop(header);
 
-        // --------------------------------------------------------
-        // CENTRE : Conteneur principal avec Scroll
-        // --------------------------------------------------------
         scrollPane = new ScrollPane();
         scrollPane.setFitToWidth(true);
         scrollPane.setStyle("-fx-background-color: transparent; -fx-background: transparent; -fx-border-color: transparent;");
@@ -84,9 +78,6 @@ public class CatalogueVue {
 
         root.setCenter(scrollPane);
 
-        // --------------------------------------------------------
-        // BAS : Pagination
-        // --------------------------------------------------------
         HBox footer = new HBox(15);
         footer.setAlignment(Pos.CENTER);
         footer.setPadding(new Insets(20, 0, 0, 0));
@@ -115,7 +106,7 @@ public class CatalogueVue {
     }
 
     private void chargerPage() {
-        if (boiteService == null) return; // Sécurité si le service n'est pas initialisé
+        if (boiteService == null) return; 
 
         // 1. Calculs globaux
         int totalBoites = boiteService.obtenirNombreTotalBoites();
