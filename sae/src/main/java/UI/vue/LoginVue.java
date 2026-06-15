@@ -2,6 +2,7 @@ package UI.vue;
 
 import App.Utilisateur;
 import UI.Controller.AuthController;
+import UI.Controller.DashboardController; 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -18,7 +19,7 @@ public class LoginVue {
         this.authController = authController;
     }
 
-    public Scene getScene() {
+    public void afficher() {
         VBox root = new VBox(15);
         root.setAlignment(Pos.CENTER);
         root.setPadding(new Insets(40));
@@ -48,19 +49,25 @@ public class LoginVue {
         btnConnexion.setOnAction(e -> {
             Utilisateur u = authController.connecter(txtIdentifiant.getText(), txtMotDePasse.getText(), lblErreur);
             if (u != null) {
-                System.out.println("Connexion réussie : " + u.getIdentifiant() + " (Rôle: " + u.getRole() + ")");
-                // TODO: Rediriger vers le tableau de bord (DashboardVue) en passant l'utilisateur
+                DashboardController dashboardController = new DashboardController(u, null, null, null, null);
+                DashboardVue dashboardVue = new DashboardVue(stage, dashboardController, authController);
+                dashboardVue.afficher(); 
             }
         });
 
         linkInscription.setOnAction(e -> {
-            // Basculer vers la vue d'inscription
             RegisterVue registerVue = new RegisterVue(stage, authController);
-            stage.setScene(registerVue.getScene());
+            registerVue.afficher(); 
         });
 
         root.getChildren().addAll(lblTitre, txtIdentifiant, txtMotDePasse, btnConnexion, linkInscription, lblErreur);
 
-        return new Scene(root, 800, 600);
+
+        Scene sceneActuelle = stage.getScene();
+        if (sceneActuelle == null) {
+            stage.setScene(new Scene(root, 1024, 768));
+        } else {
+            sceneActuelle.setRoot(root);
+        }
     }
 }

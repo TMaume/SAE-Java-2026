@@ -2,6 +2,7 @@ package UI.vue;
 
 import App.Utilisateur;
 import UI.Controller.AuthController;
+import UI.Controller.DashboardController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -18,7 +19,8 @@ public class RegisterVue {
         this.authController = authController;
     }
 
-    public Scene getScene() {
+
+    public void afficher() {
         VBox root = new VBox(15);
         root.setAlignment(Pos.CENTER);
         root.setPadding(new Insets(40));
@@ -48,7 +50,7 @@ public class RegisterVue {
 
         Hyperlink linkConnexion = new Hyperlink("Déjà un compte ? Se connecter");
 
-        // --- ACTIONS ---
+        // actions
         btnInscription.setOnAction(e -> {
             Utilisateur u = authController.creerCompte(
                 txtIdentifiant.getText(), 
@@ -57,19 +59,25 @@ public class RegisterVue {
                 lblErreur
             );
             if (u != null) {
-                System.out.println("Compte créé avec succès !");
-                // TODO: Rediriger vers le tableau de bord (DashboardVue)
+                DashboardController dashboardController = new DashboardController(u, null, null, null, null);
+                DashboardVue dashboardVue = new DashboardVue(stage, dashboardController, authController);
+                dashboardVue.afficher(); 
             }
         });
 
         linkConnexion.setOnAction(e -> {
-            // Basculer vers la vue de connexion
+
             LoginVue loginVue = new LoginVue(stage, authController);
-            stage.setScene(loginVue.getScene());
+            loginVue.afficher(); 
         });
 
         root.getChildren().addAll(lblTitre, txtIdentifiant, txtMotDePasse, txtConfirmMotDePasse, btnInscription, linkConnexion, lblErreur);
 
-        return new Scene(root, 800, 600);
+        Scene sceneActuelle = stage.getScene();
+        if (sceneActuelle == null) {
+            stage.setScene(new Scene(root, 1024, 768));
+        } else {
+            sceneActuelle.setRoot(root);
+        }
     }
 }
