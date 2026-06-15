@@ -66,36 +66,8 @@ public class DashboardVue {
 
         root.setLeft(sidebar);
 
-        // La banniere
-        HBox header = new HBox(15);
-        header.setPadding(new Insets(15, 20, 15, 20));
-        header.setStyle("-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-width: 0 0 1 0;");
-        header.setAlignment(Pos.CENTER_LEFT);
-
-        // Bouton pour plier le menu
-        Button btnToggleMenu = new Button("☰");
-        btnToggleMenu.setStyle("-fx-background-color: transparent; -fx-font-size: 18px; -fx-cursor: hand; -fx-text-fill: #2c3e50;");
-        btnToggleMenu.setOnAction(e -> {
-            boolean estVisible = sidebar.isVisible();
-            sidebar.setVisible(!estVisible);
-            sidebar.setManaged(!estVisible); 
-        });
-
-        Label lblBienvenue = new Label("Bienvenue, " + controller.getUtilisateurConnecte().getIdentifiant());
-        lblBienvenue.setStyle("-fx-font-size: 14px; -fx-text-fill: #555555;");
-
-        Region spacer = new Region();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
-
-        Button btnDeconnexion = new Button("Déconnexion");
-        btnDeconnexion.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold;");
-        btnDeconnexion.setOnAction(e -> {
-            LoginVue loginVue = new LoginVue(stage, authController);
-            loginVue.afficher();
-        });
-
-        header.getChildren().addAll(btnToggleMenu, lblBienvenue, spacer, btnDeconnexion);
-        root.setTop(header);
+        banniere = new Banniere(stage, authController);
+        root.setTop(banniere);
 
         // Menu au centre
         StackPane conteneurCentral = new StackPane();

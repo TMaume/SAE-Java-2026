@@ -17,26 +17,42 @@ public class Banniere extends HBox {
 
     public Banniere() {
         super();
-        this.setPadding(new Insets(10, 20, 10, 20));
-        this.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
 
-        bienvenue = new Label("Bienvenue sur notre application!");
+        this.setPadding(new Insets(15, 20, 15, 20));
+        this.setStyle("-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-width: 0 0 1 0;");
+        this.setAlignment(Pos.CENTER_LEFT);
+
+        bienvenue = new Label("Bienvenue, " + controller.getUtilisateurConnecte().getIdentifiant());
+        bienvenue.setStyle("-fx-font-size: 14px; -fx-text-fill: #555555;");
         this.getChildren().add(bienvenue);
-
-        btn_Acceuil = new Button("Accueil");
-        btn_Acceuil.setGraphic(createIcon("/images/home.png"));
-        this.getChildren().add(btn_Acceuil);
 
         btn_Paramètres = new Button("Paramètres");
         btn_Paramètres.setGraphic(createIcon("/images/settings.png"));
+        btn_Paramètres.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold;");
+        btn_Paramètres.setOnAction(e -> {
+            //ouvrir la vue des paramètres
+        });
         this.getChildren().add(btn_Paramètres);
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+        this.getChildren().add(spacer);
 
         btn_SeDeconnecter = new Button("Se déconnecter");
         btn_SeDeconnecter.setGraphic(createIcon("/images/logout.png"));
+        btn_SeDeconnecter.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold;");
+        btn_SeDeconnecter.setOnAction(e -> {
+            LoginVue loginVue = new LoginVue(stage, authController);
+            loginVue.afficher();
+        });
         this.getChildren().add(btn_SeDeconnecter);
 
         btn_Arreter = new Button("Arrêter");
         btn_Arreter.setGraphic(createIcon("/images/stop.png"));
+        btn_Arreter.setStyle("-fx-background-color: #c0392b; -fx-text-fill: white; -fx-font-weight: bold;");
+        btn_Arreter.setOnAction(e -> {
+            System.exit(0);
+        });
         this.getChildren().add(btn_Arreter);
     }
 
