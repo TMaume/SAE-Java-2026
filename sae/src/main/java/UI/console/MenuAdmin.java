@@ -1,13 +1,7 @@
 package UI.console;
 
 import java.util.List;
-import App.Boite;
-import App.BoiteService;
-import App.PieceService;
-import App.ThemeService;
-import App.Categorie;
-import App.Piece;
-import App.Theme;
+import App.*;
 
 public class MenuAdmin {
 
