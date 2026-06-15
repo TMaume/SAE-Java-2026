@@ -91,6 +91,7 @@ public class DashboardVue {
             controller.chargerContenu(conteneurCentral, new Label("Vue : Catalogue des boîtes LEGO (À faire)"));
             activerBouton(btnCatalogue);
         });
+        this.boutonActif = btnCatalogue;
         btnTheme.setOnAction(e -> {
             controller.chargerContenu(conteneurCentral, new Label("Vue : Exploration par thèmes (À faire)"));
             activerBouton(btnTheme);
