@@ -11,19 +11,11 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        // 1. Initialisation du modèle
         GestionUtilisateurs gestionUtilisateurs = new GestionUtilisateurs(GestionUtilisateurs.cheminParDefaut());
-        
-        // 2. Initialisation du contrôleur
         AuthController authController = new AuthController(gestionUtilisateurs);
-
-        // 3. Initialisation de la vue de départ
         LoginVue loginVue = new LoginVue(primaryStage, authController);
-        Scene scene = loginVue.getScene();
-
-        // 4. Configuration de la fenêtre principale
+        loginVue.afficher(); 
         primaryStage.setTitle("Briqu'IUTO - Application de gestion");
-        primaryStage.setScene(scene);
         primaryStage.show();
     }
 
