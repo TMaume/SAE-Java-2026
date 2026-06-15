@@ -2,7 +2,6 @@ package UI.Controller;
 
 import App.*;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 
 public class DashboardController {
@@ -15,7 +14,6 @@ public class DashboardController {
     public DashboardController(Utilisateur utilisateur, BoiteService boiteService, 
                                PieceService pieceService, ThemeService themeService, 
                                CollectionService collectionService) {
-                                
         this.utilisateurConnecte = utilisateur;
         this.boiteService = boiteService;
         this.pieceService = pieceService;
@@ -25,6 +23,22 @@ public class DashboardController {
 
     public Utilisateur getUtilisateurConnecte() {
         return utilisateurConnecte;
+    }
+
+    public BoiteService getBoiteService() {
+        return boiteService;
+    }
+
+    public PieceService getPieceService() {
+        return pieceService;
+    }
+
+    public ThemeService getThemeService() {
+        return themeService;
+    }
+
+    public CollectionService getCollectionService() {
+        return collectionService;
     }
 
     /**

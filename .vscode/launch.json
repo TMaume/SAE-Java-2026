@@ -13,6 +13,7 @@
             "type": "java",
             "name": "MenuConsole",
             "request": "launch",
+            "vmArgs": "--module-path /usr/share/openjfx/lib/ --add-modules javafx.controls,javafx.fxml",
             "mainClass": "UI.console.MenuConsole",
             "projectName": "sae"
         },
@@ -20,6 +21,7 @@
             "type": "java",
             "name": "Main",
             "request": "launch",
+            "vmArgs": "--module-path /usr/share/openjfx/lib/ --add-modules javafx.controls,javafx.fxml",
             "mainClass": "Main",
             "projectName": "sae"
         },
@@ -27,6 +29,7 @@
             "type": "java",
             "name": "Lancer App.Main",
             "request": "launch",
+            "vmArgs": "--module-path /usr/share/openjfx/lib/ --add-modules javafx.controls,javafx.fxml",
             "mainClass": "App.Main",
             "projectName": "sae"
         }
