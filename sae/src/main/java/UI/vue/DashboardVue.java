@@ -12,18 +12,31 @@ import javafx.scene.control.Separator;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
+/**
+ * Vue principale agissant comme conteneur pour le menu et les sous-vues.
+ */
 public class DashboardVue {
     private final Stage stage;
     private final DashboardController controller;
     private final AuthController authController;
     private Button boutonActif = null;
 
+    /**
+     * Construit le tableau de bord.
+     *
+     * @param stage la fenêtre principale
+     * @param controller le contrôleur du tableau de bord
+     * @param authController le contrôleur d'authentification
+     */
     public DashboardVue(Stage stage, DashboardController controller, AuthController authController) {
         this.stage = stage;
         this.controller = controller;
         this.authController = authController;
     }
 
+    /**
+     * Initialise et affiche le tableau de bord.
+     */
     public void afficher() {
         BorderPane root = new BorderPane();
 
@@ -47,6 +60,11 @@ public class DashboardVue {
         }
     }
 
+    /**
+     * Crée la vue par défaut affichée au lancement.
+     *
+     * @return un VBox contenant le message de bienvenue
+     */
     private VBox creerVueDefaut() {
         VBox vueDefaut = new VBox(10);
         vueDefaut.setAlignment(Pos.CENTER);
@@ -61,6 +79,27 @@ public class DashboardVue {
         return vueDefaut;
     }
 
+    /**
+     * Affiche la vue du catalogue et gère la transition vers les détails.
+     *
+     * @param conteneurCentral la zone d'affichage principale
+     * @param btnCatalogue le bouton du menu déclencheur
+     */
+    private void afficherCatalogue(StackPane conteneurCentral, Button btnCatalogue) {
+        CatalogueVue catalogueVue = new CatalogueVue(controller.getBoiteService(), controller.getThemeService(), boite -> {
+            DetailBoiteVue detailVue = new DetailBoiteVue(boite, controller.getBoiteService(), () -> afficherCatalogue(conteneurCentral, btnCatalogue));
+            controller.chargerContenu(conteneurCentral, detailVue);
+        });
+        controller.chargerContenu(conteneurCentral, catalogueVue.getVue());
+        activerBouton(btnCatalogue);
+    }
+
+    /**
+     * Construit le menu latéral.
+     *
+     * @param conteneurCentral la zone d'affichage affectée par le menu
+     * @return un VBox contenant la navigation
+     */
     private VBox creerSidebar(StackPane conteneurCentral){
         VBox sidebar = new VBox(10);
         sidebar.setPadding(new Insets(20));
@@ -80,11 +119,8 @@ public class DashboardVue {
 
         sidebar.getChildren().addAll(btnCatalogue, btnTheme, btnStats, btnPiece, btnCollection, btnComposer);
 
-        btnCatalogue.setOnAction(e -> {
-            CatalogueVue catalogueVue = new CatalogueVue(controller.getBoiteService(), controller.getThemeService());
-            controller.chargerContenu(conteneurCentral, catalogueVue.getVue());
-            activerBouton(btnCatalogue);
-        });
+        btnCatalogue.setOnAction(e -> afficherCatalogue(conteneurCentral, btnCatalogue));
+
         btnTheme.setOnAction(e -> {
             controller.chargerContenu(conteneurCentral, new Label("Vue : Exploration par thèmes (À faire)"));
             activerBouton(btnTheme);
@@ -141,6 +177,11 @@ public class DashboardVue {
         return sidebar;
     }
 
+    /**
+     * Modifie l'apparence visuelle du bouton actif.
+     *
+     * @param nouveauBouton le bouton sélectionné
+     */
     public void activerBouton(Button nouveauBouton) {
         if (boutonActif != null) {
             boutonActif.setStyle("-fx-background-color: transparent; -fx-text-fill: #4f5f6f; -fx-font-size: 13px; -fx-cursor: hand;");
@@ -149,6 +190,12 @@ public class DashboardVue {
         boutonActif = nouveauBouton;
     }
 
+    /**
+     * Construit l'en-tête principal de la fenêtre.
+     *
+     * @param sidebar le menu latéral à afficher ou masquer
+     * @return un HBox contenant l'en-tête
+     */
     private HBox creerHeader(VBox sidebar) {
         HBox header = new HBox(15);
         header.setPadding(new Insets(15, 20, 15, 20));
@@ -181,6 +228,12 @@ public class DashboardVue {
         return header;
     }
 
+    /**
+     * Crée un bouton formaté pour le menu latéral.
+     *
+     * @param texte le texte du bouton
+     * @return le bouton configuré
+     */
     private Button creerBoutonMenu(String texte) {
         Button btn = new Button(texte);
         btn.setAlignment(Pos.CENTER_LEFT);

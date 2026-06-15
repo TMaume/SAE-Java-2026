@@ -12,6 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Vue affichant le catalogue des boîtes LEGO avec pagination et filtres.
@@ -19,6 +20,8 @@ import java.util.List;
 public class CatalogueVue {
     private final BoiteService boiteService;
     private final ThemeService themeService;
+    private final Consumer<Boite> actionClicBoite;
+    
     private int pageCourante = 1;
     private final int taillePage = 20;
     private boolean estVueGrille = true;
@@ -41,10 +44,12 @@ public class CatalogueVue {
      *
      * @param boiteService le service de gestion des boîtes
      * @param themeService le service de gestion des thèmes
+     * @param actionClicBoite l'action déclenchée lors du clic sur une boîte
      */
-    public CatalogueVue(BoiteService boiteService, ThemeService themeService) {
+    public CatalogueVue(BoiteService boiteService, ThemeService themeService, Consumer<Boite> actionClicBoite) {
         this.boiteService = boiteService;
         this.themeService = themeService;
+        this.actionClicBoite = actionClicBoite;
         initialiserInterface();
         chargerPage();
     }
@@ -339,9 +344,10 @@ public class CatalogueVue {
     private VBox creerCarteBoite(Boite b) {
         VBox carte = new VBox(10);
         carte.setPadding(new Insets(15));
-        carte.setStyle("-fx-background-color: white; -fx-border-color: #dcdde1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 5, 0, 0, 2);");
+        carte.setStyle("-fx-background-color: white; -fx-border-color: #dcdde1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 5, 0, 0, 2); -fx-cursor: hand;");
         carte.setPrefWidth(220);
         carte.setMinHeight(250);
+        carte.setOnMouseClicked(e -> actionClicBoite.accept(b));
 
         ImageView imageView = new ImageView();
         imageView.setFitWidth(180);
@@ -388,8 +394,9 @@ public class CatalogueVue {
     private HBox creerLigneBoite(Boite b) {
         HBox ligne = new HBox(20);
         ligne.setPadding(new Insets(10, 15, 10, 15));
-        ligne.setStyle("-fx-background-color: white; -fx-border-color: #dcdde1; -fx-border-radius: 5; -fx-background-radius: 5;");
+        ligne.setStyle("-fx-background-color: white; -fx-border-color: #dcdde1; -fx-border-radius: 5; -fx-background-radius: 5; -fx-cursor: hand;");
         ligne.setAlignment(Pos.CENTER_LEFT);
+        ligne.setOnMouseClicked(e -> actionClicBoite.accept(b));
 
         ImageView imageView = new ImageView();
         imageView.setFitWidth(60);

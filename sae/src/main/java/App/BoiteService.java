@@ -24,6 +24,16 @@ public class BoiteService {
     private final ContenirbBD contenirbBD;
     private final ThemeService themeService;
 
+    /**
+     * Crée un service de gestion des boîtes.
+     *
+     * @param boiteBD l'accès aux données des boîtes
+     * @param contenuBD l'accès aux données des contenus
+     * @param contenirpBD l'accès aux associations pièce-contenu
+     * @param contenirfBD l'accès aux associations figurine-contenu
+     * @param contenirbBD l'accès aux associations boîte-contenu
+     * @param themeService le service des thèmes
+     */
     public BoiteService(BoiteBD boiteBD, Contenu contenuBD, ContenirpBD contenirpBD, ContenirfBD contenirfBD, ContenirbBD contenirbBD, ThemeService themeService) {
         this.boiteBD = boiteBD;
         this.contenuBD = contenuBD;
@@ -33,23 +43,44 @@ public class BoiteService {
         this.themeService = themeService;
     }
 
+    /**
+     * Liste toutes les boîtes.
+     *
+     * @return la liste des boîtes
+     */
     public List<Boite> listerBoites() {
         return boiteBD.listeDesBoites();
     }
 
+    /**
+     * Liste un sous-ensemble de boîtes pour la page courante.
+     *
+     * @param page numéro de la page active (indexé à partir de 1)
+     * @param taillePage nombre d'éléments maximum par page
+     * @return liste restreinte de boîtes
+     */
     public List<Boite> listerBoitesPaginees(int page, int taillePage) {
         int offset = (page - 1) * taillePage;
         return boiteBD.listeDesBoitesPaginee(taillePage, offset);
     }
 
+    /**
+     * Retourne le nombre total de boîtes disponibles en BD.
+     *
+     * @return total de lignes dans BOITE
+     */
     public int obtenirNombreTotalBoites() {
         return boiteBD.compterBoites();
     }
 
-    // --- NOUVELLES MÉTHODES DE FILTRAGE ---
-
     /**
      * Liste un sous-ensemble de boîtes selon des critères de recherche et pagination.
+     *
+     * @param recherche le nom partiel à rechercher
+     * @param idTheme l'identifiant du thème
+     * @param page numéro de la page active
+     * @param taillePage nombre d'éléments maximum par page
+     * @return la liste filtrée et paginée
      */
     public List<Boite> listerBoitesFiltreesPaginees(String recherche, Integer idTheme, int page, int taillePage) {
         int offset = (page - 1) * taillePage;
@@ -58,17 +89,31 @@ public class BoiteService {
 
     /**
      * Retourne le nombre total de boîtes correspondant aux critères.
+     *
+     * @param recherche le nom partiel à rechercher
+     * @param idTheme l'identifiant du thème
+     * @return le total de résultats filtrés
      */
     public int obtenirNombreTotalBoitesFiltrees(String recherche, Integer idTheme) {
         return boiteBD.compterBoitesFiltrees(recherche, idTheme);
     }
 
-    // --------------------------------------
-
+    /**
+     * Recherche une boîte par son numéro.
+     *
+     * @param numero le numéro de la boîte
+     * @return la boîte ou null si non trouvée
+     */
     public Boite rechercherBoiteParNumero(String numero) {
         return boiteBD.rechercherBoite(numero);
     }
 
+    /**
+     * Recherche les boîtes d'un thème, incluant les sous-thèmes.
+     *
+     * @param theme le thème recherché
+     * @return la liste des boîtes du thème et ses sous-thèmes
+     */
     public List<Boite> rechercherBoitesParTheme(Theme theme) {
         List<Boite> resultat = new ArrayList<>();
         if (theme == null) return resultat;
@@ -84,6 +129,16 @@ public class BoiteService {
         return resultat;
     }
 
+    /**
+     * Crée une boîte personnalisée avec les pièces spécifiées.
+     *
+     * @param nom le nom de la boîte
+     * @param themePersonnalise le thème de la boîte
+     * @param pieces la liste des pièces à inclure
+     * @param forcerCreation true pour ignorer les vérifications de doublons
+     * @return la boîte créée
+     * @throws BoiteIdentiqueException si une boîte identique existe et forcerCreation est false
+     */
     public Boite composerBoitePersonnalisee(String nom, Theme themePersonnalise, List<PieceQuantite> pieces, boolean forcerCreation) throws BoiteIdentiqueException {
         if (!forcerCreation && boiteIdentiqueExiste(pieces)) {
             throw new BoiteIdentiqueException("Une boîte contenant exactement ces pièces existe déjà.");
@@ -101,6 +156,12 @@ public class BoiteService {
         return nouvelleBoite;
     }
 
+    /**
+     * Charge une boîte complète avec tout son contenu (pièces, figurines, boîtes incluses).
+     *
+     * @param numero le numéro de la boîte
+     * @return la boîte avec son contenu complet, ou null si non trouvée
+     */
     public Boite chargerBoiteComplete(String numero) {
         Boite b = boiteBD.rechercherBoite(numero);
         if (b == null) return null;
@@ -127,12 +188,20 @@ public class BoiteService {
         return b;
     }
 
+    /**
+     * Calcule les statistiques d'une boîte.
+     *
+     * @param numero le numéro de la boîte
+     * @return les statistiques de la boîte ou null si non trouvée
+     */
     public App.BoiteStats calculerStatsBoite(String numero) {
         Boite b = chargerBoiteComplete(numero);
         if (b == null) return null;
 
         int totalPieces = 0;
         int totalSupplements = 0;
+        int totalFigurines = 0;
+        int totalSousBoites = 0;
         java.util.Map<App.Couleur, Integer> repartitionCouleurs = new java.util.LinkedHashMap<>();
 
         for (PieceQuantite pq : b.getPieces()) {
@@ -145,21 +214,55 @@ public class BoiteService {
                 repartitionCouleurs.put(c, repartitionCouleurs.getOrDefault(c, 0) + pq.getQuantite());
             }
         }
-        return new App.BoiteStats(totalPieces, totalSupplements, repartitionCouleurs);
+
+        for (App.FigurineQuantite fq : b.getFigurines()) {
+            totalFigurines += fq.getQuantite();
+        }
+
+        for (App.BoiteQuantite bq : b.getBoitesIncluses()) {
+            totalSousBoites += bq.getQuantite();
+        }
+
+        return new App.BoiteStats(totalPieces, totalSupplements, totalFigurines, totalSousBoites, repartitionCouleurs);
     }
 
+    /**
+     * Vérifie si une boîte identique (même contenu de pièces) existe.
+     *
+     * @param pieces la liste des pièces
+     * @return true si une boîte identique existe
+     */
     private boolean boiteIdentiqueExiste(List<PieceQuantite> pieces) {
         return false; 
     }
 
+    /**
+     * Recherche les boîtes par nom.
+     *
+     * @param nom le nom recherché
+     * @return la liste des boîtes correspondantes
+     */
     public List<Boite> rechercherBoitesParNom(String nom) {
         return boiteBD.rechercherBoitesParNom(nom);
     }
 
+    /**
+     * Recherche les boîtes contenant une pièce donnée.
+     *
+     * @param numPiece le numéro de la pièce
+     * @return la liste des boîtes contenant cette pièce
+     */
     public List<Boite> rechercherBoitesParPiece(String numPiece) {
         return boiteBD.rechercherBoitesParPiece(numPiece);
     }
 
+    /**
+     * Ajoute une pièce à une boîte.
+     *
+     * @param numBoite le numéro de la boîte
+     * @param pq la pièce à ajouter
+     * @return true si l'ajout a réussi, false sinon
+     */
     public boolean ajouterPieceABoite(String numBoite, PieceQuantite pq) {
         List<Contenu.ContenuDetail> contenus = contenuBD.listeContenusParBoite(numBoite);
         
