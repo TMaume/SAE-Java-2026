@@ -77,6 +77,6 @@ public class Theme {
 
     @Override
     public String toString() {
-        return idTheme + " - " + nom;
+        return this.nom;
     }
 }

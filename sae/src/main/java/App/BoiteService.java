@@ -74,6 +74,31 @@ public class BoiteService {
     }
 
     /**
+     * Liste un sous-ensemble de boîtes selon des critères de recherche et pagination.
+     *
+     * @param recherche le nom partiel à rechercher
+     * @param idTheme l'identifiant du thème
+     * @param page numéro de la page active
+     * @param taillePage nombre d'éléments maximum par page
+     * @return la liste filtrée et paginée
+     */
+    public List<Boite> listerBoitesFiltreesPaginees(String recherche, Integer idTheme, int page, int taillePage) {
+        int offset = (page - 1) * taillePage;
+        return boiteBD.rechercherBoitesFiltreesPaginees(recherche, idTheme, taillePage, offset);
+    }
+
+    /**
+     * Retourne le nombre total de boîtes correspondant aux critères.
+     *
+     * @param recherche le nom partiel à rechercher
+     * @param idTheme l'identifiant du thème
+     * @return le total de résultats filtrés
+     */
+    public int obtenirNombreTotalBoitesFiltrees(String recherche, Integer idTheme) {
+        return boiteBD.compterBoitesFiltrees(recherche, idTheme);
+    }
+
+    /**
      * Recherche une boîte par son numéro.
      *
      * @param numero le numéro de la boîte
@@ -115,25 +140,19 @@ public class BoiteService {
      * @throws BoiteIdentiqueException si une boîte identique existe et forcerCreation est false
      */
     public Boite composerBoitePersonnalisee(String nom, Theme themePersonnalise, List<PieceQuantite> pieces, boolean forcerCreation) throws BoiteIdentiqueException {
-        
-        // 1. Vérification si une boîte identique existe déjà
         if (!forcerCreation && boiteIdentiqueExiste(pieces)) {
             throw new BoiteIdentiqueException("Une boîte contenant exactement ces pièces existe déjà.");
         }
 
-        // 2. Génération d'un identifiant unique
         String numeroUnique = "PERSO-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
 
-        // 3. Création de l'objet
-        Boite nouvelleBoite = new Boite(numeroUnique, nom, 2026, themePersonnalise);
+        Boite nouvelleBoite = new Boite(numeroUnique, nom, 2026, themePersonnalise, null);
         nouvelleBoite.setPersonnalisee(true);
         for (PieceQuantite pq : pieces) {
             nouvelleBoite.ajouterPiece(pq);
         }
         
-        // 4. Sauvegarde en BD 
         boiteBD.insererBoite(nouvelleBoite);
-        
         return nouvelleBoite;
     }
 
@@ -147,18 +166,15 @@ public class BoiteService {
         Boite b = boiteBD.rechercherBoite(numero);
         if (b == null) return null;
 
-        // On cherche les contenus liés à cette boîte
         List<Contenu.ContenuDetail> listContenus = contenuBD.listeContenusParBoite(numero);
         for (Contenu.ContenuDetail c : listContenus) {
             int idContenu = c.getIdCont();
 
-            // On ajoute les pièces
             List<PieceQuantite> pieces = contenirpBD.listeContenirpParContenu(idContenu);
             for (PieceQuantite pq : pieces) {
                 b.ajouterPiece(pq);
             }
 
-            // On ajoute les figurines
             List<App.FigurineQuantite> figurines = contenirfBD.listeContenirfParContenu(idContenu);
             for (App.FigurineQuantite fq : figurines) {
                 b.ajouterFigurine(fq);
@@ -184,6 +200,8 @@ public class BoiteService {
 
         int totalPieces = 0;
         int totalSupplements = 0;
+        int totalFigurines = 0;
+        int totalSousBoites = 0;
         java.util.Map<App.Couleur, Integer> repartitionCouleurs = new java.util.LinkedHashMap<>();
 
         for (PieceQuantite pq : b.getPieces()) {
@@ -196,7 +214,16 @@ public class BoiteService {
                 repartitionCouleurs.put(c, repartitionCouleurs.getOrDefault(c, 0) + pq.getQuantite());
             }
         }
-        return new App.BoiteStats(totalPieces, totalSupplements, repartitionCouleurs);
+
+        for (App.FigurineQuantite fq : b.getFigurines()) {
+            totalFigurines += fq.getQuantite();
+        }
+
+        for (App.BoiteQuantite bq : b.getBoitesIncluses()) {
+            totalSousBoites += bq.getQuantite();
+        }
+
+        return new App.BoiteStats(totalPieces, totalSupplements, totalFigurines, totalSousBoites, repartitionCouleurs);
     }
 
     /**

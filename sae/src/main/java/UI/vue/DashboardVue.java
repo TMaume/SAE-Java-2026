@@ -12,37 +12,46 @@ import javafx.scene.control.Separator;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
+/**
+ * Vue principale agissant comme conteneur pour le menu et les sous-vues.
+ */
 public class DashboardVue {
     private final Stage stage;
     private final DashboardController controller;
     private final AuthController authController;
     private Button boutonActif = null;
 
+    /**
+     * Construit le tableau de bord.
+     *
+     * @param stage la fenêtre principale
+     * @param controller le contrôleur du tableau de bord
+     * @param authController le contrôleur d'authentification
+     */
     public DashboardVue(Stage stage, DashboardController controller, AuthController authController) {
         this.stage = stage;
         this.controller = controller;
         this.authController = authController;
     }
 
+    /**
+     * Initialise et affiche le tableau de bord.
+     */
     public void afficher() {
         BorderPane root = new BorderPane();
 
-        // 1. Initialisation de la zone centrale
         StackPane conteneurCentral = new StackPane();
         conteneurCentral.setPadding(new Insets(30));
         conteneurCentral.setStyle("-fx-background-color: #fafbfc;");
         conteneurCentral.getChildren().add(creerVueDefaut()); 
 
-        // 2. Initialisation des menus
         VBox sidebar = creerSidebar(conteneurCentral);
         HBox header = creerHeader(sidebar);
 
-        // 3. Assemblage
         root.setTop(header);
         root.setLeft(sidebar);
         root.setCenter(conteneurCentral);
 
-        // 4. Gestion de la taille d'écran dynamique
         Scene sceneActuelle = stage.getScene();
         if (sceneActuelle == null) {
             stage.setScene(new Scene(root, 1024, 768));
@@ -51,34 +60,57 @@ public class DashboardVue {
         }
     }
 
+    /**
+     * Crée la vue par défaut affichée au lancement.
+     *
+     * @return un VBox contenant le message de bienvenue
+     */
     private VBox creerVueDefaut() {
         VBox vueDefaut = new VBox(10);
         vueDefaut.setAlignment(Pos.CENTER);
         
-        // Label lblMessage1 = new Label("Bienvenue sur le tableau de bord.");
-        // lblMessage1.setStyle("-fx-font-size: 18px; -fx-text-fill: #2c3e50; -fx-font-weight: bold;");
+        Label lblMessage1 = new Label("Bienvenue sur le tableau de bord.");
+        lblMessage1.setStyle("-fx-font-size: 18px; -fx-text-fill: #2c3e50; -fx-font-weight: bold;");
         
-        // Label lblMessage2 = new Label("Utilisez le menu de gauche pour naviguer.");
-        // lblMessage2.setStyle("-fx-font-size: 14px; -fx-text-fill: #7f8c8d;");
+        Label lblMessage2 = new Label("Utilisez le menu de gauche pour naviguer.");
+        lblMessage2.setStyle("-fx-font-size: 14px; -fx-text-fill: #7f8c8d;");
         
-        //vueDefaut.getChildren().addAll(lblMessage1, lblMessage2);
-        controller.chargerContenu(new StackPane(),new Label("Vue : Catalogue des boîtes LEGO (À faire)"));
+        vueDefaut.getChildren().addAll(lblMessage1, lblMessage2);
         return vueDefaut;
     }
 
+    /**
+     * Affiche la vue du catalogue et gère la transition vers les détails.
+     *
+     * @param conteneurCentral la zone d'affichage principale
+     * @param btnCatalogue le bouton du menu déclencheur
+     */
+    private void afficherCatalogue(StackPane conteneurCentral, Button btnCatalogue) {
+        CatalogueVue catalogueVue = new CatalogueVue(controller.getBoiteService(), controller.getThemeService(), boite -> {
+            DetailBoiteVue detailVue = new DetailBoiteVue(boite, controller.getBoiteService(), () -> afficherCatalogue(conteneurCentral, btnCatalogue));
+            controller.chargerContenu(conteneurCentral, detailVue);
+        });
+        controller.chargerContenu(conteneurCentral, catalogueVue.getVue());
+        activerBouton(btnCatalogue);
+    }
+
+    /**
+     * Construit le menu latéral.
+     *
+     * @param conteneurCentral la zone d'affichage affectée par le menu
+     * @return un VBox contenant la navigation
+     */
     private VBox creerSidebar(StackPane conteneurCentral){
         VBox sidebar = new VBox(10);
         sidebar.setPadding(new Insets(20));
         sidebar.setPrefWidth(240);
         sidebar.setStyle("-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-width: 0 1 0 0;");
 
-        // --- Section Client ---
         Label lblMenuClient = new Label("Menu Client");
         lblMenuClient.setStyle("-fx-font-weight: bold; -fx-font-size: 15px; -fx-text-fill: #2c3e50;");
         sidebar.getChildren().add(lblMenuClient);
 
         Button btnCatalogue = creerBoutonMenu("Consulter le catalogue");
-        this.boutonActif = btnCatalogue;
         Button btnTheme = creerBoutonMenu("Explorer par thème");
         Button btnStats = creerBoutonMenu("Statistiques d'une boîte");
         Button btnPiece = creerBoutonMenu("Rechercher par pièce");
@@ -87,11 +119,8 @@ public class DashboardVue {
 
         sidebar.getChildren().addAll(btnCatalogue, btnTheme, btnStats, btnPiece, btnCollection, btnComposer);
 
-        btnCatalogue.setOnAction(e -> {
-            CatalogueVue catalogueVue = new CatalogueVue(controller.getBoiteService());
-            controller.chargerContenu(conteneurCentral, catalogueVue.getVue());
-            activerBouton(btnCatalogue);
-        });
+        btnCatalogue.setOnAction(e -> afficherCatalogue(conteneurCentral, btnCatalogue));
+
         btnTheme.setOnAction(e -> {
             controller.chargerContenu(conteneurCentral, new Label("Vue : Exploration par thèmes (À faire)"));
             activerBouton(btnTheme);
@@ -113,7 +142,6 @@ public class DashboardVue {
             activerBouton(btnComposer);
         });
 
-       // --- Section Admin ---
         if (controller.getUtilisateurConnecte().getRole() == RoleUtilisateur.ADMIN) {
             Separator separator = new Separator();
             separator.setPadding(new Insets(10, 0, 10, 0));
@@ -128,7 +156,6 @@ public class DashboardVue {
 
             sidebar.getChildren().addAll(separator, lblMenuAdmin, btnAddBoite, btnAddPiece, btnAddTheme, btnModContenu);
 
-            // Actions Admin
             btnAddBoite.setOnAction(e -> {
                 controller.chargerContenu(conteneurCentral, new Label("Formulaire : Ajouter une boîte (À faire)"));
                 activerBouton(btnAddBoite);
@@ -146,10 +173,15 @@ public class DashboardVue {
                 activerBouton(btnModContenu);
             });
         }
-        this.boutonActif.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 13px; -fx-cursor: hand; -fx-font-weight: bold;");
+
         return sidebar;
     }
 
+    /**
+     * Modifie l'apparence visuelle du bouton actif.
+     *
+     * @param nouveauBouton le bouton sélectionné
+     */
     public void activerBouton(Button nouveauBouton) {
         if (boutonActif != null) {
             boutonActif.setStyle("-fx-background-color: transparent; -fx-text-fill: #4f5f6f; -fx-font-size: 13px; -fx-cursor: hand;");
@@ -158,6 +190,12 @@ public class DashboardVue {
         boutonActif = nouveauBouton;
     }
 
+    /**
+     * Construit l'en-tête principal de la fenêtre.
+     *
+     * @param sidebar le menu latéral à afficher ou masquer
+     * @return un HBox contenant l'en-tête
+     */
     private HBox creerHeader(VBox sidebar) {
         HBox header = new HBox(15);
         header.setPadding(new Insets(15, 20, 15, 20));
@@ -190,6 +228,12 @@ public class DashboardVue {
         return header;
     }
 
+    /**
+     * Crée un bouton formaté pour le menu latéral.
+     *
+     * @param texte le texte du bouton
+     * @return le bouton configuré
+     */
     private Button creerBoutonMenu(String texte) {
         Button btn = new Button(texte);
         btn.setAlignment(Pos.CENTER_LEFT);

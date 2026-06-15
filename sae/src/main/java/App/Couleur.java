@@ -1,5 +1,7 @@
 package App;
 
+import java.util.Objects;
+
 /**
  * Représente une couleur de pièce LEGO.
  * <p>
@@ -88,6 +90,23 @@ public class Couleur {
      */
     public void setTransparent(boolean transparent) {
         this.transparent = transparent;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Couleur couleur = (Couleur) o;
+        return idCouleur == couleur.idCouleur;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idCouleur);
     }
 
     @Override

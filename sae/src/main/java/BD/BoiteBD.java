@@ -14,12 +14,6 @@ import java.util.List;
 public class BoiteBD {
     private final ConnexionMySQL connexion;
 
-    /**
-     * Crée un accès aux données des boîtes.
-     *
-     * @param connexion la connexion MySQL (non null)
-     * @throws IllegalArgumentException si connexion est null
-     */
     public BoiteBD(ConnexionMySQL connexion) {
         if (connexion == null) {
             throw new IllegalArgumentException("connexion");
@@ -27,43 +21,18 @@ public class BoiteBD {
         this.connexion = connexion;
     }
 
-    /**
-     * Retourne la connexion MySQL.
-     *
-     * @return la connexion
-     */
     public ConnexionMySQL getConnexion() {
         return connexion;
     }
 
-    /**
-     * Crée une nouvelle instruction SQL.
-     *
-     * @return une instruction SQL
-     * @throws SQLException si l'opération échoue
-     */
     protected Statement createStatement() throws SQLException {
         return connexion.createStatement();
     }
 
-    /**
-     * Prépare une requête SQL paramétrée.
-     *
-     * @param sql la requête SQL
-     * @return une instruction SQL préparée
-     * @throws SQLException si l'opération échoue
-     */
     protected PreparedStatement prepareStatement(String sql) throws SQLException {
         return connexion.prepareStatement(sql);
     }
 
-    /**
-     * Insère une boîte dans la base de données.
-     *
-     * @param b la boîte à insérer (non null)
-     * @return le nombre de lignes affectées
-     * @throws IllegalArgumentException si b est null
-     */
     public int insererBoite(Boite b) {
         if (b == null) {
             throw new IllegalArgumentException("boite");
@@ -89,12 +58,6 @@ public class BoiteBD {
         }
     }
 
-    /**
-     * Supprime une boîte de la base de données.
-     *
-     * @param numBoite le numéro de la boîte (non null)
-     * @return le nombre de lignes affectées
-     */
     public int effacerBoite(String numBoite) {
         String sql = "DELETE FROM BOITE WHERE numboite = ?";
         try (PreparedStatement ps = prepareStatement(sql)) {
@@ -105,13 +68,6 @@ public class BoiteBD {
         }
     }
 
-    /**
-     * Met à jour une boîte dans la base de données.
-     *
-     * @param b la boîte à mettre à jour (non null)
-     * @return le nombre de lignes affectées
-     * @throws IllegalArgumentException si b est null
-     */
     public int majBoite(Boite b) {
         if (b == null) {
             throw new IllegalArgumentException("boite");
@@ -137,12 +93,6 @@ public class BoiteBD {
         }
     }
 
-    /**
-     * Recherche une boîte par son numéro.
-     *
-     * @param numBoite le numéro de la boîte (non null)
-     * @return la boîte trouvée, ou null si introuvable
-     */
     public Boite rechercherBoite(String numBoite) {
         String sql = "SELECT b.numboite, b.nomboite, b.annee, b.nbpieces, t.idtheme, t.nomtheme, b.image " +
                      "FROM BOITE b " +
@@ -174,11 +124,6 @@ public class BoiteBD {
         }
     }
 
-    /**
-     * Retourne la liste de toutes les boîtes (Attention : non paginée).
-     *
-     * @return liste des boîtes
-     */
     public List<Boite> listeDesBoites() {
         ArrayList<Boite> res = new ArrayList<>();
         String sql = "SELECT b.numboite, b.nomboite, b.annee, b.nbpieces, t.idtheme, t.nomtheme, b.image " +
@@ -207,13 +152,6 @@ public class BoiteBD {
         return res;
     }
 
-    /**
-     * Récupère une portion restreinte de boîtes (Pagination).
-     *
-     * @param limite nombre maximum de résultats
-     * @param offset décalage initial
-     * @return la liste paginée des boîtes
-     */
     public List<Boite> listeDesBoitesPaginee(int limite, int offset) {
         ArrayList<Boite> res = new ArrayList<>();
         String sql = "SELECT b.numboite, b.nomboite, b.annee, b.nbpieces, t.idtheme, t.nomtheme, b.image " +
@@ -248,11 +186,6 @@ public class BoiteBD {
         return res;
     }
 
-    /**
-     * Compte le nombre total de boîtes dans la base de données.
-     *
-     * @return le nombre de boîtes total
-     */
     public int compterBoites() {
         String sql = "SELECT COUNT(*) AS total FROM BOITE";
         try (Statement st = createStatement(); ResultSet rs = st.executeQuery(sql)) {
@@ -265,12 +198,100 @@ public class BoiteBD {
         return 0;
     }
 
+    // --- NOUVELLES MÉTHODES POUR LE FILTRAGE DYNAMIQUE ---
+
     /**
-     * Retourne les boîtes d'un thème.
-     *
-     * @param idTheme l'identifiant du thème
-     * @return liste des boîtes du thème
+     * Recherche avancée : Filtre par nom partiel ET/OU par thème, de manière paginée.
      */
+    public List<Boite> rechercherBoitesFiltreesPaginees(String recherche, Integer idTheme, int limite, int offset) {
+        ArrayList<Boite> res = new ArrayList<>();
+        StringBuilder sql = new StringBuilder(
+            "SELECT b.numboite, b.nomboite, b.annee, b.nbpieces, t.idtheme, t.nomtheme, b.image " +
+            "FROM BOITE b " +
+            "JOIN THEME t ON b.idtheme = t.idtheme " +
+            "WHERE 1=1 "
+        );
+
+        if (recherche != null && !recherche.isBlank()) {
+            sql.append("AND b.nomboite LIKE ? ");
+        }
+        if (idTheme != null && idTheme > 0) {
+            sql.append("AND b.idtheme = ? ");
+        }
+        sql.append("ORDER BY b.nomboite LIMIT ? OFFSET ?");
+
+        try (PreparedStatement ps = prepareStatement(sql.toString())) {
+            int paramIndex = 1;
+            
+            if (recherche != null && !recherche.isBlank()) {
+                ps.setString(paramIndex++, "%" + recherche + "%");
+            }
+            if (idTheme != null && idTheme > 0) {
+                ps.setInt(paramIndex++, idTheme);
+            }
+            ps.setInt(paramIndex++, limite);
+            ps.setInt(paramIndex, offset);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Theme theme = new Theme(
+                        rs.getInt("idtheme"),
+                        rs.getString("nomtheme"),
+                        null
+                    );
+                    Boite boite = new Boite(
+                        rs.getString("numboite"),
+                        rs.getString("nomboite"),
+                        (Integer) rs.getObject("annee"),
+                        theme,
+                        rs.getString("image")
+                    );
+                    boite.setNbPieces((Integer) rs.getObject("nbpieces"));
+                    res.add(boite);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la recherche filtrée paginée : " + e.getMessage());
+        }
+        return res;
+    }
+
+    /**
+     * Compte le nombre de boîtes correspondant aux filtres.
+     */
+    public int compterBoitesFiltrees(String recherche, Integer idTheme) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) AS total FROM BOITE b WHERE 1=1 ");
+        
+        if (recherche != null && !recherche.isBlank()) {
+            sql.append("AND b.nomboite LIKE ? ");
+        }
+        if (idTheme != null && idTheme > 0) {
+            sql.append("AND b.idtheme = ? ");
+        }
+
+        try (PreparedStatement ps = prepareStatement(sql.toString())) {
+            int paramIndex = 1;
+            
+            if (recherche != null && !recherche.isBlank()) {
+                ps.setString(paramIndex++, "%" + recherche + "%");
+            }
+            if (idTheme != null && idTheme > 0) {
+                ps.setInt(paramIndex++, idTheme);
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("total");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur lors du comptage filtré : " + e.getMessage());
+        }
+        return 0;
+    }
+
+    // -----------------------------------------------------
+
     public List<Boite> listeBoitesParTheme(int idTheme) {
         ArrayList<Boite> res = new ArrayList<>();
         String sql = "SELECT b.numboite, b.nomboite, b.annee, b.nbpieces, t.idtheme, t.nomtheme, b.image " +
@@ -302,12 +323,6 @@ public class BoiteBD {
         return res;
     }
 
-    /**
-     * Recherche les boîtes par nom partiel.
-     *
-     * @param nomPartiel le nom ou partie du nom à rechercher
-     * @return liste des boîtes correspondantes
-     */
     public List<Boite> rechercherBoitesParNom(String nomPartiel) {
         ArrayList<Boite> res = new ArrayList<>();
         String sql = "SELECT b.numboite, b.nomboite, b.annee, b.nbpieces, t.idtheme, t.nomtheme, b.image " +
@@ -340,12 +355,6 @@ public class BoiteBD {
         return res;
     }
 
-    /**
-     * Recherche les boîtes contenant une pièce.
-     *
-     * @param numPiece le numéro de la pièce
-     * @return liste des boîtes contenant la pièce
-     */
     public List<Boite> rechercherBoitesParPiece(String numPiece) {
         ArrayList<Boite> res = new ArrayList<>();
         String sql = "SELECT DISTINCT b.numboite, b.nomboite, b.annee, b.nbpieces, t.idtheme, t.nomtheme, b.image " +
