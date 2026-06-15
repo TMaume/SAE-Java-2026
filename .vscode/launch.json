@@ -3,6 +3,14 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "vmArgs": "--module-path /usr/share/openjfx/lib/ --add-modules javafx.controls,javafx.fxml",
+            "mainClass": "UI.Main",
+            "projectName": "sae"
+        },
+        {
+            "type": "java",
             "name": "MenuConsole",
             "request": "launch",
             "mainClass": "UI.console.MenuConsole",
