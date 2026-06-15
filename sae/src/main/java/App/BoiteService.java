@@ -7,6 +7,7 @@ import BD.ContenirpBD;
 import BD.Contenu;
 import java.util.List;
 import java.util.UUID;
+import java.util.ArrayList;
 
 /**
  * Service de gestion des boîtes LEGO.
