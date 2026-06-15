@@ -22,7 +22,7 @@ FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\r\n' IGNORE 1 LIN
 LOAD DATA LOCAL INFILE 'sets.csv' INTO TABLE BOITE 
 FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\r\n' IGNORE 1 LINES 
 (@v1,@v2,@v3,@v4,@v5,@v6) set numboite=NULLIF(@v1,''), nomboite=NULLIF(@v2,''), annee=NULLIF(@v3,''),
-nbpieces=NULLIF(@v5,''), idtheme=NULLIF(@v4,'');
+nbpieces=NULLIF(@v5,''), idtheme=NULLIF(@v4,''), image=NULLIF(@v6,'');
 
 LOAD DATA LOCAL INFILE 'inventories.csv' INTO TABLE CONTENU
 FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\r\n' IGNORE 1 LINES 

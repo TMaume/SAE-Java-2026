@@ -34,7 +34,7 @@ public class MenuAdmin {
             return;
         }
         
-        Boite b = new Boite(numero, nom, annee, theme);
+        Boite b = new Boite(numero, nom, annee, theme, null);
 
         boiteService.rechercherBoiteParNumero(numero); 
         ui.afficherLigne("Fonctionnalité d'ajout à lier avec ton BoiteService.");

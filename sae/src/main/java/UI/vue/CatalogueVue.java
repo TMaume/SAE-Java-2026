@@ -14,7 +14,7 @@ import java.util.List;
 public class CatalogueVue {
     private final BoiteService boiteService;
     private int pageCourante = 1;
-    private final int taillePage = 10;
+    private final int taillePage = 20;
     private boolean estVueGrille = true; 
 
     private BorderPane root;
