@@ -9,7 +9,7 @@ import java.util.List;
  * Fournit les méthodes CRUD pour les figurines LEGO.
  * </p>
  */
-public class Figurine {
+public class FigurineBD {
     private final ConnexionMySQL connexion;
 
     /**
@@ -18,7 +18,7 @@ public class Figurine {
      * @param connexion la connexion MySQL (non null)
      * @throws IllegalArgumentException si connexion est null
      */
-    public Figurine(ConnexionMySQL connexion) {
+    public FigurineBD(ConnexionMySQL connexion) {
         if (connexion == null) {
             throw new IllegalArgumentException("connexion");
         }
@@ -122,7 +122,7 @@ public class Figurine {
      * @return la figurine trouvée, ou null si introuvable
      */
     public App.Figurine rechercherFigurine(String idFig) {
-        String sql = "SELECT idfig, nomfig, nbparties FROM FIGURINE WHERE idfig = ?";
+        String sql = "SELECT idfig, nomfig, nbparties, imageF FROM FIGURINE WHERE idfig = ?";
         try (PreparedStatement ps = prepareStatement(sql)) {
             ps.setString(1, idFig);
             try (ResultSet rs = ps.executeQuery()) {
@@ -132,7 +132,8 @@ public class Figurine {
                 return new App.Figurine(
                     rs.getString("idfig"),
                     rs.getString("nomfig"),
-                    (Integer) rs.getObject("nbparties")
+                    (Integer) rs.getObject("nbparties"),
+                    rs.getString("imageF")
                 );
             }
         } catch (SQLException e) {
@@ -147,16 +148,18 @@ public class Figurine {
      */
     public List<App.Figurine> listeDesFigurines() {
         ArrayList<App.Figurine> res = new ArrayList<>();
-        String sql = "SELECT idfig, nomfig, nbparties FROM FIGURINE ORDER BY nomfig";
+        String sql = "SELECT idfig, nomfig, nbparties, imageF FROM FIGURINE ORDER BY nomfig";
         try (Statement st = createStatement(); ResultSet rs = st.executeQuery(sql)) {
             while (rs.next()) {
                 res.add(new App.Figurine(
                     rs.getString("idfig"),
                     rs.getString("nomfig"),
-                    (Integer) rs.getObject("nbparties")
+                    (Integer) rs.getObject("nbparties"),
+                    rs.getString("imageF")
                 ));
             }
         } catch (SQLException e) {
+            System.err.println("Erreur lors de la récupération de la liste des figurines : " + e.getMessage());
         }
         return res;
     }

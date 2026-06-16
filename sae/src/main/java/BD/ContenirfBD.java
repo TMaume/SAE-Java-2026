@@ -128,7 +128,7 @@ public class ContenirfBD {
      * @return la figurine avec quantité, ou null si non trouvée
      */
     public FigurineQuantite rechercherContenirf(int idCont, String idFig) {
-        String sql = "SELECT cf.quantitef, f.idfig, f.nomfig, f.nbparties " +
+        String sql = "SELECT cf.quantitef, f.idfig, f.nomfig, f.nbparties, f.imageF " +
                      "FROM CONTENIRF cf " +
                      "JOIN FIGURINE f ON cf.idfig = f.idfig " +
                      "WHERE cf.idcont = ? AND cf.idfig = ?";
@@ -142,7 +142,8 @@ public class ContenirfBD {
                 App.Figurine figurine = new App.Figurine(
                     rs.getString("idfig"),
                     rs.getString("nomfig"),
-                    (Integer) rs.getObject("nbparties")
+                    (Integer) rs.getObject("nbparties"),
+                    rs.getString("imageF")
                 );
                 return new FigurineQuantite(figurine, rs.getInt("quantitef"));
             }
@@ -159,7 +160,7 @@ public class ContenirfBD {
      */
     public List<FigurineQuantite> listeContenirfParContenu(int idCont) {
         ArrayList<FigurineQuantite> res = new ArrayList<>();
-        String sql = "SELECT cf.quantitef, f.idfig, f.nomfig, f.nbparties " +
+        String sql = "SELECT cf.quantitef, f.idfig, f.nomfig, f.nbparties, f.imageF " +
                      "FROM CONTENIRF cf " +
                      "JOIN FIGURINE f ON cf.idfig = f.idfig " +
                      "WHERE cf.idcont = ? ORDER BY f.idfig";
@@ -170,12 +171,14 @@ public class ContenirfBD {
                     App.Figurine figurine = new App.Figurine(
                         rs.getString("idfig"),
                         rs.getString("nomfig"),
-                        (Integer) rs.getObject("nbparties")
+                        (Integer) rs.getObject("nbparties"),
+                        rs.getString("imageF")
                     );
                     res.add(new FigurineQuantite(figurine, rs.getInt("quantitef")));
                 }
             }
         } catch (SQLException e) {
+            System.err.println("Erreur lors de la récupération de la liste des figurines contenues : " + e.getMessage());
         }
         return res;
     }

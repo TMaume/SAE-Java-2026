@@ -7,6 +7,7 @@ public class Figurine {
     private final String idFigurine;
     private String nom;
     private Integer nbParties;
+    private String imageF;
 
     /**
      * Crée une figurine LEGO.
@@ -14,15 +15,17 @@ public class Figurine {
      * @param idFigurine l'identifiant unique (non null, non vide)
      * @param nom le nom de la figurine
      * @param nbParties le nombre de parties
+     * @param imageF l'URL de l'image de la figurine
      * @throws IllegalArgumentException si idFigurine est null ou vide
      */
-    public Figurine(String idFigurine, String nom, Integer nbParties) {
+    public Figurine(String idFigurine, String nom, Integer nbParties, String imageF) {
         if (idFigurine == null || idFigurine.isBlank()) {
             throw new IllegalArgumentException("idFigurine");
         }
         this.idFigurine = idFigurine;
         this.nom = nom == null ? "" : nom;
         this.nbParties = nbParties;
+        this.imageF = imageF == null ? "" : imageF;
     }
 
     /**
