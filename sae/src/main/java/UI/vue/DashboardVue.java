@@ -1,6 +1,7 @@
 package UI.vue;
 
 import UI.Controller.AjouterBoiteController;
+import UI.Controller.CollectionController; // Ajout de l'import pour le nouveau controller
 import App.RoleUtilisateur;
 import UI.Controller.ParametreController;
 import UI.Controller.AuthController;
@@ -72,12 +73,37 @@ public class DashboardVue {
 
     private void afficherCatalogue(StackPane conteneurCentral, Button btnCatalogue) {
         CatalogueVue catalogueVue = new CatalogueVue(controller.getBoiteService(), controller.getThemeService(), boite -> {
-            DetailBoiteVue detailVue = new DetailBoiteVue(boite, controller.getBoiteService(), () -> afficherCatalogue(conteneurCentral, btnCatalogue));
+            // APRÈS
+            DetailBoiteVue detailVue = new DetailBoiteVue(boite, controller.getBoiteService(), controller.getCollectionService(), () -> afficherCatalogue(conteneurCentral, btnCatalogue));
             controller.chargerContenu(conteneurCentral, detailVue);
         });
         controller.chargerContenu(conteneurCentral, catalogueVue.getVue());
         activerBouton(btnCatalogue);
     }
+
+    // --- NOUVELLE MÉTHODE POUR LA COLLECTION ---
+    private void afficherCollection(StackPane conteneurCentral, Button btnCollection) {
+        CollectionVue collectionVue = new CollectionVue();
+
+        CollectionController collectionController = new CollectionController(
+            collectionVue, 
+            controller.getCollectionService(), 
+            itemClique -> {
+                // On réutilise DetailBoiteVue : on lui passe la boîte et on configure le retour vers la collection !
+                DetailBoiteVue detailVue = new DetailBoiteVue(
+                    itemClique.getBoite(), 
+                    controller.getBoiteService(),
+                    controller.getCollectionService(),
+                    () -> afficherCollection(conteneurCentral, btnCollection)
+                );
+                controller.chargerContenu(conteneurCentral, detailVue);
+            }
+        );
+
+        controller.chargerContenu(conteneurCentral, collectionVue.getVue());
+        activerBouton(btnCollection);
+    }
+    // -------------------------------------------
 
     private void afficherCreationBoite(StackPane conteneurCentral, Button btnAddBoite) {
         CreerBoiteVue creerBoiteVue = new CreerBoiteVue();
@@ -118,10 +144,9 @@ public class DashboardVue {
             controller.chargerContenu(conteneurCentral, new Label("Vue : Recherche par pièces (À faire)"));
             activerBouton(btnPiece);
         });
-        btnCollection.setOnAction(e -> {
-            controller.chargerContenu(conteneurCentral, new Label("Vue : Ma Collection personnelle (À faire)"));
-            activerBouton(btnCollection);
-        });
+        
+        btnCollection.setOnAction(e -> afficherCollection(conteneurCentral, btnCollection));
+        
         btnComposer.setOnAction(e -> {
             controller.chargerContenu(conteneurCentral, new Label("Vue : Outil de composition personnalisée (À faire)"));
             activerBouton(btnComposer);

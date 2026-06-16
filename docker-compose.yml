@@ -7,7 +7,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
       # Alignement sur les valeurs par défaut de ton squelette Java
-      MYSQL_DATABASE: DBo22403450
+      MYSQL_DATABASE: dbo22403450   # ← tout en minuscules
       MYSQL_USER: o22403450
       MYSQL_PASSWORD: o22403450
     ports:
