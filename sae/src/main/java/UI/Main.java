@@ -6,9 +6,6 @@ import UI.vue.LoginVue;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-/**
- * Point d'entrée principal de l'application JavaFX.
- */
 public class Main extends Application {
 
     @Override

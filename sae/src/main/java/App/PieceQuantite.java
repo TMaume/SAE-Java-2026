@@ -7,6 +7,7 @@ public class PieceQuantite {
     private final Piece piece;
     private final int quantite;
     private final boolean enSupplement;
+    private String imageP;
 
     /**
      * Crée une association pièce-quantité.
@@ -16,7 +17,7 @@ public class PieceQuantite {
      * @param enSupplement true si la pièce est en supplément
      * @throws IllegalArgumentException si piece est null ou quantite &lt; 0
      */
-    public PieceQuantite(Piece piece, int quantite, boolean enSupplement) {
+    public PieceQuantite(Piece piece, int quantite, boolean enSupplement, String imageP) {
         if (piece == null) {
             throw new IllegalArgumentException("piece");
         }
@@ -26,6 +27,7 @@ public class PieceQuantite {
         this.piece = piece;
         this.quantite = quantite;
         this.enSupplement = enSupplement;
+        this.imageP = imageP == null ? "" : imageP;
     }
 
     /**
@@ -53,5 +55,14 @@ public class PieceQuantite {
      */
     public boolean isEnSupplement() {
         return enSupplement;
+    }
+
+    /**
+     * Retourne l'URL de l'image de la pièce.
+     *
+     * @return l'URL de l'image
+     */
+    public String getImageP() {
+        return imageP;
     }
 }

@@ -104,7 +104,7 @@ public class SupplementBD {
                         cat,
                         couleur
                     );
-                    res.add(new PieceQuantite(piece, rs.getInt("quantitep"), tfToBool(rs.getString("en_supplement"))));
+                    res.add(new PieceQuantite(piece, rs.getInt("quantitep"), tfToBool(rs.getString("en_supplement")), rs.getString("imageP")));
                 }
             }
         } catch (SQLException e) {

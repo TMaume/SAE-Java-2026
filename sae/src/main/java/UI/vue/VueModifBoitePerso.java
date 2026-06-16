@@ -86,8 +86,8 @@ public class VueModifBoitePerso extends BorderPane {
     }
 
     private void appliquerFiltreTheme() {
-        
-        String texteRecherche = txtRechercheTheme.getText().trim().toLowerCase();
+
+        String texteRecherche = txtRechercheTheme.getText().trim().toLowerCase(); // trim qui sert a nettoyer le txt de tout espace inutile
         
         if (texteRecherche.isEmpty()) {
             comboTheme.setItems(tousLesThemes);
@@ -221,22 +221,22 @@ public class VueModifBoitePerso extends BorderPane {
         tabPaneEdition.setStyle("-fx-border-color: #bdc3c7; -fx-border-radius: 4;");
         tabPaneEdition.setPrefHeight(350);
 
-        Tab tabInfos = new Tab("📝 Informations textuelles");
+        Tab tabInfos = new Tab("Informations textuelles");
         tabInfos.setClosable(false);
         tabInfos.setContent(creerOngletInformations());
         
-        Tab tabAjout = new Tab("➕ Ajouter du contenu");
+        Tab tabAjout = new Tab("Ajouter du contenu");
         tabAjout.setClosable(false);
         tabAjout.setStyle("-fx-background-color: #e67e22; -fx-text-fill: white; -fx-font-weight: bold;");
         tabAjout.setContent(creerOngletAjout());
 
-        Tab tabContenu = new Tab("📦 Contenu de la boîte");
+        Tab tabContenu = new Tab("Contenu de la boîte");
         tabContenu.setClosable(false);
         tabContenu.setContent(creerOngletContenu());
 
         tabPaneEdition.getTabs().addAll(tabInfos, tabAjout, tabContenu);
 
-        Button btnSauvegarder = new Button("💾 Enregistrer les informations textuelles");
+        Button btnSauvegarder = new Button("Enregistrer les informations textuelles");
         btnSauvegarder.setMaxWidth(Double.MAX_VALUE);
         btnSauvegarder.setStyle("-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 10; -fx-cursor: hand;");
         btnSauvegarder.setOnAction(e -> gererActionSauvegarde());
@@ -338,7 +338,7 @@ public class VueModifBoitePerso extends BorderPane {
         
         int quantite;
         try {
-            quantite = Integer.parseInt(txtQuantiteAjout.getText().trim());
+            quantite = Integer.parseInt(txtQuantiteAjout.getText().trim()); 
             if (quantite <= 0) throw new NumberFormatException();
         } catch (NumberFormatException ex) {
             afficherAlerte(AlertType.WARNING, "Quantité invalide", "Veuillez saisir un nombre entier positif");
