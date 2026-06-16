@@ -33,6 +33,6 @@ public class ParametreController {
                 break;
         }
         
-        scene.getStylesheets().add(ParametreController.class.getResource("/UI/vue/" + fichierCss).toExternalForm());
+        scene.getStylesheets().add(ParametreController.class.getResource("/UI/Themes/" + fichierCss).toExternalForm());
     }
 }
