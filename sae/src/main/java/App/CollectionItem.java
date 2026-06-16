@@ -1,17 +1,19 @@
 package App;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Représente un élément d'une collection personnelle de boîtes LEGO.
  * <p>
- * Associe une boîte avec son état et la liste des pièces manquantes.
+ * Associe une boîte avec son état, la liste des pièces manquantes et la date d'ajout.
  * </p>
  */
 public class CollectionItem {
     private final Boite boite;
     private EtatBoite etat;
+    private LocalDate dateAjout;
     private final List<PieceQuantite> piecesManquantes = new ArrayList<>();
 
     /**
@@ -27,6 +29,7 @@ public class CollectionItem {
         }
         this.boite = boite;
         this.etat = etat == null ? EtatBoite.INCOMPLETE : etat;
+        this.dateAjout = LocalDate.now(); // Date du jour par défaut lors de l'ajout
     }
 
     /**
@@ -63,5 +66,23 @@ public class CollectionItem {
      */
     public List<PieceQuantite> getPiecesManquantes() {
         return piecesManquantes;
+    }
+
+    /**
+     * Retourne la date d'ajout à la collection.
+     *
+     * @return la date d'ajout
+     */
+    public LocalDate getDateAjout() {
+        return dateAjout;
+    }
+
+    /**
+     * Modifie la date d'ajout.
+     *
+     * @param dateAjout la nouvelle date
+     */
+    public void setDateAjout(LocalDate dateAjout) {
+        this.dateAjout = dateAjout;
     }
 }

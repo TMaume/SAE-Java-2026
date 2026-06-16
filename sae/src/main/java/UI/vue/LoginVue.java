@@ -12,6 +12,9 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 public class LoginVue {
     private final Stage stage;
     private final AuthController authController;
@@ -70,7 +73,11 @@ public class LoginVue {
                     ThemeService themeService = new ThemeService(themeBD, themeParentBD);
                     BoiteService boiteService = new BoiteService(boiteBD, contenuBD, contenirpBD, contenirfBD, contenirbBD, themeService);
                     PieceService pieceService = new PieceService(pieceBD, categorieBD, couleurBD);
-                    CollectionService collectionService = new CollectionService();
+                    
+                    // --- Initialisation du CollectionService avec JSON pour l'utilisateur connecté ---
+                    Path cheminJSON = Paths.get("collection_" + u.getIdentifiant().toLowerCase() + ".json");
+                    CollectionService collectionService = new CollectionService(cheminJSON, boiteService, pieceService);
+                    // -------------------------------------------------------------------------------
 
                     DashboardController dashboardController = new DashboardController(u, boiteService, pieceService, themeService, collectionService);
                     DashboardVue dashboardVue = new DashboardVue(stage, dashboardController, authController);
