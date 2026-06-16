@@ -4,9 +4,6 @@ import java.util.Objects;
 
 /**
  * Représente une couleur de pièce LEGO.
- * <p>
- * Contient les propriétés : identifiant, nom, code RGB et transparence.
- * </p>
  */
 public class Couleur {
     private final int idCouleur;

@@ -11,10 +11,6 @@ import java.util.ArrayList;
 
 /**
  * Service de gestion des boîtes LEGO.
- * <p>
- * Fournit des méthodes pour lister, rechercher, charger et modifier les boîtes.
- * Permet également de créer des boîtes personnalisées et calculer des statistiques.
- * </p>
  */
 public class BoiteService {
     private final BoiteBD boiteBD;
@@ -50,52 +46,6 @@ public class BoiteService {
      */
     public List<Boite> listerBoites() {
         return boiteBD.listeDesBoites();
-    }
-
-    /**
-     * Liste un sous-ensemble de boîtes pour la page courante.
-     *
-     * @param page numéro de la page active (indexé à partir de 1)
-     * @param taillePage nombre d'éléments maximum par page
-     * @return liste restreinte de boîtes
-     */
-    public List<Boite> listerBoitesPaginees(int page, int taillePage) {
-        int offset = (page - 1) * taillePage;
-        return boiteBD.listeDesBoitesPaginee(taillePage, offset);
-    }
-
-    /**
-     * Retourne le nombre total de boîtes disponibles en BD.
-     *
-     * @return total de lignes dans BOITE
-     */
-    public int obtenirNombreTotalBoites() {
-        return boiteBD.compterBoites();
-    }
-
-    /**
-     * Liste un sous-ensemble de boîtes selon des critères de recherche et pagination.
-     *
-     * @param recherche le nom partiel à rechercher
-     * @param idTheme l'identifiant du thème
-     * @param page numéro de la page active
-     * @param taillePage nombre d'éléments maximum par page
-     * @return la liste filtrée et paginée
-     */
-    public List<Boite> listerBoitesFiltreesPaginees(String recherche, Integer idTheme, int page, int taillePage) {
-        int offset = (page - 1) * taillePage;
-        return boiteBD.rechercherBoitesFiltreesPaginees(recherche, idTheme, taillePage, offset);
-    }
-
-    /**
-     * Retourne le nombre total de boîtes correspondant aux critères.
-     *
-     * @param recherche le nom partiel à rechercher
-     * @param idTheme l'identifiant du thème
-     * @return le total de résultats filtrés
-     */
-    public int obtenirNombreTotalBoitesFiltrees(String recherche, Integer idTheme) {
-        return boiteBD.compterBoitesFiltrees(recherche, idTheme);
     }
 
     /**
@@ -153,6 +103,7 @@ public class BoiteService {
         }
         
         boiteBD.insererBoite(nouvelleBoite);
+        
         return nouvelleBoite;
     }
 
@@ -273,5 +224,51 @@ public class BoiteService {
         int idCont = contenus.get(0).getIdCont();
 
         return contenirpBD.insererContenirp(idCont, pq) > 0;
+    }
+
+    /**
+     * Récupère une portion restreinte de boîtes (Pagination).
+     *
+     * @param limite nombre maximum de résultats
+     * @param offset décalage initial
+     * @return la liste paginée des boîtes
+     */
+    public List<Boite> listerBoitesPaginees(int page, int taillePage) {
+        int offset = (page - 1) * taillePage;
+        return boiteBD.listeDesBoitesPaginee(taillePage, offset);
+    }
+
+    /**
+     * Compte le nombre total de boîtes dans la base de données.
+     *
+     * @return le nombre de boîtes total
+     */
+    public int obtenirNombreTotalBoites() {
+        return boiteBD.compterBoites();
+    }
+
+    /**
+     * Liste un sous-ensemble de boîtes selon des critères de recherche et pagination.
+     *
+     * @param recherche le nom partiel à rechercher
+     * @param idTheme l'identifiant du thème
+     * @param page numéro de la page active
+     * @param taillePage nombre d'éléments maximum par page
+     * @return la liste filtrée et paginée
+     */
+    public List<Boite> listerBoitesFiltreesPaginees(String recherche, Integer idTheme, int page, int taillePage) {
+        int offset = (page - 1) * taillePage;
+        return boiteBD.rechercherBoitesFiltreesPaginees(recherche, idTheme, taillePage, offset);
+    }
+
+    /**
+     * Retourne le nombre total de boîtes correspondant aux critères.
+     *
+     * @param recherche le nom partiel à rechercher
+     * @param idTheme l'identifiant du thème
+     * @return le total de résultats filtrés
+     */
+    public int obtenirNombreTotalBoitesFiltrees(String recherche, Integer idTheme) {
+        return boiteBD.compterBoitesFiltrees(recherche, idTheme);
     }
 }

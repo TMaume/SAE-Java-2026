@@ -6,10 +6,6 @@ import java.util.Map;
 
 /**
  * Contient les statistiques d'une boîte LEGO.
- * <p>
- * Inclut le nombre total de pièces, de suppléments, de figurines,
- * de sous-boîtes et la répartition des pièces par couleur.
- * </p>
  */
 public class BoiteStats {
     private final int totalPieces;
@@ -24,7 +20,7 @@ public class BoiteStats {
      * @param totalPieces le nombre total de pièces
      * @param totalSupplement le nombre de pièces en supplément
      * @param totalFigurines le nombre total de figurines
-     * @param totalSousBoites le nombre de sous-boîtes incluses
+     * @param totalSousBoites le nombre total de sous-boîtes
      * @param repartitionCouleurs la répartition des pièces par couleur
      */
     public BoiteStats(int totalPieces, int totalSupplement, int totalFigurines, int totalSousBoites, Map<Couleur, Integer> repartitionCouleurs) {
