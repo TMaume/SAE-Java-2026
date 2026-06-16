@@ -4,6 +4,8 @@ import App.Boite;
 import App.BoiteService;
 import App.BoiteStats;
 import App.Couleur;
+import App.FigurineQuantite;
+import App.PieceQuantite;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.chart.PieChart;
@@ -11,33 +13,46 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import java.util.Map;
 
 /**
- * Vue affichant les détails complets et les statistiques d'une boîte LEGO.
+ * Vue affichant les détails complets, les statistiques, les pièces et les figurines d'une boîte LEGO.
  */
 public class DetailBoiteVue extends BorderPane {
 
     private final BoiteService boiteService;
+    private final Boite boiteComplete;
+    
+    private int pageCourantePieces = 1;
+    private final int taillePagePieces = 20;
+    private FlowPane conteneurPiecesGrille;
+    private Label lblPaginationPieces;
+    private Button btnPrecedentPieces;
+    private Button btnSuivantPieces;
 
     /**
      * Construit la vue détaillée d'une boîte.
      *
-     * @param boite la boîte à afficher
-     * @param boiteService le service permettant de récupérer les statistiques
+     * @param boiteLegere la boîte allégée provenant du catalogue
+     * @param boiteService le service permettant de récupérer les statistiques et l'inventaire
      * @param actionRetour l'action déclenchée pour revenir au catalogue
      */
-    public DetailBoiteVue(Boite boite, BoiteService boiteService, Runnable actionRetour) {
+    public DetailBoiteVue(Boite boiteLegere, BoiteService boiteService, Runnable actionRetour) {
         this.boiteService = boiteService;
+        
+        Boite boiteChargee = boiteService.chargerBoiteComplete(boiteLegere.getNumero());
+        this.boiteComplete = (boiteChargee != null) ? boiteChargee : boiteLegere;
         
         setPadding(new Insets(30));
         setStyle("-fx-background-color: transparent;");
 
-        setTop(creerEnTete(actionRetour, boite));
-        setCenter(creerContenu(boite));
+        setTop(creerEnTete(actionRetour, this.boiteComplete));
+        setCenter(creerOnglets(this.boiteComplete));
     }
 
     /**
@@ -102,7 +117,33 @@ public class DetailBoiteVue extends BorderPane {
     }
 
     /**
-     * Crée la zone centrale contenant l'image, les informations et les statistiques.
+     * Crée le système d'onglets pour séparer les statistiques, les pièces et les figurines.
+     *
+     * @param boite la boîte à afficher
+     * @return le composant TabPane contenant les vues
+     */
+    private TabPane creerOnglets(Boite boite) {
+        TabPane tabPane = new TabPane();
+        tabPane.setStyle("-fx-background-color: transparent;");
+
+        Tab tabInfos = new Tab("Informations & Statistiques");
+        tabInfos.setClosable(false);
+        tabInfos.setContent(creerContenu(boite));
+
+        Tab tabPieces = new Tab("Pièces incluses");
+        tabPieces.setClosable(false);
+        tabPieces.setContent(creerContenuPieces(boite));
+
+        Tab tabFigurines = new Tab("Figurines incluses");
+        tabFigurines.setClosable(false);
+        tabFigurines.setContent(creerContenuFigurines(boite));
+
+        tabPane.getTabs().addAll(tabInfos, tabPieces, tabFigurines);
+        return tabPane;
+    }
+
+    /**
+     * Crée la zone contenant les informations générales et les statistiques.
      *
      * @param boite la boîte à afficher
      * @return un HBox structurant l'affichage
@@ -110,6 +151,7 @@ public class DetailBoiteVue extends BorderPane {
     private HBox creerContenu(Boite boite) {
         HBox contenu = new HBox(30);
         contenu.setAlignment(Pos.TOP_LEFT);
+        contenu.setPadding(new Insets(20, 0, 0, 0));
 
         VBox zoneInformations = new VBox(20);
         zoneInformations.getChildren().addAll(
@@ -127,7 +169,233 @@ public class DetailBoiteVue extends BorderPane {
     }
 
     /**
-     * Crée le conteneur affichant l'image de la boîte.
+     * Crée le conteneur paginé affichant la liste des pièces.
+     *
+     * @param boite la boîte complète contenant les pièces
+     * @return un BorderPane contenant la grille et la pagination
+     */
+    private BorderPane creerContenuPieces(Boite boite) {
+        BorderPane conteneurGlobal = new BorderPane();
+        conteneurGlobal.setPadding(new Insets(20));
+
+        conteneurPiecesGrille = new FlowPane(20, 20);
+        conteneurPiecesGrille.setAlignment(Pos.TOP_LEFT);
+
+        if (boite.getPieces() == null || boite.getPieces().isEmpty()) {
+            Label lblVide = new Label("Aucun inventaire de pièces répertorié pour cette boîte.");
+            lblVide.setStyle("-fx-font-size: 16px; -fx-text-fill: #7f8c8d; -fx-font-style: italic;");
+            conteneurPiecesGrille.getChildren().add(lblVide);
+            conteneurGlobal.setCenter(conteneurPiecesGrille);
+            return conteneurGlobal;
+        }
+
+        ScrollPane scroll = new ScrollPane(conteneurPiecesGrille);
+        scroll.setFitToWidth(true);
+        scroll.setStyle("-fx-background-color: transparent; -fx-background: transparent; -fx-border-color: transparent;");
+        conteneurGlobal.setCenter(scroll);
+
+        HBox footer = new HBox(15);
+        footer.setAlignment(Pos.CENTER);
+        footer.setPadding(new Insets(20, 0, 0, 0));
+
+        btnPrecedentPieces = new Button("◄ Précédent");
+        btnPrecedentPieces.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-cursor: hand; -fx-font-weight: bold;");
+        btnPrecedentPieces.setOnAction(e -> {
+            if (pageCourantePieces > 1) {
+                pageCourantePieces--;
+                chargerPagePieces(boite);
+            }
+        });
+
+        lblPaginationPieces = new Label();
+        lblPaginationPieces.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
+
+        btnSuivantPieces = new Button("Suivant ►");
+        btnSuivantPieces.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-cursor: hand; -fx-font-weight: bold;");
+        btnSuivantPieces.setOnAction(e -> {
+            pageCourantePieces++;
+            chargerPagePieces(boite);
+        });
+
+        footer.getChildren().addAll(btnPrecedentPieces, lblPaginationPieces, btnSuivantPieces);
+        conteneurGlobal.setBottom(footer);
+
+        chargerPagePieces(boite);
+
+        return conteneurGlobal;
+    }
+
+    /**
+     * Charge et affiche la page actuelle des pièces.
+     *
+     * @param boite la boîte contenant la liste globale des pièces
+     */
+    private void chargerPagePieces(Boite boite) {
+        int totalItems = boite.getPieces().size();
+        int totalPages = (int) Math.ceil((double) totalItems / taillePagePieces);
+        
+        if (totalPages == 0) {
+            totalPages = 1;
+        }
+        if (pageCourantePieces > totalPages) {
+            pageCourantePieces = totalPages;
+        }
+        if (pageCourantePieces < 1) {
+            pageCourantePieces = 1;
+        }
+
+        lblPaginationPieces.setText("Page " + pageCourantePieces + " sur " + totalPages);
+        btnPrecedentPieces.setDisable(pageCourantePieces <= 1);
+        btnSuivantPieces.setDisable(pageCourantePieces >= totalPages);
+
+        conteneurPiecesGrille.getChildren().clear();
+
+        int indexDebut = (pageCourantePieces - 1) * taillePagePieces;
+        int indexFin = Math.min(indexDebut + taillePagePieces, totalItems);
+
+        for (int i = indexDebut; i < indexFin; i++) {
+            conteneurPiecesGrille.getChildren().add(creerCartePiece(boite.getPieces().get(i)));
+        }
+    }
+
+    /**
+     * Crée une carte graphique pour une pièce individuelle.
+     *
+     * @param pq l'objet contenant la pièce et sa quantité
+     * @return un VBox stylisé
+     */
+    private VBox creerCartePiece(PieceQuantite pq) {
+        VBox carte = new VBox(10);
+        carte.setPadding(new Insets(15));
+        carte.setStyle("-fx-background-color: white; -fx-border-color: #dcdde1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 5, 0, 0, 2);");
+        carte.setPrefWidth(220);
+        carte.setAlignment(Pos.CENTER);
+
+        ImageView imageView = new ImageView();
+        imageView.setFitWidth(120);
+        imageView.setFitHeight(120);
+        imageView.setPreserveRatio(true);
+
+        String url = pq.getImageP();
+        if (url != null && !url.isBlank() && !url.equalsIgnoreCase("null")) {
+            try {
+                Image image = new Image(url, true);
+                imageView.setImage(image);
+            } catch (IllegalArgumentException e) {
+                System.err.println("Impossible de charger l'image de la pièce : " + url);
+            }
+        }
+
+        VBox conteneurImage = new VBox(imageView);
+        conteneurImage.setAlignment(Pos.CENTER);
+        conteneurImage.setPrefHeight(130);
+
+        Label lblId = new Label("#" + pq.getPiece().getNumero());
+        lblId.setStyle("-fx-font-size: 12px; -fx-text-fill: #e67e22; -fx-font-weight: bold;");
+
+        Label lblNom = new Label(pq.getPiece().getNom());
+        lblNom.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+        lblNom.setWrapText(true);
+        lblNom.setAlignment(Pos.CENTER);
+        lblNom.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+        lblNom.setMinHeight(40);
+
+        String nomCouleur = (pq.getPiece().getCouleur() != null) ? pq.getPiece().getCouleur().getNom() : "Couleur inconnue";
+        Label lblCouleur = new Label(nomCouleur);
+        lblCouleur.setStyle("-fx-font-size: 12px; -fx-text-fill: #7f8c8d;");
+
+        Label lblQte = new Label("Quantité incluse : " + pq.getQuantite());
+        lblQte.setStyle("-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #3498db;");
+
+        carte.getChildren().addAll(conteneurImage, lblId, lblNom, lblCouleur, lblQte);
+
+        if (pq.isEnSupplement()) {
+            Label lblSupp = new Label("(Pièce de supplément)");
+            lblSupp.setStyle("-fx-font-size: 11px; -fx-font-style: italic; -fx-text-fill: #e74c3c;");
+            carte.getChildren().add(lblSupp);
+        }
+
+        return carte;
+    }
+
+    /**
+     * Crée le conteneur affichant la liste des figurines sous forme de cartes.
+     *
+     * @param boite la boîte complète contenant les figurines
+     * @return un ScrollPane contenant les cartes
+     */
+    private ScrollPane creerContenuFigurines(Boite boite) {
+        FlowPane flowFigurines = new FlowPane(20, 20);
+        flowFigurines.setPadding(new Insets(20));
+        flowFigurines.setAlignment(Pos.TOP_LEFT);
+
+        if (boite.getFigurines() == null || boite.getFigurines().isEmpty()) {
+            Label lblVide = new Label("Aucune figurine répertoriée pour cette boîte.");
+            lblVide.setStyle("-fx-font-size: 16px; -fx-text-fill: #7f8c8d; -fx-font-style: italic;");
+            flowFigurines.getChildren().add(lblVide);
+        } else {
+            for (FigurineQuantite fq : boite.getFigurines()) {
+                flowFigurines.getChildren().add(creerCarteFigurine(fq));
+            }
+        }
+
+        ScrollPane scroll = new ScrollPane(flowFigurines);
+        scroll.setFitToWidth(true);
+        scroll.setStyle("-fx-background-color: transparent; -fx-background: transparent; -fx-border-color: transparent;");
+        return scroll;
+    }
+
+    /**
+     * Crée une carte graphique pour une figurine individuelle.
+     *
+     * @param fq l'objet contenant la figurine et sa quantité
+     * @return un VBox stylisé
+     */
+    private VBox creerCarteFigurine(FigurineQuantite fq) {
+        VBox carte = new VBox(10);
+        carte.setPadding(new Insets(15));
+        carte.setStyle("-fx-background-color: white; -fx-border-color: #dcdde1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 5, 0, 0, 2);");
+        carte.setPrefWidth(220);
+        carte.setAlignment(Pos.CENTER);
+
+        ImageView imageView = new ImageView();
+        imageView.setFitWidth(120);
+        imageView.setFitHeight(120);
+        imageView.setPreserveRatio(true);
+
+        String url = fq.getFigurine().getImageF();
+        if (url != null && !url.isBlank() && !url.equalsIgnoreCase("null")) {
+            try {
+                Image image = new Image(url, true);
+                imageView.setImage(image);
+            } catch (IllegalArgumentException e) {
+                System.err.println("Impossible de charger l'image de la figurine (URL invalide) : " + url);
+            }
+        }
+
+        VBox conteneurImage = new VBox(imageView);
+        conteneurImage.setAlignment(Pos.CENTER);
+        conteneurImage.setPrefHeight(130);
+
+        Label lblId = new Label("#" + fq.getFigurine().getIdFigurine());
+        lblId.setStyle("-fx-font-size: 12px; -fx-text-fill: #e67e22; -fx-font-weight: bold;");
+
+        Label lblNom = new Label(fq.getFigurine().getNom());
+        lblNom.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+        lblNom.setWrapText(true);
+        lblNom.setAlignment(Pos.CENTER);
+        lblNom.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+        lblNom.setMinHeight(40);
+
+        Label lblQte = new Label("Quantité incluse : " + fq.getQuantite());
+        lblQte.setStyle("-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #3498db;");
+
+        carte.getChildren().addAll(conteneurImage, lblId, lblNom, lblQte);
+        return carte;
+    }
+
+    /**
+     * Crée le conteneur affichant l'image principale de la boîte.
      *
      * @param boite la boîte contenant l'URL de l'image
      * @return un VBox stylisé contenant l'image
@@ -138,6 +406,7 @@ public class DetailBoiteVue extends BorderPane {
         conteneurImage.setPadding(new Insets(10));
         conteneurImage.setStyle("-fx-background-color: white; -fx-border-color: #dcdde1; -fx-border-radius: 5; -fx-background-radius: 5;");
         conteneurImage.setPrefWidth(350);
+        conteneurImage.setMaxHeight(350);
 
         ImageView imageView = new ImageView();
         imageView.setFitWidth(330);
@@ -145,9 +414,13 @@ public class DetailBoiteVue extends BorderPane {
         imageView.setPreserveRatio(true);
 
         String url = boite.getImageBoite();
-        if (url != null && !url.isBlank()) {
-            Image image = new Image(url, true);
-            imageView.setImage(image);
+        if (url != null && !url.isBlank() && !url.equalsIgnoreCase("null")) {
+            try {
+                Image image = new Image(url, true);
+                imageView.setImage(image);
+            } catch (IllegalArgumentException e) {
+                System.err.println("Impossible de charger l'image de la boîte (URL invalide) : " + url);
+            }
         }
 
         conteneurImage.getChildren().add(imageView);
@@ -189,6 +462,7 @@ public class DetailBoiteVue extends BorderPane {
         VBox sectionComplete = new VBox(15);
         sectionComplete.setPadding(new Insets(20));
         sectionComplete.setStyle("-fx-background-color: white; -fx-border-color: #dcdde1; -fx-border-radius: 5; -fx-background-radius: 5;");
+        VBox.setVgrow(sectionComplete, Priority.ALWAYS);
         
         Label lblTitreStats = new Label("Statistiques du contenu réel");
         lblTitreStats.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
@@ -206,10 +480,11 @@ public class DetailBoiteVue extends BorderPane {
 
         HBox conteneurDivise = new HBox(30);
         conteneurDivise.setAlignment(Pos.TOP_LEFT);
+        VBox.setVgrow(conteneurDivise, Priority.ALWAYS);
 
         VBox colonneGauche = new VBox(20);
-        colonneGauche.setPrefWidth(400);
-        colonneGauche.setMaxWidth(400);
+        colonneGauche.setPrefWidth(450);
+        colonneGauche.setMaxWidth(450);
 
         GridPane grilleStats = new GridPane();
         grilleStats.setVgap(15);
@@ -224,12 +499,10 @@ public class DetailBoiteVue extends BorderPane {
         lblCouleurs.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
 
         FlowPane flowCouleurs = new FlowPane(10, 10);
-        flowCouleurs.setPrefWrapLength(380);
+        flowCouleurs.setPrefWrapLength(420);
 
         PieChart graphiqueCouleurs = new PieChart();
-        graphiqueCouleurs.setPrefSize(350, 350);
-        graphiqueCouleurs.setMinSize(350, 350);
-        graphiqueCouleurs.setMaxSize(350, 350);
+        graphiqueCouleurs.setPrefSize(600, 600);
         graphiqueCouleurs.setLegendVisible(false);
 
         for (Map.Entry<Couleur, Integer> entree : stats.getRepartitionCouleurs().entrySet()) {
@@ -259,13 +532,12 @@ public class DetailBoiteVue extends BorderPane {
 
         ScrollPane scrollCouleurs = new ScrollPane(flowCouleurs);
         scrollCouleurs.setFitToWidth(true);
-        scrollCouleurs.setPrefSize(400, 180);
-        scrollCouleurs.setMinHeight(180);
-        scrollCouleurs.setMaxHeight(180);
         scrollCouleurs.setStyle("-fx-background-color: transparent; -fx-background: transparent; -fx-border-color: transparent;");
+        VBox.setVgrow(scrollCouleurs, Priority.ALWAYS);
 
         colonneGauche.getChildren().addAll(grilleStats, lblCouleurs, scrollCouleurs);
 
+        HBox.setHgrow(graphiqueCouleurs, Priority.ALWAYS);
         conteneurDivise.getChildren().addAll(colonneGauche, graphiqueCouleurs);
 
         sectionComplete.getChildren().addAll(lblTitreStats, separator, conteneurDivise);

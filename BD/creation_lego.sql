@@ -35,7 +35,8 @@ CREATE TABLE CONTENIRP (
   numpiece      varchar(20) NOT NULL,
   idcoul        int NOT NULL,
   en_supplement char(1) NOT NULL,
-  quantitep     int
+  quantitep     int,
+  imageP        varchar(200)
 );
 
 CREATE TABLE CONTENU (

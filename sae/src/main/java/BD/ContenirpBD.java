@@ -161,7 +161,7 @@ public class ContenirpBD {
      * @return la pièce avec quantité, ou null si non trouvée
      */
     public PieceQuantite rechercherContenirp(int idCont, String numPiece, int idCoul, boolean enSupplement) {
-        String sql = "SELECT cp.quantitep, cp.en_supplement, p.numpiece, p.nompiece, c.idcat, c.nomcat, coul.idcoul, coul.nomcoul, coul.RGB, coul.transparent " +
+        String sql = "SELECT cp.quantitep, cp.en_supplement, cp.imageP, p.numpiece, p.nompiece, c.idcat, c.nomcat, coul.idcoul, coul.nomcoul, coul.RGB, coul.transparent " +
                      "FROM CONTENIRP cp " +
                      "JOIN PIECE p ON cp.numpiece = p.numpiece " +
                      "LEFT JOIN CATEGORIE c ON p.idcat = c.idcat " +
@@ -192,7 +192,7 @@ public class ContenirpBD {
                     cat,
                     couleur
                 );
-                return new PieceQuantite(piece, rs.getInt("quantitep"), tfToBool(rs.getString("en_supplement")));
+                return new PieceQuantite(piece, rs.getInt("quantitep"), tfToBool(rs.getString("en_supplement")), rs.getString("imageP"));
             }
         } catch (SQLException e) {
             return null;
@@ -207,7 +207,7 @@ public class ContenirpBD {
      */
     public List<PieceQuantite> listeContenirpParContenu(int idCont) {
         ArrayList<PieceQuantite> res = new ArrayList<>();
-        String sql = "SELECT cp.quantitep, cp.en_supplement, p.numpiece, p.nompiece, c.idcat, c.nomcat, coul.idcoul, coul.nomcoul, coul.RGB, coul.transparent " +
+        String sql = "SELECT cp.quantitep, cp.en_supplement, cp.imageP, p.numpiece, p.nompiece, c.idcat, c.nomcat, coul.idcoul, coul.nomcoul, coul.RGB, coul.transparent " +
                      "FROM CONTENIRP cp " +
                      "JOIN PIECE p ON cp.numpiece = p.numpiece " +
                      "LEFT JOIN CATEGORIE c ON p.idcat = c.idcat " +
@@ -234,7 +234,7 @@ public class ContenirpBD {
                         cat,
                         couleur
                     );
-                    res.add(new PieceQuantite(piece, rs.getInt("quantitep"), tfToBool(rs.getString("en_supplement"))));
+                    res.add(new PieceQuantite(piece, rs.getInt("quantitep"), tfToBool(rs.getString("en_supplement")), rs.getString("imageP")));
                 }
             }
         } catch (SQLException e) {
