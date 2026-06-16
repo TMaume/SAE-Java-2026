@@ -7,32 +7,32 @@
 }
 
 /* --- PANNEAUX (HEADER, NAV GAUCHE, STATS) --- */
-.header-pane {
+.header-Pane {
     -fx-background-color: #22272e;
     -fx-border-color: #444c56;
     -fx-border-width: 0 0 1px 0;
 }
 
-.header-pane .button {
+.header .button {
     -fx-background-radius: 50em;
 }
 
-.left-nav-panel {
+.sidebar-Pane {
     -fx-background-color: #22272e;
     -fx-border-color: #444c56;
     -fx-border-width: 0 1px 0 0;
 }
 
-.stats-box {
+/* .stats-box {
     -fx-background-color: #22272e;
     -fx-border-color: #444c56;
     -fx-border-width: 1px;
     -fx-border-radius: 8px;
     -fx-padding: 15px;
-}
+} */
 
 /* --- TEXTES --- */
-.label {
+.Label {
     -fx-text-fill: #e6edf3; /* Blanc cassé */
     -fx-font-size: 14px;
 }
@@ -48,7 +48,7 @@
 }
 
 /* --- BOUTONS --- */
-.btn {
+.button {
     -fx-background-color: #373b41;
     -fx-text-fill: #e6edf3;
     -fx-font-size: 13px;
@@ -64,7 +64,23 @@
     -fx-background-color: #2a2e33;
 }
 
-/* Boutons du menu de navigation */
+
+.StackPane{
+    -fx-base: #3c3f41; /*/ Couleur de base des contrôles */
+    -fx-background: #1c2128; /* Fond bleu nuit très sombre */
+    -fx-font-family: "Segoe UI", "Arial", sans-serif;
+    -fx-accent: #388bfd; /* Bleu vif pour les accents */
+}
+.HBox, .VBox {
+    -fx-background-color: #0f69e7;
+    -fx-text-fill: #e6edf3;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+}
+
+
+
+/* Boutons du menu de navigation
 .left-nav-panel .button {
     -fx-background-color: transparent;
     -fx-text-fill: #adb5bd;
@@ -86,20 +102,19 @@
      -fx-text-fill: white;
 }
 
-/* --- NOUVEAU STYLE POUR LES BOUTONS AVEC ICÔNES --- */
+/*
 .icon-button {
-    -fx-background-radius: 50em; /* Rend le bouton parfaitement rond */
+    -fx-background-radius: 50em;
     -fx-min-width: 40px;
     -fx-pref-width: 40px;
     -fx-max-width: 40px;
     -fx-min-height: 40px;
     -fx-pref-height: 40px;
     -fx-max-height: 40px;
-    -fx-padding: 5px; /* Marge intérieure pour l'icône */
-}
+    -fx-padding: 5px;
+} */
 
-
-/* --- CHAMPS DE SAISIE --- */
+/* --- CHAMPS DE SAISIE ---
 .text-field, .combo-box, .check-box {
     -fx-background-color: #22272e;
     -fx-border-color: #444c56;
@@ -111,9 +126,9 @@
 .text-field:focused, .combo-box:focused {
     -fx-border-color: -fx-accent;
     -fx-effect: dropshadow(three-pass-box, derive(-fx-accent, 50%), 3, 0, 0, 0);
-}
+} */
 
-/* --- TABLE VIEW --- */
+/* --- TABLE VIEW ---
 .table-view {
     -fx-background-color: #22272e;
     -fx-border-color: #444c56;
@@ -154,11 +169,5 @@
 
 .table-row-cell:selected .text {
      -fx-fill: white ;
-}
+} */
 
-.conteneurCentral{
-    -fx-base: #3c3f41; /* Couleur de base des contrôles */
-    -fx-background: #1c2128; /* Fond bleu nuit très sombre */
-    -fx-font-family: "Segoe UI", "Arial", sans-serif;
-    -fx-accent: #388bfd; /* Bleu vif pour les accents */
-}
