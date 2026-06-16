@@ -22,7 +22,7 @@ FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\r\n' IGNORE 1 LIN
 LOAD DATA LOCAL INFILE 'sets.csv' INTO TABLE BOITE 
 FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\r\n' IGNORE 1 LINES 
 (@v1,@v2,@v3,@v4,@v5,@v6) set numboite=NULLIF(@v1,''), nomboite=NULLIF(@v2,''), annee=NULLIF(@v3,''),
-nbpieces=NULLIF(@v5,''), idtheme=NULLIF(@v4,''), image=NULLIF(@v6,'');
+nbpieces=NULLIF(@v5,''), idtheme=NULLIF(@v4,''), imageB=NULLIF(@v6,'');
 
 LOAD DATA LOCAL INFILE 'inventories.csv' INTO TABLE CONTENU
 FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\r\n' IGNORE 1 LINES 
@@ -34,7 +34,7 @@ FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\r\n' IGNORE 1 LIN
 
 LOAD DATA LOCAL INFILE 'inventory_minifigs.csv' INTO TABLE CONTENIRF 
 FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\r\n' IGNORE 1 LINES 
-(@v1,@v2,@v3) set idcont=NULLIF(@v1,''), idfig=NULLIF(@v2,''), quantitef=NULLIF(@v3,'');
+(@v1,@v2,@v3,@v4) set idcont=NULLIF(@v1,''), idfig=NULLIF(@v2,''), quantitef=NULLIF(@v3,''),imageF=NULLIF(@v4,'');
 
 
 LOAD DATA LOCAL INFILE 'inventory_parts.csv' INTO TABLE CONTENIRP

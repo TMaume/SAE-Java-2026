@@ -130,7 +130,7 @@ public class ContenirbBD {
      * @return la boîte avec quantité, ou null si non trouvée
      */
     public BoiteQuantite rechercherContenirb(int idCont, String numBoite) {
-        String sql = "SELECT cb.quantiteb, b.numboite, b.nomboite, b.annee, b.nbpieces, t.idtheme, t.nomtheme, b.image" +
+        String sql = "SELECT cb.quantiteb, b.numboite, b.nomboite, b.annee, b.nbpieces, t.idtheme, t.nomtheme, b.imageB" +
                      "FROM CONTENIRB cb " +
                      "JOIN BOITE b ON cb.numboite = b.numboite " +
                      "JOIN THEME t ON b.idtheme = t.idtheme " +
@@ -152,7 +152,7 @@ public class ContenirbBD {
                     rs.getString("nomboite"),
                     (Integer) rs.getObject("annee"),
                     theme,
-                    rs.getString("image")
+                    rs.getString("imageB")
                 );
                 boite.setNbPieces((Integer) rs.getObject("nbpieces"));
                 return new BoiteQuantite(boite, rs.getInt("quantiteb"));
@@ -170,7 +170,7 @@ public class ContenirbBD {
      */
     public List<BoiteQuantite> listeContenirbParContenu(int idCont) {
         ArrayList<BoiteQuantite> res = new ArrayList<>();
-        String sql = "SELECT cb.quantiteb, b.numboite, b.nomboite, b.annee, b.nbpieces, t.idtheme, t.nomtheme, b.image " +
+        String sql = "SELECT cb.quantiteb, b.numboite, b.nomboite, b.annee, b.nbpieces, t.idtheme, t.nomtheme, b.imageB " +
                      "FROM CONTENIRB cb " +
                      "JOIN BOITE b ON cb.numboite = b.numboite " +
                      "JOIN THEME t ON b.idtheme = t.idtheme " +
@@ -189,13 +189,14 @@ public class ContenirbBD {
                         rs.getString("nomboite"),
                         (Integer) rs.getObject("annee"),
                         theme,
-                        rs.getString("image")
+                        rs.getString("imageB")
                     );
                     boite.setNbPieces((Integer) rs.getObject("nbpieces"));
                     res.add(new BoiteQuantite(boite, rs.getInt("quantiteb")));
                 }
             }
         } catch (SQLException e) {
+            System.err.println("Erreur lors de la récupération de la liste des boîtes contenues : " + e.getMessage());
         }
         return res;
     }

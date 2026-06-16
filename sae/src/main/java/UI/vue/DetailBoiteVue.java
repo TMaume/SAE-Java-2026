@@ -204,12 +204,12 @@ public class DetailBoiteVue extends BorderPane {
             return sectionComplete;
         }
 
-        HBox conteneurDivise = new HBox(40);
+        HBox conteneurDivise = new HBox(30);
         conteneurDivise.setAlignment(Pos.TOP_LEFT);
 
         VBox colonneGauche = new VBox(20);
-        colonneGauche.setPrefWidth(350);
-        colonneGauche.setMaxWidth(350);
+        colonneGauche.setPrefWidth(400);
+        colonneGauche.setMaxWidth(400);
 
         GridPane grilleStats = new GridPane();
         grilleStats.setVgap(15);
@@ -224,11 +224,12 @@ public class DetailBoiteVue extends BorderPane {
         lblCouleurs.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
 
         FlowPane flowCouleurs = new FlowPane(10, 10);
-        flowCouleurs.setPrefWrapLength(320);
+        flowCouleurs.setPrefWrapLength(380);
 
         PieChart graphiqueCouleurs = new PieChart();
-        graphiqueCouleurs.setPrefSize(400, 400);
-        graphiqueCouleurs.setMinSize(300, 300);
+        graphiqueCouleurs.setPrefSize(350, 350);
+        graphiqueCouleurs.setMinSize(350, 350);
+        graphiqueCouleurs.setMaxSize(350, 350);
         graphiqueCouleurs.setLegendVisible(false);
 
         for (Map.Entry<Couleur, Integer> entree : stats.getRepartitionCouleurs().entrySet()) {
@@ -245,28 +246,27 @@ public class DetailBoiteVue extends BorderPane {
             PieChart.Data tranche = new PieChart.Data(couleur.getNom() + " (" + quantite + ")", quantite);
             graphiqueCouleurs.getData().add(tranche);
 
-            String styleTranche = "-fx-pie-color: " + rgbHex + "; -fx-border-color: derive(" + rgbHex + ", -10%); -fx-border-width: 1px;";
-            
             if (tranche.getNode() != null) {
-                tranche.getNode().setStyle(styleTranche);
+                tranche.getNode().setStyle("-fx-pie-color: " + rgbHex + "; -fx-border-color: white; -fx-border-width: 1px;");
             }
+            
             tranche.nodeProperty().addListener((obs, oldNode, newNode) -> {
                 if (newNode != null) {
-                    newNode.setStyle(styleTranche);
+                    newNode.setStyle("-fx-pie-color: " + rgbHex + "; -fx-border-color: white; -fx-border-width: 1px;");
                 }
             });
         }
 
         ScrollPane scrollCouleurs = new ScrollPane(flowCouleurs);
         scrollCouleurs.setFitToWidth(true);
-        scrollCouleurs.setPrefHeight(200);
-        scrollCouleurs.setMaxHeight(250);
-        scrollCouleurs.setStyle("-fx-background-color: transparent; -fx-background: transparent; -fx-border-color: #bdc3c7; -fx-border-radius: 5; -fx-padding: 5;");
+        scrollCouleurs.setPrefSize(400, 180);
+        scrollCouleurs.setMinHeight(180);
+        scrollCouleurs.setMaxHeight(180);
+        scrollCouleurs.setStyle("-fx-background-color: transparent; -fx-background: transparent; -fx-border-color: transparent;");
 
         colonneGauche.getChildren().addAll(grilleStats, lblCouleurs, scrollCouleurs);
 
         conteneurDivise.getChildren().addAll(colonneGauche, graphiqueCouleurs);
-        HBox.setHgrow(graphiqueCouleurs, Priority.ALWAYS);
 
         sectionComplete.getChildren().addAll(lblTitreStats, separator, conteneurDivise);
         return sectionComplete;

@@ -6,7 +6,7 @@ CREATE TABLE BOITE (
   annee    int,
   nbpieces int,
   idtheme  int NOT NULL,
-  image    varchar(200)
+  imageB   varchar(200)
 );
 
 CREATE TABLE CATEGORIE (
@@ -58,7 +58,8 @@ CREATE TABLE FIGURINE (
   PRIMARY KEY (idfig),
   idfig     varchar(12) NOT NULL,
   nomfig   varchar(150),
-  nbparties int
+  nbparties int,
+  imageF    varchar(200)
 );
 
 CREATE TABLE PIECE (
