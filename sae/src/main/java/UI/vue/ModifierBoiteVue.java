@@ -27,7 +27,7 @@ import App.PieceService;
 import App.Theme;
 import App.ThemeService;
 
-public class ModifBoiteVue extends BorderPane {
+public class ModifierBoiteVue extends BorderPane {
 
     private final BoiteService boiteService;
     private final ThemeService themeService;
@@ -52,7 +52,7 @@ public class ModifBoiteVue extends BorderPane {
     
     private VBox sectionStatistiques;
 
-    public ModifBoiteVue(Boite boite, BoiteService boiteService, ThemeService themeService, PieceService pieceService, Runnable actionRetour) {
+    public ModifierBoiteVue(Boite boite, BoiteService boiteService, ThemeService themeService, PieceService pieceService, Runnable actionRetour) {
         this.boiteService = boiteService;
         this.themeService = themeService;
         this.pieceService = pieceService;
