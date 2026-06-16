@@ -6,7 +6,6 @@ import App.BoiteStats;
 import App.Couleur;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.geometry.Side;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -205,10 +204,12 @@ public class DetailBoiteVue extends BorderPane {
             return sectionComplete;
         }
 
-        HBox conteneurDivise = new HBox(30);
+        HBox conteneurDivise = new HBox(40);
         conteneurDivise.setAlignment(Pos.TOP_LEFT);
 
         VBox colonneGauche = new VBox(20);
+        colonneGauche.setPrefWidth(350);
+        colonneGauche.setMaxWidth(350);
 
         GridPane grilleStats = new GridPane();
         grilleStats.setVgap(15);
@@ -223,10 +224,11 @@ public class DetailBoiteVue extends BorderPane {
         lblCouleurs.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
 
         FlowPane flowCouleurs = new FlowPane(10, 10);
-        flowCouleurs.setPrefWrapLength(350);
+        flowCouleurs.setPrefWrapLength(320);
 
         PieChart graphiqueCouleurs = new PieChart();
         graphiqueCouleurs.setPrefSize(400, 400);
+        graphiqueCouleurs.setMinSize(300, 300);
         graphiqueCouleurs.setLegendVisible(false);
 
         for (Map.Entry<Couleur, Integer> entree : stats.getRepartitionCouleurs().entrySet()) {
@@ -243,9 +245,14 @@ public class DetailBoiteVue extends BorderPane {
             PieChart.Data tranche = new PieChart.Data(couleur.getNom() + " (" + quantite + ")", quantite);
             graphiqueCouleurs.getData().add(tranche);
 
+            String styleTranche = "-fx-pie-color: " + rgbHex + "; -fx-border-color: derive(" + rgbHex + ", -10%); -fx-border-width: 1px;";
+            
+            if (tranche.getNode() != null) {
+                tranche.getNode().setStyle(styleTranche);
+            }
             tranche.nodeProperty().addListener((obs, oldNode, newNode) -> {
                 if (newNode != null) {
-                    newNode.setStyle("-fx-pie-color: " + rgbHex + ";");
+                    newNode.setStyle(styleTranche);
                 }
             });
         }
@@ -253,12 +260,13 @@ public class DetailBoiteVue extends BorderPane {
         ScrollPane scrollCouleurs = new ScrollPane(flowCouleurs);
         scrollCouleurs.setFitToWidth(true);
         scrollCouleurs.setPrefHeight(200);
-        scrollCouleurs.setStyle("-fx-background-color: transparent; -fx-background: transparent; -fx-border-color: transparent;");
+        scrollCouleurs.setMaxHeight(250);
+        scrollCouleurs.setStyle("-fx-background-color: transparent; -fx-background: transparent; -fx-border-color: #bdc3c7; -fx-border-radius: 5; -fx-padding: 5;");
 
         colonneGauche.getChildren().addAll(grilleStats, lblCouleurs, scrollCouleurs);
-        HBox.setHgrow(colonneGauche, Priority.ALWAYS);
 
         conteneurDivise.getChildren().addAll(colonneGauche, graphiqueCouleurs);
+        HBox.setHgrow(graphiqueCouleurs, Priority.ALWAYS);
 
         sectionComplete.getChildren().addAll(lblTitreStats, separator, conteneurDivise);
         return sectionComplete;
