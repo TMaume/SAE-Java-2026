@@ -1,9 +1,9 @@
 package UI.Controller;
 import App.Boite;
-import UI.Exeption.BoiteExistanteException;
 import App.BoiteService;
 import App.ThemeService;
 import App.Theme;
+import UI.Exception.BoiteExistanteException;
 import UI.vue.CreerBoiteVue;
 import javafx.collections.FXCollections;
 import javafx.scene.paint.Color;
