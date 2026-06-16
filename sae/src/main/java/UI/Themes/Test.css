@@ -1,4 +1,4 @@
-/* --- THEME FORET GLOBAL --- */
+/*global*/
 .root {
     -fx-base: #4f594c; 
     -fx-background: #4f594c;
@@ -8,7 +8,7 @@
     -fx-faint-focus-color: rgba(122, 156, 104, 0.2);
 }
 
-/* --- VOS CLASSES PERSONNALISÉES --- */
+/*les objets principaux*/
 .center {
     -fx-background-color: #4f594c; 
 }
@@ -22,7 +22,7 @@
     -fx-border-width: 0 0 1px 0;
 }
 
-/* --- PANNEAUX ET VUES STANDARDS --- */
+/*panneaux*/
 .header-pane {
     -fx-background-color: #30362e;
     -fx-border-color: #1c221a;
@@ -44,7 +44,7 @@
     -fx-padding: 15px;
 }
 
-/* --- TEXTES --- */
+/*label*/
 .label {
     -fx-text-fill: #e6edf3;
     -fx-font-size: 14px;
@@ -59,7 +59,7 @@
     -fx-text-fill: #a2b09a; 
 }
 
-/* --- BOUTONS --- */
+/*bouton*/
 .button, .btn, .retract {
     -fx-background-color: #373b41;
     -fx-text-fill: #e6edf3;
@@ -78,7 +78,7 @@
     -fx-background-color: #26292d;
 }
 
-/* Boutons d'action principale (ex: Valider, Ajouter) */
+/*Boutons importants*/
 .btn-primary {
     -fx-background-color: #5c7e46; 
     -fx-text-fill: white;
@@ -88,7 +88,7 @@
     -fx-background-color: #6a9152;
 }
 
-/* Boutons d'annulation ou d'erreur */
+/*Boutons d'annulation ou d'erreur*/
 .btn-danger {
     -fx-background-color: #a64e44; 
     -fx-text-fill: white;
@@ -98,7 +98,7 @@
     -fx-background-color: #bd594e;
 }
 
-/* --- CHAMPS DE TEXTE & COMBOBOX --- */
+/*textfield et menu deroulant*/
 .text-field, .password-field, .combo-box {
     -fx-background-color: #3e473b;
     -fx-border-color: #2b3328;
@@ -113,7 +113,7 @@
     -fx-effect: dropshadow(three-pass-box, rgba(122, 156, 104, 0.4), 5, 0, 0, 0);
 }
 
-/* --- LISTES ET TABLEAUX --- */
+/*liste et tableau*/
 .table-view {
     -fx-background-color: #4f594c;
     -fx-border-color: #2b3328;
@@ -138,7 +138,7 @@
     -fx-text-fill: white;
 }
 
-/* --- ONGLETS (TAB PANE) --- */
+/*ONGLETS*/
 .tab-pane .tab-header-area .tab-header-background {
     -fx-background-color: transparent;
 }
@@ -157,7 +157,7 @@
     -fx-font-weight: bold;
 }
 
-/* --- SCROLLPANE --- */
+/*SCROLLPANE*/
 .scroll-pane {
     -fx-background-color: transparent;
 }

@@ -1,3 +1,4 @@
+/*global*/
 .root {
     -fx-base: #22272e; 
     -fx-background: #1c2128;
@@ -7,6 +8,7 @@
     -fx-faint-focus-color: rgba(56, 139, 253, 0.2);
 }
 
+/*les objets principaux*/
 .header-pane {
     -fx-background-color: #22272e;
     -fx-border-color: #444c56;
@@ -29,7 +31,7 @@
     -fx-padding: 15px;
 }
 
-
+/*label*/
 .label {
     -fx-text-fill: #e6edf3;
     -fx-font-size: 14px;
@@ -45,6 +47,7 @@
     -fx-text-fill: #768390;
 }
 
+/*bouton*/
 .button {
     -fx-background-color: #373e47;
     -fx-text-fill: #c9d1d9;
@@ -62,6 +65,7 @@
 .button:pressed {
     -fx-background-color: #2d333b;
 }
+/*Boutons importants*/
 .btn-primary {
     -fx-background-color: #238636;
     -fx-text-fill: white;
@@ -70,6 +74,7 @@
 .btn-primary:hover {
     -fx-background-color: #2ea043;
 }
+/*Boutons d'annulation ou d'erreur*/
 .btn-danger {
     -fx-background-color: #da3633;
     -fx-text-fill: white;
@@ -79,6 +84,7 @@
     -fx-background-color: #f85149;
 }
 
+/*textfield et menu deroulant*/
 .text-field, .password-field, .combo-box {
     -fx-background-color: #2d333b;
     -fx-border-color: #444c56;
@@ -93,6 +99,7 @@
     -fx-effect: dropshadow(three-pass-box, rgba(56,139,253,0.3), 5, 0, 0, 0);
 }
 
+/*liste et tableau*/
 .table-view {
     -fx-background-color: #22272e;
     -fx-border-color: #444c56;
