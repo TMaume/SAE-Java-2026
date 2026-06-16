@@ -1,5 +1,4 @@
-Java
-package App;
+package UI.vue;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,7 +14,20 @@ import java.time.LocalDate;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class VueModifBoitePerso extends BorderPane {
+import App.Boite;
+import App.BoiteQuantite;
+import App.BoiteService;
+import App.BoiteStats;
+import App.Couleur;
+import App.Figurine;
+import App.FigurineQuantite;
+import App.Piece;
+import App.PieceQuantite;
+import App.PieceService;
+import App.Theme;
+import App.ThemeService;
+
+public class ModifBoitePersoVue extends BorderPane {
 
     private final BoiteService boiteService;
     private final ThemeService themeService;
@@ -40,7 +52,7 @@ public class VueModifBoitePerso extends BorderPane {
     
     private VBox sectionStatistiques;
 
-    public VueModifBoitePerso(Boite boite, BoiteService boiteService, ThemeService themeService, PieceService pieceService, Runnable actionRetour) {
+    public ModifBoitePersoVue(Boite boite, BoiteService boiteService, ThemeService themeService, PieceService pieceService, Runnable actionRetour) {
         this.boiteService = boiteService;
         this.themeService = themeService;
         this.pieceService = pieceService;
@@ -48,10 +60,9 @@ public class VueModifBoitePerso extends BorderPane {
         Boite boiteComplete = boiteService.chargerBoiteComplete(boite.getNumero());
         this.boite = (boiteComplete != null) ? boiteComplete : boite;
 
-        // List dynamique avec FXCollections 
         tousLesThemes = FXCollections.observableArrayList();
         if (themeService != null) {
-            tousLesThemes.addAll(themeService.listeDesThemes());
+            tousLesThemes.addAll(themeService.listerThemes());
         }
 
         setPadding(new Insets(30));
@@ -121,7 +132,7 @@ public class VueModifBoitePerso extends BorderPane {
         }
         if (afficherFigurines && boite.getFigurines() != null) {
             for (FigurineQuantite fq : boite.getFigurines()) {
-                listeComposition.getItems().add("[Figurine] Réf: " + fq.getFigurine().getNumero() + " | Quantité: " + fq.getQuantite());
+                listeComposition.getItems().add("[Figurine] Réf: " + fq.getFigurine().getIdFigurine() + " | Quantité: " + fq.getQuantite());
             }
         }
         if (afficherSousBoites && boite.getBoitesIncluses() != null) {
@@ -348,7 +359,7 @@ public class VueModifBoitePerso extends BorderPane {
         // Extraction du code et sauvegarde en base puis en local pour actualiser la vue
         if (type.equals("Pièce")) {
             Piece piece = new Piece("REF-SIMULEE", "Pièce simulée", null, null); 
-            PieceQuantite pq = new PieceQuantite(piece, quantite, false);
+            PieceQuantite pq = new PieceQuantite(piece, quantite, false, null);
             boite.ajouterPiece(pq);
             boiteService.ajouterPieceABoite(boite.getNumero(), pq);
             afficherAlerte(AlertType.INFORMATION, "Succès", "Pièce ajoutée avec succès");

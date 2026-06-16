@@ -342,6 +342,7 @@ public class CatalogueVue {
      */
     private VBox creerCarteBoite(Boite b) {
         VBox carte = new VBox(10);
+        carte.getStyleClass().add("carte");
         carte.setPadding(new Insets(15));
         carte.getStyleClass().add("carte-boite");
         carte.setPrefWidth(220);
