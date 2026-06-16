@@ -58,7 +58,8 @@ CREATE TABLE FIGURINE (
   PRIMARY KEY (idfig),
   idfig     varchar(12) NOT NULL,
   nomfig   varchar(150),
-  nbparties int
+  nbparties int,
+  image    varchar(200)
 );
 
 CREATE TABLE PIECE (

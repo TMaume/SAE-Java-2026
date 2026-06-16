@@ -34,7 +34,7 @@ FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\r\n' IGNORE 1 LIN
 
 LOAD DATA LOCAL INFILE 'inventory_minifigs.csv' INTO TABLE CONTENIRF 
 FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\r\n' IGNORE 1 LINES 
-(@v1,@v2,@v3) set idcont=NULLIF(@v1,''), idfig=NULLIF(@v2,''), quantitef=NULLIF(@v3,'');
+(@v1,@v2,@v3,@v4) set idcont=NULLIF(@v1,''), idfig=NULLIF(@v2,''), quantitef=NULLIF(@v3,''),image=NULLIF(@v4,'');
 
 
 LOAD DATA LOCAL INFILE 'inventory_parts.csv' INTO TABLE CONTENIRP
