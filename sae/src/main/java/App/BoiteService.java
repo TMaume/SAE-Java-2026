@@ -1,5 +1,6 @@
 package App;
 
+import UI.Exeption.BoiteExistanteException;
 import BD.BoiteBD;
 import BD.ContenirbBD;
 import BD.ContenirfBD;

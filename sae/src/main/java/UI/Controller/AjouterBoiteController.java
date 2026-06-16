@@ -1,6 +1,6 @@
 package UI.Controller;
 import App.Boite;
-import App.BoiteExistanteException;
+import UI.Exeption.BoiteExistanteException;
 import App.BoiteService;
 import App.ThemeService;
 import App.Theme;
