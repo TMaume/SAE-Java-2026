@@ -36,6 +36,9 @@ public class ParametreController {
             case "TripleT":
                 fichierCss = "triplet-theme.css";
                 break;
+            case "Lego":
+                fichierCss = "Lego-theme.css";
+                break;
             case "Clair":
             default:
                 fichierCss = "clair-theme.css";

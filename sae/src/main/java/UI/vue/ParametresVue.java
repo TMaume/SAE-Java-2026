@@ -36,7 +36,7 @@ public class ParametresVue {
 
         ComboBox<String> comboTheme = new ComboBox<>();
 
-        comboTheme.getItems().addAll("Clair", "Sombre", "Forêt");
+        comboTheme.getItems().addAll("Clair", "Sombre", "Forêt","Lego");
         
         comboTheme.setValue(ParametreController.getThemeActuel());
 

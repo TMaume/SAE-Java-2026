@@ -45,6 +45,7 @@ public class LoginVue {
         btnConnexion.setPrefWidth(250);
 
         Hyperlink linkInscription = new Hyperlink("Pas encore de compte ? S'inscrire");
+        linkInscription.getStyleClass().add("label");
 
         btnConnexion.setOnAction(e -> {
             lblErreur.setText("");
