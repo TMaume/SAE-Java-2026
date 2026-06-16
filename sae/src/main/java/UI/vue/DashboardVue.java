@@ -21,6 +21,7 @@ public class DashboardVue {
     private final DashboardController controller;
     private final AuthController authController;
     private Button boutonActif = null;
+    private int compteurEasterEgg = 0;
 
     public DashboardVue(Stage stage, DashboardController controller, AuthController authController) {
         this.stage = stage;
@@ -181,9 +182,18 @@ public class DashboardVue {
             boolean estVisible = sidebar.isVisible();
             sidebar.setVisible(!estVisible);
             sidebar.setManaged(!estVisible); 
+
+            compteurEasterEgg++;
+            if (compteurEasterEgg == 3) {
+                ParametreController.appliquerTheme(stage.getScene());
+
+                this.afficher(); 
+                
+                compteurEasterEgg = 0;
+            }
         });
 
-        Label lblBienvenue = new Label("Bienvenue, " + controller.getUtilisateurConnecte().getIdentifiant());
+        Label lblBienvenue = new Label("Bienvenue, " + (ParametreController.isTripleTActif() ? "Triple-T" : controller.getUtilisateurConnecte().getIdentifiant()));
         lblBienvenue.getStyleClass().add("subtitle-label");
 
         Region spacer = new Region();
@@ -225,5 +235,9 @@ public class DashboardVue {
         btn.setMaxWidth(Double.MAX_VALUE);
         btn.setPadding(new Insets(8, 12, 8, 12));
         return btn;
+    }
+
+    public void resetCompteurEasterEgg() {
+        this.compteurEasterEgg = 0;
     }
 }

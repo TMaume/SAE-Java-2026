@@ -5,6 +5,7 @@ import javafx.scene.Scene;
 public class ParametreController {
     
     private static String themeActuel = "Clair"; 
+    private static boolean tripleTActif = false;
 
     public static String getThemeActuel() {
         return themeActuel;
@@ -13,6 +14,11 @@ public class ParametreController {
     public static void setThemeActuel(String theme) {
         themeActuel = theme;
     }
+
+    public static boolean isTripleTActif() {
+        return tripleTActif;
+    }
+    
 
     public static void appliquerTheme(Scene scene) {
         if (scene == null) return;
@@ -27,6 +33,9 @@ public class ParametreController {
             case "Forêt":
                 fichierCss = "foret-theme.css";
                 break;
+            case "TripleT":
+                fichierCss = "triplet-theme.css";
+                break;
             case "Clair":
             default:
                 fichierCss = "clair-theme.css";
@@ -34,5 +43,6 @@ public class ParametreController {
         }
         
         scene.getStylesheets().add(ParametreController.class.getResource("/UI/Themes/" + fichierCss).toExternalForm());
+        if (themeActuel.equals("TripleT")) tripleTActif = true;
     }
 }
