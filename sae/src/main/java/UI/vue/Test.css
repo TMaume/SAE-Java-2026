@@ -1,0 +1,47 @@
+/* .root{
+    -fx-background: #4f594c; 
+    -fx-font-family: "Segoe UI", "Arial", sans-serif;
+    -fx-text-fill: #30a6b3;
+} */
+.center {
+    -fx-base: #4f594c;
+    -fx-background-color: #4f594c; 
+    -fx-font-family: "Segoe UI", "Arial", sans-serif;
+}
+
+.label {
+    -fx-text-fill: #e6edf3; /* Blanc cassé */
+    -fx-font-size: 14px;
+}
+
+.retract{
+    -fx-background-color: #373b41;
+    -fx-text-fill: #e6edf3;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+}
+
+.side{
+    -fx-background-color: #374134; 
+    -fx-font-family: "Segoe UI", "Arial", sans-serif;
+    -fx-text-fill: #e6edf3;
+    -fx-border-color: #000000;
+}
+
+.head{
+    -fx-background-color: #30362e;
+    -fx-border-color: #000000;
+    -fx-border-width: 0 0 1px 0;
+}
+
+.btn{
+    -fx-background-color: #373b41;
+    -fx-text-fill: #e6edf3;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+}
+
+.titre{
+   -fx-text-fill: #e6edf3; 
+   -fx-font-size: 15px;
+}
