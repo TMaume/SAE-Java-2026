@@ -1,20 +1,21 @@
-version: '3.8'
-
 services:
   db:
     image: mariadb:latest
     container_name: briquiuto_db
-    # On active local-infile directement au démarrage du serveur
-    command: --local-infile=1
+    # Ajout de l'option pour ignorer la casse des tables
+    command: --local-infile=1 --lower-case-table-names=1
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: sae_lego
-      MYSQL_USER: lego_user
-      MYSQL_PASSWORD: legopassword
+      # Alignement sur les valeurs par défaut de ton squelette Java
+      MYSQL_DATABASE: DBo22403450
+      MYSQL_USER: o22403450
+      MYSQL_PASSWORD: o22403450
     ports:
       - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
+    #Pour acceder a la base de donnée depuis nxOS
+    #mariadb -h 127.0.0.1 -P 3306 -u o22403450 -po22403450
 
 volumes:
   db_data:
