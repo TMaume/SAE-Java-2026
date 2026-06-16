@@ -39,6 +39,10 @@ public class BoiteService {
         this.themeService = themeService;
     }
 
+    public void ajouterBoite(Boite boite) {
+        boiteBD.insererBoite(boite);
+    }
+
     /**
      * Liste toutes les boîtes.
      *

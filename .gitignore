@@ -43,5 +43,3 @@ buildNumber.properties
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
 # Pour utiliser MVN sur nixOS 
-*.nix
-*.lock

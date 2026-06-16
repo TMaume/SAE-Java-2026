@@ -1,4 +1,5 @@
 package UI.vue;
+import UI.Controller.AjouterBoiteController;
 
 import App.RoleUtilisateur;
 import UI.Controller.AuthController;
@@ -96,6 +97,13 @@ public class DashboardVue {
         activerBouton(btnCatalogue);
     }
 
+    private void afficherCreationBoite(StackPane conteneurCentral, Button btnAddBoite) {
+        CreerBoiteVue creerBoiteVue = new CreerBoiteVue();
+        new AjouterBoiteController(creerBoiteVue, controller.getBoiteService(), controller.getThemeService());
+        controller.chargerContenu(conteneurCentral, creerBoiteVue);
+        activerBouton(btnAddBoite);
+    }
+
     /**
      * Construit le menu latéral.
      *
@@ -159,10 +167,7 @@ public class DashboardVue {
 
             sidebar.getChildren().addAll(separator, lblMenuAdmin, btnAddBoite, btnAddPiece, btnAddTheme, btnModContenu);
 
-            btnAddBoite.setOnAction(e -> {
-                controller.chargerContenu(conteneurCentral, new Label("Formulaire : Ajouter une boîte (À faire)"));
-                activerBouton(btnAddBoite);
-            });
+            btnAddBoite.setOnAction(e -> afficherCreationBoite(conteneurCentral, btnAddBoite));
             btnAddPiece.setOnAction(e -> {
                 controller.chargerContenu(conteneurCentral, new Label("Formulaire : Ajouter une pièce (À faire)"));
                 activerBouton(btnAddPiece);
