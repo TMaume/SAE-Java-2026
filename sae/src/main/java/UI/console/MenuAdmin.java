@@ -116,7 +116,7 @@ public class MenuAdmin {
                 int qte = ui.lireEntier("Quantité : ");
                 boolean supp = ui.lireOuiNon("Est-ce une pièce en supplément (Extra) ? (o/n) : ");
                 
-                PieceQuantite pq = new PieceQuantite(p, qte, supp);
+                PieceQuantite pq = new PieceQuantite(p, qte, supp, null);
                 
                 if (boiteService.ajouterPieceABoite(numBoite, pq)) {
                     ui.afficherLigne("Succès : Pièce ajoutée au contenu de la boîte !");

@@ -21,7 +21,7 @@ public class DashboardVue {
     private final DashboardController controller;
     private final AuthController authController;
     private Button boutonActif = null;
-    private static boolean theme = true;
+    private static boolean theme = false;
 
     /**
      * Construit le tableau de bord.

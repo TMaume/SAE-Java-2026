@@ -65,6 +65,15 @@ public class Figurine {
     }
 
     /**
+     * Retourne l'URL de l'image de la figurine.
+     *
+     * @return l'URL de l'image
+     */
+    public String getImageF() {
+        return imageF;
+    }
+
+    /**
      * Modifie le nombre de parties de la figurine.
      *
      * @param nbParties le nouveau nombre de parties
