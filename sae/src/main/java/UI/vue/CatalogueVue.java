@@ -68,7 +68,7 @@ public class CatalogueVue {
      */
     private void initialiserInterface() {
         root = new BorderPane();
-        root.setStyle("-fx-background-color: transparent;");
+        root.getStyleClass().add("root");
 
         VBox enteteGlobal = new VBox(15);
         enteteGlobal.setPadding(new Insets(0, 0, 20, 0));
@@ -89,16 +89,15 @@ public class CatalogueVue {
         header.setAlignment(Pos.CENTER_LEFT);
 
         Label lblTitre = new Label("Catalogue des Boîtes LEGO");
-        //lblTitre.setStyle("-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
-        lblTitre.getStyleClass().add("titre");
+        lblTitre.getStyleClass().add("titre-label");
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
         lblInfosTotal = new Label();
-        lblInfosTotal.setStyle("-fx-text-fill: #7f8c8d; -fx-font-size: 14px;");
+        lblInfosTotal.getStyleClass().add("soustitre-label");
 
         Button btnChangerVue = new Button("Affichage : Grille");
-        btnChangerVue.getStyleClass().add("btn");
+        btnChangerVue.getStyleClass().add("button");
         btnChangerVue.setOnAction(e -> basculerVue(btnChangerVue));
 
         header.getChildren().addAll(lblTitre, spacer, lblInfosTotal, btnChangerVue);
@@ -140,11 +139,11 @@ public class CatalogueVue {
         }
 
         Button btnFiltrer = new Button("Filtrer");
-        btnFiltrer.setStyle("-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;");
+        btnFiltrer.getStyleClass().add("btn-primary");
         btnFiltrer.setOnAction(e -> appliquerFiltres());
 
         Button btnReinitialiser = new Button("Réinitialiser");
-        btnReinitialiser.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;");
+        btnReinitialiser.getStyleClass().add("btn-danger");
         btnReinitialiser.setOnAction(e -> reinitialiserFiltres());
 
         barreFiltres.getChildren().addAll(txtRecherche, comboTheme, btnFiltrer, btnReinitialiser);
@@ -177,7 +176,7 @@ public class CatalogueVue {
     private ScrollPane creerZoneAffichage() {
         scrollPane = new ScrollPane();
         scrollPane.setFitToWidth(true);
-        scrollPane.setStyle("-fx-background-color: transparent; -fx-background: transparent; -fx-border-color: transparent;");
+        scrollPane.getStyleClass().add("scroll-pane");
 
         conteneurGrille = new FlowPane(20, 20);
         conteneurGrille.setPadding(new Insets(10));
@@ -200,11 +199,11 @@ public class CatalogueVue {
         footer.setPadding(new Insets(20, 0, 0, 0));
 
         btnPrecedent = new Button("◄ Précédent");
-        btnPrecedent.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-cursor: hand; -fx-font-weight: bold;");
+        btnPrecedent.getStyleClass().add("button");
         btnPrecedent.setOnAction(e -> pagePrecedente());
 
         lblPagination = new Label("Page ");
-        lblPagination.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
+        lblPagination.getStyleClass().add("label");
 
         txtPageExacte = new TextField();
         txtPageExacte.setPrefWidth(50);
@@ -212,10 +211,10 @@ public class CatalogueVue {
         txtPageExacte.setOnAction(e -> allerAPageExacte());
 
         Label lblSurTotal = new Label();
-        lblSurTotal.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
+        lblSurTotal.getStyleClass().add("label");
 
         btnSuivant = new Button("Suivant ►");
-        btnSuivant.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-cursor: hand; -fx-font-weight: bold;");
+        btnSuivant.getStyleClass().add("button");
         btnSuivant.setOnAction(e -> pageSuivante());
 
         footer.getChildren().addAll(btnPrecedent, lblPagination, txtPageExacte, lblSurTotal, btnSuivant);
@@ -344,7 +343,7 @@ public class CatalogueVue {
     private VBox creerCarteBoite(Boite b) {
         VBox carte = new VBox(10);
         carte.setPadding(new Insets(15));
-        //carte.setStyle("-fx-background-color: white; -fx-border-color: #dcdde1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 5, 0, 0, 2); -fx-cursor: hand;");
+        carte.getStyleClass().add("carte-boite");
         carte.setPrefWidth(220);
         carte.setMinHeight(250);
         carte.setOnMouseClicked(e -> actionClicBoite.accept(b));
@@ -365,21 +364,21 @@ public class CatalogueVue {
         conteneurImage.setPrefHeight(140);
 
         Label lblNumero = new Label("#" + b.getNumero());
-        lblNumero.setStyle("-fx-text-fill: #e67e22; -fx-font-weight: bold; -fx-font-size: 12px;");
+        lblNumero.getStyleClass().add("label");
 
         Label lblNom = new Label(b.getNom());
-        lblNom.setStyle("-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+        lblNom.getStyleClass().add("label");
         lblNom.setWrapText(true);
         lblNom.setMaxHeight(40);
 
         String nomTheme = (b.getTheme() != null) ? b.getTheme().getNom() : "Inconnu";
         Label lblTheme = new Label("Thème : " + nomTheme);
-        lblTheme.setStyle("-fx-text-fill: #7f8c8d; -fx-font-size: 12px;");
+        lblTheme.getStyleClass().add("label");
 
         String strAnnee = (b.getAnnee() != null) ? String.valueOf(b.getAnnee()) : "N/A";
         String strPieces = (b.getNbPieces() != null) ? String.valueOf(b.getNbPieces()) : "?";
         Label lblDetails = new Label(strAnnee + " • " + strPieces + " pièces");
-        lblDetails.setStyle("-fx-text-fill: #34495e; -fx-font-size: 13px;");
+        lblDetails.getStyleClass().add("label");
 
         carte.getChildren().addAll(conteneurImage, lblNumero, lblNom, lblTheme, lblDetails);
         return carte;
@@ -394,7 +393,7 @@ public class CatalogueVue {
     private HBox creerLigneBoite(Boite b) {
         HBox ligne = new HBox(20);
         ligne.setPadding(new Insets(10, 15, 10, 15));
-        //ligne.setStyle("-fx-background-color: white; -fx-border-color: #dcdde1; -fx-border-radius: 5; -fx-background-radius: 5; -fx-cursor: hand;");
+        ligne.getStyleClass().add("ligne-boite");
         ligne.setAlignment(Pos.CENTER_LEFT);
         ligne.setOnMouseClicked(e -> actionClicBoite.accept(b));
 
@@ -414,19 +413,19 @@ public class CatalogueVue {
         conteneurImage.setPrefWidth(70);
 
         Label lblNumero = new Label("#" + b.getNumero());
-        lblNumero.setStyle("-fx-text-fill: #e67e22; -fx-font-weight: bold; -fx-pref-width: 80px;");
+        lblNumero.getStyleClass().add("label");
 
         Label lblNom = new Label(b.getNom());
-        lblNom.setStyle("-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #2c3e50; -fx-pref-width: 250px;");
+        lblNom.getStyleClass().add("label");
 
         String nomTheme = (b.getTheme() != null) ? b.getTheme().getNom() : "Inconnu";
         Label lblTheme = new Label(nomTheme);
-        lblTheme.setStyle("-fx-text-fill: #7f8c8d; -fx-pref-width: 180px;");
+        lblTheme.getStyleClass().add("label");
 
         String strAnnee = (b.getAnnee() != null) ? String.valueOf(b.getAnnee()) : "N/A";
         String strPieces = (b.getNbPieces() != null) ? String.valueOf(b.getNbPieces()) : "?";
         Label lblDetails = new Label(strAnnee + "  |  " + strPieces + " pcs");
-        lblDetails.setStyle("-fx-text-fill: #34495e;");
+        lblDetails.getStyleClass().add("label");
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);

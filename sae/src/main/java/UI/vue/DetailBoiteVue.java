@@ -49,7 +49,6 @@ public class DetailBoiteVue extends BorderPane {
         this.boiteComplete = (boiteChargee != null) ? boiteChargee : boiteLegere;
         
         setPadding(new Insets(30));
-        setStyle("-fx-background-color: transparent;");
 
         setTop(creerEnTete(actionRetour, this.boiteComplete));
         setCenter(creerOnglets(this.boiteComplete));
@@ -105,12 +104,12 @@ public class DetailBoiteVue extends BorderPane {
         entete.setPadding(new Insets(0, 0, 30, 0));
 
         Button btnRetour = new Button("◄ Retour au catalogue");
-        btnRetour.setStyle("-fx-background-color: #7f8c8d; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;");
+        btnRetour.getStyleClass().add("button");
         btnRetour.setOnAction(e -> actionRetour.run());
 
         String nomTheme = (boite.getTheme() != null) ? boite.getTheme().getNom() : "Inconnu";
         Label lblTitre = new Label("LEGO " + nomTheme + " " + boite.getNumero() + " - " + boite.getNom());
-        lblTitre.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+        lblTitre.getStyleClass().add("title-label");
 
         entete.getChildren().addAll(btnRetour, lblTitre);
         return entete;
@@ -124,7 +123,6 @@ public class DetailBoiteVue extends BorderPane {
      */
     private TabPane creerOnglets(Boite boite) {
         TabPane tabPane = new TabPane();
-        tabPane.setStyle("-fx-background-color: transparent;");
 
         Tab tabInfos = new Tab("Informations & Statistiques");
         tabInfos.setClosable(false);
@@ -183,7 +181,8 @@ public class DetailBoiteVue extends BorderPane {
 
         if (boite.getPieces() == null || boite.getPieces().isEmpty()) {
             Label lblVide = new Label("Aucun inventaire de pièces répertorié pour cette boîte.");
-            lblVide.setStyle("-fx-font-size: 16px; -fx-text-fill: #7f8c8d; -fx-font-style: italic;");
+            lblVide.getStyleClass().add("subtitle-label");
+            lblVide.setStyle("-fx-font-style: italic;");
             conteneurPiecesGrille.getChildren().add(lblVide);
             conteneurGlobal.setCenter(conteneurPiecesGrille);
             return conteneurGlobal;
@@ -191,7 +190,7 @@ public class DetailBoiteVue extends BorderPane {
 
         ScrollPane scroll = new ScrollPane(conteneurPiecesGrille);
         scroll.setFitToWidth(true);
-        scroll.setStyle("-fx-background-color: transparent; -fx-background: transparent; -fx-border-color: transparent;");
+        scroll.getStyleClass().add("scroll-pane");
         conteneurGlobal.setCenter(scroll);
 
         HBox footer = new HBox(15);
@@ -199,7 +198,7 @@ public class DetailBoiteVue extends BorderPane {
         footer.setPadding(new Insets(20, 0, 0, 0));
 
         btnPrecedentPieces = new Button("◄ Précédent");
-        btnPrecedentPieces.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-cursor: hand; -fx-font-weight: bold;");
+        btnPrecedentPieces.getStyleClass().add("btn-primary");
         btnPrecedentPieces.setOnAction(e -> {
             if (pageCourantePieces > 1) {
                 pageCourantePieces--;
@@ -208,10 +207,11 @@ public class DetailBoiteVue extends BorderPane {
         });
 
         lblPaginationPieces = new Label();
-        lblPaginationPieces.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
+        lblPaginationPieces.getStyleClass().add("label");
+        lblPaginationPieces.setStyle("-fx-font-weight: bold;");
 
         btnSuivantPieces = new Button("Suivant ►");
-        btnSuivantPieces.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-cursor: hand; -fx-font-weight: bold;");
+        btnSuivantPieces.getStyleClass().add("btn-primary");
         btnSuivantPieces.setOnAction(e -> {
             pageCourantePieces++;
             chargerPagePieces(boite);
@@ -267,7 +267,7 @@ public class DetailBoiteVue extends BorderPane {
     private VBox creerCartePiece(PieceQuantite pq) {
         VBox carte = new VBox(10);
         carte.setPadding(new Insets(15));
-        carte.setStyle("-fx-background-color: white; -fx-border-color: #dcdde1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 5, 0, 0, 2);");
+        carte.getStyleClass().add("card");
         carte.setPrefWidth(220);
         carte.setAlignment(Pos.CENTER);
 
@@ -291,10 +291,12 @@ public class DetailBoiteVue extends BorderPane {
         conteneurImage.setPrefHeight(130);
 
         Label lblId = new Label("#" + pq.getPiece().getNumero());
-        lblId.setStyle("-fx-font-size: 12px; -fx-text-fill: #e67e22; -fx-font-weight: bold;");
+        lblId.getStyleClass().add("subtitle-label");
+        lblId.setStyle("-fx-text-fill: #e67e22; -fx-font-weight: bold;"); // On garde l'accent orange pour l'ID
 
         Label lblNom = new Label(pq.getPiece().getNom());
-        lblNom.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+        lblNom.getStyleClass().add("label");
+        lblNom.setStyle("-fx-font-weight: bold;");
         lblNom.setWrapText(true);
         lblNom.setAlignment(Pos.CENTER);
         lblNom.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
@@ -302,16 +304,18 @@ public class DetailBoiteVue extends BorderPane {
 
         String nomCouleur = (pq.getPiece().getCouleur() != null) ? pq.getPiece().getCouleur().getNom() : "Couleur inconnue";
         Label lblCouleur = new Label(nomCouleur);
-        lblCouleur.setStyle("-fx-font-size: 12px; -fx-text-fill: #7f8c8d;");
+        lblCouleur.getStyleClass().add("subtitle-label");
 
         Label lblQte = new Label("Quantité incluse : " + pq.getQuantite());
-        lblQte.setStyle("-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #3498db;");
+        lblQte.getStyleClass().add("label");
+        lblQte.setStyle("-fx-font-weight: bold;");
 
         carte.getChildren().addAll(conteneurImage, lblId, lblNom, lblCouleur, lblQte);
 
         if (pq.isEnSupplement()) {
             Label lblSupp = new Label("(Pièce de supplément)");
-            lblSupp.setStyle("-fx-font-size: 11px; -fx-font-style: italic; -fx-text-fill: #e74c3c;");
+            lblSupp.getStyleClass().add("subtitle-label");
+            lblSupp.setStyle("-fx-font-style: italic; -fx-text-fill: #e74c3c;"); // Rouge signalétique conservé
             carte.getChildren().add(lblSupp);
         }
 
@@ -331,7 +335,8 @@ public class DetailBoiteVue extends BorderPane {
 
         if (boite.getFigurines() == null || boite.getFigurines().isEmpty()) {
             Label lblVide = new Label("Aucune figurine répertoriée pour cette boîte.");
-            lblVide.setStyle("-fx-font-size: 16px; -fx-text-fill: #7f8c8d; -fx-font-style: italic;");
+            lblVide.getStyleClass().add("subtitle-label");
+            lblVide.setStyle("-fx-font-style: italic;");
             flowFigurines.getChildren().add(lblVide);
         } else {
             for (FigurineQuantite fq : boite.getFigurines()) {
@@ -341,7 +346,7 @@ public class DetailBoiteVue extends BorderPane {
 
         ScrollPane scroll = new ScrollPane(flowFigurines);
         scroll.setFitToWidth(true);
-        scroll.setStyle("-fx-background-color: transparent; -fx-background: transparent; -fx-border-color: transparent;");
+        scroll.getStyleClass().add("scroll-pane");
         return scroll;
     }
 
@@ -354,7 +359,7 @@ public class DetailBoiteVue extends BorderPane {
     private VBox creerCarteFigurine(FigurineQuantite fq) {
         VBox carte = new VBox(10);
         carte.setPadding(new Insets(15));
-        carte.setStyle("-fx-background-color: white; -fx-border-color: #dcdde1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 5, 0, 0, 2);");
+        carte.getStyleClass().add("card");
         carte.setPrefWidth(220);
         carte.setAlignment(Pos.CENTER);
 
@@ -378,17 +383,20 @@ public class DetailBoiteVue extends BorderPane {
         conteneurImage.setPrefHeight(130);
 
         Label lblId = new Label("#" + fq.getFigurine().getIdFigurine());
-        lblId.setStyle("-fx-font-size: 12px; -fx-text-fill: #e67e22; -fx-font-weight: bold;");
+        lblId.getStyleClass().add("subtitle-label");
+        lblId.setStyle("-fx-text-fill: #e67e22; -fx-font-weight: bold;"); // Accent orange
 
         Label lblNom = new Label(fq.getFigurine().getNom());
-        lblNom.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+        lblNom.getStyleClass().add("label");
+        lblNom.setStyle("-fx-font-weight: bold;");
         lblNom.setWrapText(true);
         lblNom.setAlignment(Pos.CENTER);
         lblNom.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
         lblNom.setMinHeight(40);
 
         Label lblQte = new Label("Quantité incluse : " + fq.getQuantite());
-        lblQte.setStyle("-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #3498db;");
+        lblQte.getStyleClass().add("label");
+        lblQte.setStyle("-fx-font-weight: bold;");
 
         carte.getChildren().addAll(conteneurImage, lblId, lblNom, lblQte);
         return carte;
@@ -404,7 +412,7 @@ public class DetailBoiteVue extends BorderPane {
         VBox conteneurImage = new VBox();
         conteneurImage.setAlignment(Pos.CENTER);
         conteneurImage.setPadding(new Insets(10));
-        conteneurImage.setStyle("-fx-background-color: white; -fx-border-color: #dcdde1; -fx-border-radius: 5; -fx-background-radius: 5;");
+        conteneurImage.getStyleClass().add("stats-box");
         conteneurImage.setPrefWidth(350);
         conteneurImage.setMaxHeight(350);
 
@@ -438,7 +446,7 @@ public class DetailBoiteVue extends BorderPane {
         grille.setVgap(15);
         grille.setHgap(50);
         grille.setPadding(new Insets(20));
-        grille.setStyle("-fx-background-color: white; -fx-border-color: #dcdde1; -fx-border-radius: 5; -fx-background-radius: 5;");
+        grille.getStyleClass().add("stats-box");
 
         String nomTheme = (boite.getTheme() != null) ? boite.getTheme().getNom() : "Inconnu";
         String annee = (boite.getAnnee() != null) ? String.valueOf(boite.getAnnee()) : "Non renseignée";
@@ -461,11 +469,11 @@ public class DetailBoiteVue extends BorderPane {
     private VBox creerSectionStatistiques(Boite boite) {
         VBox sectionComplete = new VBox(15);
         sectionComplete.setPadding(new Insets(20));
-        sectionComplete.setStyle("-fx-background-color: white; -fx-border-color: #dcdde1; -fx-border-radius: 5; -fx-background-radius: 5;");
+        sectionComplete.getStyleClass().add("stats-box");
         VBox.setVgrow(sectionComplete, Priority.ALWAYS);
         
         Label lblTitreStats = new Label("Statistiques du contenu réel");
-        lblTitreStats.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+        lblTitreStats.getStyleClass().add("title-label");
         
         Separator separator = new Separator();
 
@@ -473,6 +481,7 @@ public class DetailBoiteVue extends BorderPane {
         
         if (stats == null || stats.getTotalPieces() == 0) {
             Label lblVide = new Label("Aucun inventaire détaillé disponible pour cette boîte en base de données.");
+            lblVide.getStyleClass().add("subtitle-label");
             lblVide.setStyle("-fx-text-fill: #e74c3c; -fx-font-style: italic;");
             sectionComplete.getChildren().addAll(lblTitreStats, separator, lblVide);
             return sectionComplete;
@@ -496,7 +505,8 @@ public class DetailBoiteVue extends BorderPane {
         ajouterLigneInfo(grilleStats, 3, "Sous-boîtes incluses :", String.valueOf(stats.getTotalSousBoites()));
 
         Label lblCouleurs = new Label("Répartition par couleurs :");
-        lblCouleurs.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+        lblCouleurs.getStyleClass().add("subtitle-label");
+        lblCouleurs.setStyle("-fx-font-weight: bold;");
 
         FlowPane flowCouleurs = new FlowPane(10, 10);
         flowCouleurs.setPrefWrapLength(420);
@@ -520,19 +530,19 @@ public class DetailBoiteVue extends BorderPane {
             graphiqueCouleurs.getData().add(tranche);
 
             if (tranche.getNode() != null) {
-                tranche.getNode().setStyle("-fx-pie-color: " + rgbHex + "; -fx-border-color: white; -fx-border-width: 1px;");
+                tranche.getNode().setStyle("-fx-pie-color: " + rgbHex + "; -fx-border-color: transparent;");
             }
             
             tranche.nodeProperty().addListener((obs, oldNode, newNode) -> {
                 if (newNode != null) {
-                    newNode.setStyle("-fx-pie-color: " + rgbHex + "; -fx-border-color: white; -fx-border-width: 1px;");
+                    newNode.setStyle("-fx-pie-color: " + rgbHex + "; -fx-border-color: transparent;");
                 }
             });
         }
 
         ScrollPane scrollCouleurs = new ScrollPane(flowCouleurs);
         scrollCouleurs.setFitToWidth(true);
-        scrollCouleurs.setStyle("-fx-background-color: transparent; -fx-background: transparent; -fx-border-color: transparent;");
+        scrollCouleurs.getStyleClass().add("scroll-pane");
         VBox.setVgrow(scrollCouleurs, Priority.ALWAYS);
 
         colonneGauche.getChildren().addAll(grilleStats, lblCouleurs, scrollCouleurs);
@@ -554,10 +564,11 @@ public class DetailBoiteVue extends BorderPane {
      */
     private void ajouterLigneInfo(GridPane grille, int ligne, String libelle, String valeur) {
         Label lblLibelle = new Label(libelle);
-        lblLibelle.setStyle("-fx-font-size: 14px; -fx-text-fill: #34495e;");
+        lblLibelle.getStyleClass().add("subtitle-label");
 
         Label lblValeur = new Label(valeur);
-        lblValeur.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+        lblValeur.getStyleClass().add("label");
+        lblValeur.setStyle("-fx-font-weight: bold;");
 
         grille.add(lblLibelle, 0, ligne);
         grille.add(lblValeur, 1, ligne);

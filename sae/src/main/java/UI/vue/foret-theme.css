@@ -1,30 +1,42 @@
-/* --- THEME SOMBRE GLOBAL --- */
+/* --- THEME FORET GLOBAL --- */
 .root {
-    -fx-base: #22272e; 
-    -fx-background: #1c2128;
+    -fx-base: #4f594c; 
+    -fx-background: #4f594c;
     -fx-font-family: "Segoe UI", "Arial", sans-serif;
-    -fx-accent: #388bfd;
-    -fx-focus-color: rgba(56, 139, 253, 0.5);
-    -fx-faint-focus-color: rgba(56, 139, 253, 0.2);
+    -fx-accent: #7a9c68;
+    -fx-focus-color: rgba(122, 156, 104, 0.5);
+    -fx-faint-focus-color: rgba(122, 156, 104, 0.2);
 }
 
-/* --- PANNEAUX ET VUES --- */
+/* --- VOS CLASSES PERSONNALISÉES --- */
+.center {
+    -fx-background-color: #4f594c; 
+}
+.side {
+    -fx-background-color: #374134; 
+    -fx-border-color: #1c221a;
+}
+.head {
+    -fx-background-color: #30362e;
+    -fx-border-color: #1c221a;
+    -fx-border-width: 0 0 1px 0;
+}
+
+/* --- PANNEAUX ET VUES STANDARDS --- */
 .header-pane {
-    -fx-background-color: #22272e;
-    -fx-border-color: #444c56;
+    -fx-background-color: #30362e;
+    -fx-border-color: #1c221a;
     -fx-border-width: 0 0 1px 0;
     -fx-padding: 15px;
 }
 .sidebar-pane {
-    -fx-background-color: #22272e;
-    -fx-border-color: #444c56;
+    -fx-background-color: #374134;
+    -fx-border-color: #1c221a;
     -fx-border-width: 0 1px 0 0;
 }
-
-/* On regroupe carte-boite (Catalogue) et card (Figurines/Pièces) */
 .card, .carte-boite, .stats-box {
-    -fx-background-color: #22272e;
-    -fx-border-color: #444c56;
+    -fx-background-color: #3e473b; 
+    -fx-border-color: #2b3328;
     -fx-border-width: 1px;
     -fx-border-radius: 8px;
     -fx-background-radius: 8px;
@@ -37,90 +49,92 @@
     -fx-text-fill: #e6edf3;
     -fx-font-size: 14px;
 }
-
-/* On gère à la fois l'anglais et le français pour éviter les bugs */
-.title-label, .titre-label {
+.title-label, .titre-label, .titre {
     -fx-font-size: 24px;
     -fx-font-weight: bold;
     -fx-text-fill: #e6edf3;
 }
 .subtitle-label, .soustitre-label {
     -fx-font-size: 16px;
-    -fx-text-fill: #768390;
+    -fx-text-fill: #a2b09a; 
 }
 
 /* --- BOUTONS --- */
-.button {
-    -fx-background-color: #373e47;
-    -fx-text-fill: #c9d1d9;
+.button, .btn, .retract {
+    -fx-background-color: #373b41;
+    -fx-text-fill: #e6edf3;
     -fx-border-radius: 4px;
     -fx-background-radius: 4px;
     -fx-padding: 8px 16px;
     -fx-font-weight: bold;
     -fx-cursor: hand;
-    -fx-border-color: #444c56;
+    -fx-border-color: #222529;
 }
-.button:hover {
-    -fx-background-color: #444c56;
+.button:hover, .btn:hover, .retract:hover {
+    -fx-background-color: #494e56;
     -fx-text-fill: #ffffff;
 }
-.button:pressed {
-    -fx-background-color: #2d333b;
+.button:pressed, .btn:pressed, .retract:pressed {
+    -fx-background-color: #26292d;
 }
+
+/* Boutons d'action principale (ex: Valider, Ajouter) */
 .btn-primary {
-    -fx-background-color: #238636;
+    -fx-background-color: #5c7e46; 
     -fx-text-fill: white;
     -fx-border-color: transparent;
 }
 .btn-primary:hover {
-    -fx-background-color: #2ea043;
+    -fx-background-color: #6a9152;
 }
+
+/* Boutons d'annulation ou d'erreur */
 .btn-danger {
-    -fx-background-color: #da3633;
+    -fx-background-color: #a64e44; 
     -fx-text-fill: white;
     -fx-border-color: transparent;
 }
 .btn-danger:hover {
-    -fx-background-color: #f85149;
+    -fx-background-color: #bd594e;
 }
 
 /* --- CHAMPS DE TEXTE & COMBOBOX --- */
 .text-field, .password-field, .combo-box {
-    -fx-background-color: #2d333b;
-    -fx-border-color: #444c56;
+    -fx-background-color: #3e473b;
+    -fx-border-color: #2b3328;
     -fx-border-radius: 4px;
     -fx-background-radius: 4px;
     -fx-font-size: 14px;
-    -fx-text-fill: #c9d1d9;
+    -fx-text-fill: #e6edf3;
     -fx-padding: 6px 10px;
 }
 .text-field:focused, .password-field:focused, .combo-box:focused {
-    -fx-border-color: #388bfd;
-    -fx-effect: dropshadow(three-pass-box, rgba(56,139,253,0.3), 5, 0, 0, 0);
+    -fx-border-color: #7a9c68;
+    -fx-effect: dropshadow(three-pass-box, rgba(122, 156, 104, 0.4), 5, 0, 0, 0);
 }
 
 /* --- LISTES ET TABLEAUX --- */
 .table-view {
-    -fx-background-color: #22272e;
-    -fx-border-color: #444c56;
+    -fx-background-color: #4f594c;
+    -fx-border-color: #2b3328;
     -fx-border-radius: 5px;
 }
 .table-view .column-header-background {
-    -fx-background-color: #2d333b;
+    -fx-background-color: #374134;
 }
 .table-view .column-header, .table-view .filler {
     -fx-background-color: transparent;
-    -fx-border-color: #444c56;
+    -fx-border-color: #2b3328;
     -fx-border-width: 0 1px 1px 0;
 }
 .table-view .table-cell {
     -fx-text-fill: #e6edf3;
 }
 .table-row-cell:odd {
-    -fx-background-color: #1c2128;
+    -fx-background-color: #454e42;
 }
 .table-row-cell:selected {
-    -fx-background-color: #388bfd;
+    -fx-background-color: #5c7e46;
     -fx-text-fill: white;
 }
 
@@ -129,13 +143,13 @@
     -fx-background-color: transparent;
 }
 .tab-pane .tab {
-    -fx-background-color: #2d333b;
+    -fx-background-color: #374134;
     -fx-background-radius: 5px 5px 0 0;
     -fx-padding: 5px 15px;
 }
 .tab-pane .tab:selected {
-    -fx-background-color: #22272e;
-    -fx-border-color: #444c56 #444c56 transparent #444c56;
+    -fx-background-color: #4f594c;
+    -fx-border-color: #2b3328 #2b3328 transparent #2b3328;
     -fx-border-radius: 5px 5px 0 0;
 }
 .tab-pane .tab-header-area .headers-region .tab .tab-label {
@@ -154,9 +168,9 @@
     -fx-background-color: transparent;
 }
 .scroll-bar .thumb {
-    -fx-background-color: #444c56;
+    -fx-background-color: #374134;
     -fx-background-radius: 5px;
 }
 .scroll-bar .thumb:hover {
-    -fx-background-color: #768390;
+    -fx-background-color: #5a6b55;
 }
