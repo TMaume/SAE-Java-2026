@@ -15,6 +15,19 @@ import java.time.LocalDate;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import App.Boite;
+import App.BoiteQuantite;
+import App.BoiteService;
+import App.BoiteStats;
+import App.Couleur;
+import App.Figurine;
+import App.FigurineQuantite;
+import App.Piece;
+import App.PieceQuantite;
+import App.PieceService;
+import App.Theme;
+import App.ThemeService;
+
 public class VueModifBoitePerso extends BorderPane {
 
     private final BoiteService boiteService;
@@ -40,7 +53,7 @@ public class VueModifBoitePerso extends BorderPane {
     
     private VBox sectionStatistiques;
 
-    public VueModifBoitePerso(Boite boite, BoiteService boiteService, ThemeService themeService, PieceService pieceService, Runnable actionRetour) {
+    public ModifBoitePersoVue(Boite boite, BoiteService boiteService, ThemeService themeService, PieceService pieceService, Runnable actionRetour) {
         this.boiteService = boiteService;
         this.themeService = themeService;
         this.pieceService = pieceService;
