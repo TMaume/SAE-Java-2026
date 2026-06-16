@@ -73,6 +73,7 @@ public class FigurineBD {
             ps.setInt(3, f.getNbParties());
             return ps.executeUpdate();
         } catch (SQLException e) {
+            System.err.println("Erreur lors de l'insertion de la figurine : " + e.getMessage());
             return 0;
         }
     }
@@ -89,6 +90,7 @@ public class FigurineBD {
             ps.setString(1, idFig);
             return ps.executeUpdate();
         } catch (SQLException e) {
+            System.err.println("Erreur lors de la suppression de la figurine : " + e.getMessage());
             return 0;
         }
     }
@@ -111,6 +113,7 @@ public class FigurineBD {
             ps.setString(3, f.getIdFigurine());
             return ps.executeUpdate();
         } catch (SQLException e) {
+            System.err.println("Erreur lors de la mise à jour de la figurine : " + e.getMessage());
             return 0;
         }
     }
@@ -137,6 +140,7 @@ public class FigurineBD {
                 );
             }
         } catch (SQLException e) {
+            System.err.println("Erreur lors de la recherche de la figurine : " + e.getMessage());
             return null;
         }
     }
