@@ -22,7 +22,7 @@ public class ParametreController {
 
     public static void appliquerTheme(Scene scene) {
         if (scene == null) return;
-        
+        if (themeActuel.equals("TripleT")) tripleTActif = true;
         scene.getStylesheets().clear();
         
         String fichierCss;
@@ -41,6 +41,7 @@ public class ParametreController {
                 fichierCss = "clair-theme.css";
                 break;
         }
+        
         
         scene.getStylesheets().add(ParametreController.class.getResource("/UI/Themes/" + fichierCss).toExternalForm());
         if (themeActuel.equals("TripleT")) tripleTActif = true;

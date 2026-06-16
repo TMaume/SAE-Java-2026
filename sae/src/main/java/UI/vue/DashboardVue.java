@@ -184,7 +184,10 @@ public class DashboardVue {
             sidebar.setManaged(!estVisible); 
 
             compteurEasterEgg++;
-            if (compteurEasterEgg == 3) {
+            if (compteurEasterEgg == 30) {
+
+                ParametreController.setThemeActuel("TripleT");
+
                 ParametreController.appliquerTheme(stage.getScene());
 
                 this.afficher(); 
@@ -208,7 +211,6 @@ public class DashboardVue {
             vueIcone.setFitWidth(18);
             btnParametres.setGraphic(vueIcone);
         } catch (Exception ex) {
-            // Cas de secours si l'image n'est pas encore créée
             btnParametres.setText("⚙ Paramètres");
         }
         btnParametres.getStyleClass().add("button");
