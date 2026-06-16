@@ -1,0 +1,247 @@
+public class VueModifierContenuBoite extends BorderPane {
+    private final BoiteService boiteService;
+
+    public VueModifierContenuBoite(Boite boite, BoiteService boiteService, Runnable actionRetour) {
+        this.boiteService = boiteService;
+
+        setPadding(new Insets(30));
+        setStyle("-fx-background-color: transparent;");
+
+        setTop(creerEnTete(actionRetour, boite.getNom()));
+        setCenter(creerContenu(boite));
+    }
+
+    private HBox creerEnTete(Runnable actionRetour, String titre) {
+        HBox entete = new HBox(20);
+        entete.setAlignment(Pos.CENTER_LEFT);
+        entete.setPadding(new Insets(0, 0, 30, 0));
+
+        Button btnRetour = new Button("◄ Retour au catalogue");
+        btnRetour.setStyle("-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;");
+        btnRetour.setOnAction(e -> actionRetour.run());
+
+        Label lblTitre = new Label(titre);
+        lblTitre.setStyle("-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+
+        entete.getChildren().addAll(btnRetour, lblTitre);
+        return entete;
+    }
+public class VueModifierContenuBoite extends BorderPane {
+    private final BoiteService boiteService;
+
+    public VueModifierContenuBoite(Boite boite, BoiteService boiteService, Runnable actionRetour) {
+        this.boiteService = boiteService;
+
+        setPadding(new Insets(30));
+        setStyle("-fx-background-color: transparent;");
+
+        setTop(creerEnTete(actionRetour, boite.getNom()));
+        setCenter(creerContenu(boite));
+    }
+
+    private HBox creerEnTete(Runnable actionRetour, String titre) {
+        HBox entete = new HBox(20);
+        entete.setAlignment(Pos.CENTER_LEFT);
+        entete.setPadding(new Insets(0, 0, 30, 0));
+
+        Button btnRetour = new Button("◄ Retour au catalogue");
+        btnRetour.setStyle("-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;");
+        btnRetour.setOnAction(e -> actionRetour.run());
+
+        Label lblTitre = new Label(titre);
+        lblTitre.setStyle("-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+
+        entete.getChildren().addAll(btnRetour, lblTitre);
+        return entete;
+    }
+
+   /**
+     * Crée la zone centrale contenant l'image, les informations et les statistiques.
+     *
+     * @param boite la boîte à afficher
+     * @return un HBox structurant l'affichage
+     */
+    private HBox creerContenu(Boite boite) {
+        HBox contenu = new HBox(30);
+        contenu.setAlignment(Pos.TOP_LEFT);
+
+        VBox zoneInformations = new VBox(20);
+        zoneInformations.getChildren().addAll(
+            creerSectionInformations(boite),
+            creerSectionStatistiques(boite)
+        );
+        HBox.setHgrow(zoneInformations, Priority.ALWAYS);
+
+        contenu.getChildren().addAll(
+            creerSectionImage(boite),
+            zoneInformations
+        );
+
+        return contenu;
+    }
+
+    /**
+     * Crée le conteneur affichant l'image de la boîte.
+     *
+     * @param boite la boîte contenant l'URL de l'image
+     * @return un VBox stylisé contenant l'image
+     */
+    private VBox creerSectionImage(Boite boite) {
+        VBox conteneurImage = new VBox();
+        conteneurImage.setAlignment(Pos.CENTER);
+        conteneurImage.setPadding(new Insets(10));
+        conteneurImage.setStyle("-fx-background-color: white; -fx-border-color: #dcdde1; -fx-border-radius: 5; -fx-background-radius: 5;");
+        conteneurImage.setPrefWidth(350);
+
+        ImageView imageView = new ImageView();
+        imageView.setFitWidth(330);
+        imageView.setFitHeight(330);
+        imageView.setPreserveRatio(true);
+
+        String url = boite.getImageBoite();
+        if (url != null && !url.isBlank()) {
+            Image image = new Image(url, true);
+            imageView.setImage(image);
+        }
+
+        conteneurImage.getChildren().add(imageView);
+        return conteneurImage;
+    }
+
+    /**
+     * Crée la grille détaillant les métadonnées de base de la boîte.
+     *
+     * @param boite la boîte contenant les informations
+     * @return un GridPane contenant les labels
+     */
+    private GridPane creerSectionInformations(Boite boite) {
+        GridPane grille = new GridPane();
+        grille.setVgap(15);
+        grille.setHgap(50);
+        grille.setPadding(new Insets(20));
+        grille.setStyle("-fx-background-color: white; -fx-border-color: #dcdde1; -fx-border-radius: 5; -fx-background-radius: 5;");
+
+        String nomTheme = (boite.getTheme() != null) ? boite.getTheme().getNom() : "Inconnu";
+        String annee = (boite.getAnnee() != null) ? String.valueOf(boite.getAnnee()) : "Non renseignée";
+        String pieces = (boite.getNbPieces() != null) ? String.valueOf(boite.getNbPieces()) : "Inconnu";
+
+        ajouterLigneInfo(grille, 0, "Numéro de référence :", boite.getNumero());
+        ajouterLigneInfo(grille, 1, "Thème :", nomTheme);
+        ajouterLigneInfo(grille, 2, "Année de sortie :", annee);
+        ajouterLigneInfo(grille, 3, "Pièces annoncées :", pieces);
+
+        return grille;
+    }
+
+    /**
+     * Crée la section affichant les statistiques réelles du contenu de la boîte.
+     *
+     * @param boite la boîte à analyser
+     * @return un VBox contenant les statistiques calculées
+     */
+    private VBox creerSectionStatistiques(Boite boite) {
+        VBox sectionComplete = new VBox(15);
+        sectionComplete.setPadding(new Insets(20));
+        sectionComplete.setStyle("-fx-background-color: white; -fx-border-color: #dcdde1; -fx-border-radius: 5; -fx-background-radius: 5;");
+        
+        Label lblTitreStats = new Label("Statistiques du contenu réel");
+        lblTitreStats.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+        
+        Separator separator = new Separator();
+
+        BoiteStats stats = boiteService.calculerStatsBoite(boite.getNumero());
+        
+        if (stats == null || stats.getTotalPieces() == 0) {
+            Label lblVide = new Label("Aucun inventaire détaillé disponible pour cette boîte en base de données.");
+            lblVide.setStyle("-fx-text-fill: #e74c3c; -fx-font-style: italic;");
+            sectionComplete.getChildren().addAll(lblTitreStats, separator, lblVide);
+            return sectionComplete;
+        }
+
+        HBox conteneurDivise = new HBox(40);
+        conteneurDivise.setAlignment(Pos.TOP_LEFT);
+
+        VBox colonneGauche = new VBox(20);
+        colonneGauche.setPrefWidth(350);
+        colonneGauche.setMaxWidth(350);
+
+        GridPane grilleStats = new GridPane();
+        grilleStats.setVgap(15);
+        grilleStats.setHgap(30);
+        
+        ajouterLigneInfo(grilleStats, 0, "Total de pièces répertoriées :", String.valueOf(stats.getTotalPieces()));
+        ajouterLigneInfo(grilleStats, 1, "Dont pièces en supplément :", String.valueOf(stats.getTotalSupplement()));
+        ajouterLigneInfo(grilleStats, 2, "Nombre de figurines :", String.valueOf(stats.getTotalFigurines()));
+        ajouterLigneInfo(grilleStats, 3, "Sous-boîtes incluses :", String.valueOf(stats.getTotalSousBoites()));
+
+        Label lblCouleurs = new Label("Répartition par couleurs :");
+        lblCouleurs.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+
+        FlowPane flowCouleurs = new FlowPane(10, 10);
+        flowCouleurs.setPrefWrapLength(320);
+
+        PieChart graphiqueCouleurs = new PieChart();
+        graphiqueCouleurs.setPrefSize(400, 400);
+        graphiqueCouleurs.setMinSize(300, 300);
+        graphiqueCouleurs.setLegendVisible(false);
+
+        for (Map.Entry<Couleur, Integer> entree : stats.getRepartitionCouleurs().entrySet()) {
+            Couleur couleur = entree.getKey();
+            int quantite = entree.getValue();
+            String rgbHex = formaterRgb(couleur.getRgb());
+            String textCouleur = obtenirCouleurTexte(rgbHex);
+            String borderColor = rgbHex.equalsIgnoreCase("#FFFFFF") ? "#bdc3c7" : rgbHex;
+            
+            Label tagCouleur = new Label(couleur.getNom() + " (" + quantite + ")");
+            tagCouleur.setStyle("-fx-background-color: " + rgbHex + "; -fx-text-fill: " + textCouleur + "; -fx-border-color: " + borderColor + "; -fx-border-radius: 5; -fx-background-radius: 5; -fx-padding: 5 10; -fx-font-size: 11px;");
+            flowCouleurs.getChildren().add(tagCouleur);
+
+            PieChart.Data tranche = new PieChart.Data(couleur.getNom() + " (" + quantite + ")", quantite);
+            graphiqueCouleurs.getData().add(tranche);
+
+            String styleTranche = "-fx-pie-color: " + rgbHex + "; -fx-border-color: derive(" + rgbHex + ", -10%); -fx-border-width: 1px;";
+            
+            if (tranche.getNode() != null) {
+                tranche.getNode().setStyle(styleTranche);
+            }
+            tranche.nodeProperty().addListener((obs, oldNode, newNode) -> {
+                if (newNode != null) {
+                    newNode.setStyle(styleTranche);
+                }
+            });
+        }
+
+        ScrollPane scrollCouleurs = new ScrollPane(flowCouleurs);
+        scrollCouleurs.setFitToWidth(true);
+        scrollCouleurs.setPrefHeight(200);
+        scrollCouleurs.setMaxHeight(250);
+        scrollCouleurs.setStyle("-fx-background-color: transparent; -fx-background: transparent; -fx-border-color: #bdc3c7; -fx-border-radius: 5; -fx-padding: 5;");
+
+        colonneGauche.getChildren().addAll(grilleStats, lblCouleurs, scrollCouleurs);
+
+        conteneurDivise.getChildren().addAll(colonneGauche, graphiqueCouleurs);
+        HBox.setHgrow(graphiqueCouleurs, Priority.ALWAYS);
+
+        sectionComplete.getChildren().addAll(lblTitreStats, separator, conteneurDivise);
+        return sectionComplete;
+    }
+
+    /**
+     * Ajoute une ligne de données dans un GridPane.
+     *
+     * @param grille le conteneur cible
+     * @param ligne l'index de la ligne
+     * @param libelle le nom de la caractéristique
+     * @param valeur la valeur de la caractéristique
+     */
+    private void ajouterLigneInfo(GridPane grille, int ligne, String libelle, String valeur) {
+        Label lblLibelle = new Label(libelle);
+        lblLibelle.setStyle("-fx-font-size: 14px; -fx-text-fill: #34495e;");
+
+        Label lblValeur = new Label(valeur);
+        lblValeur.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+
+        grille.add(lblLibelle, 0, ligne);
+        grille.add(lblValeur, 1, ligne);
+    }
+}
