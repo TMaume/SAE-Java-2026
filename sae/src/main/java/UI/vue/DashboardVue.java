@@ -11,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import java.net.URL;
 
 /**
  * Vue principale agissant comme conteneur pour le menu et les sous-vues.
@@ -20,6 +21,7 @@ public class DashboardVue {
     private final DashboardController controller;
     private final AuthController authController;
     private Button boutonActif = null;
+    private static boolean theme = true;
 
     /**
      * Construit le tableau de bord.
@@ -42,7 +44,7 @@ public class DashboardVue {
 
         StackPane conteneurCentral = new StackPane();
         conteneurCentral.setPadding(new Insets(30));
-        conteneurCentral.setStyle("-fx-background-color: #fafbfc;");
+        //conteneurCentral.setStyle("-fx-background-color: #fafbfc;");
         conteneurCentral.getChildren().add(creerVueDefaut()); 
 
         VBox sidebar = creerSidebar(conteneurCentral);
@@ -57,6 +59,7 @@ public class DashboardVue {
             stage.setScene(new Scene(root, 1024, 768));
         } else {
             sceneActuelle.setRoot(root);
+            theme();
         }
     }
 
@@ -70,10 +73,10 @@ public class DashboardVue {
         vueDefaut.setAlignment(Pos.CENTER);
         
         Label lblMessage1 = new Label("Bienvenue sur le tableau de bord.");
-        lblMessage1.setStyle("-fx-font-size: 18px; -fx-text-fill: #2c3e50; -fx-font-weight: bold;");
+        //lblMessage1.setStyle("-fx-font-size: 18px; -fx-text-fill: #2c3e50; -fx-font-weight: bold;");
         
         Label lblMessage2 = new Label("Utilisez le menu de gauche pour naviguer.");
-        lblMessage2.setStyle("-fx-font-size: 14px; -fx-text-fill: #7f8c8d;");
+        //lblMessage2.setStyle("-fx-font-size: 14px; -fx-text-fill: #7f8c8d;");
         
         vueDefaut.getChildren().addAll(lblMessage1, lblMessage2);
         return vueDefaut;
@@ -104,10 +107,11 @@ public class DashboardVue {
         VBox sidebar = new VBox(10);
         sidebar.setPadding(new Insets(20));
         sidebar.setPrefWidth(240);
+        if(!DashboardVue.theme)
         sidebar.setStyle("-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-width: 0 1 0 0;");
 
         Label lblMenuClient = new Label("Menu Client");
-        lblMenuClient.setStyle("-fx-font-weight: bold; -fx-font-size: 15px; -fx-text-fill: #2c3e50;");
+        //lblMenuClient.setStyle("-fx-font-weight: bold; -fx-font-size: 15px; -fx-text-fill: #2c3e50;");
         sidebar.getChildren().add(lblMenuClient);
 
         Button btnCatalogue = creerBoutonMenu("Consulter le catalogue");
@@ -184,9 +188,12 @@ public class DashboardVue {
      */
     public void activerBouton(Button nouveauBouton) {
         if (boutonActif != null) {
+            if(DashboardVue.theme)boutonActif.setStyle("-fx-background-color: #373b41; -fx-text-fill: white; -fx-font-size: 13px; -fx-cursor: hand;");
             boutonActif.setStyle("-fx-background-color: transparent; -fx-text-fill: #4f5f6f; -fx-font-size: 13px; -fx-cursor: hand;");
         }
+        if(!DashboardVue.theme)
         nouveauBouton.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 13px; -fx-cursor: hand; -fx-font-weight: bold;");
+    else nouveauBouton.setStyle("-fx-background-color: #7AA95C; -fx-text-fill: white; -fx-font-size: 13px; -fx-cursor: hand; -fx-font-weight: bold;");
         boutonActif = nouveauBouton;
     }
 
@@ -199,7 +206,7 @@ public class DashboardVue {
     private HBox creerHeader(VBox sidebar) {
         HBox header = new HBox(15);
         header.setPadding(new Insets(15, 20, 15, 20));
-        header.setStyle("-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-width: 0 0 1 0;");
+        //header.setStyle("-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-width: 0 0 1 0;");
         header.setAlignment(Pos.CENTER_LEFT);
 
         Button btnToggleMenu = new Button("☰");
@@ -240,20 +247,30 @@ public class DashboardVue {
         btn.setMaxWidth(Double.MAX_VALUE);
         btn.setPadding(new Insets(8, 12, 8, 12));
         
-        btn.setStyle("-fx-background-color: transparent; -fx-text-fill: #4f5f6f; -fx-font-size: 13px; -fx-cursor: hand;");
+        //btn.setStyle("-fx-background-color: transparent; -fx-text-fill: #4f5f6f; -fx-font-size: 13px; -fx-cursor: hand;");
         
         btn.setOnMouseEntered(e -> {
             if (btn != boutonActif) {
-                btn.setStyle("-fx-background-color: #f0f2f5; -fx-text-fill: #2c3e50; -fx-font-size: 13px; -fx-cursor: hand;");
+                //btn.setStyle("-fx-background-color: #f0f2f5; -fx-text-fill: #2c3e50; -fx-font-size: 13px; -fx-cursor: hand;");
             }
         });
         
         btn.setOnMouseExited(e -> {
             if (btn != boutonActif) {
-                btn.setStyle("-fx-background-color: transparent; -fx-text-fill: #4f5f6f; -fx-font-size: 13px; -fx-cursor: hand;");
+               //btn.setStyle("-fx-background-color: transparent; -fx-text-fill: #4f5f6f; -fx-font-size: 13px; -fx-cursor: hand;");
             }
         });
         
         return btn;
+    }
+
+    public void theme(){
+        Scene s = this.stage.getScene();
+        String str = "clair";
+        if (s==null)return;
+        if(DashboardVue.theme)str = "sombre";
+        s.getStylesheets().clear();
+        s.getStylesheets().add(getClass().getResource(""+str+"-theme.css").toExternalForm());
+        System.out.println(str);
     }
 }
