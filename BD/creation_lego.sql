@@ -6,7 +6,7 @@ CREATE TABLE BOITE (
   annee    int,
   nbpieces int,
   idtheme  int NOT NULL,
-  image    varchar(200)
+  imageB   varchar(200)
 );
 
 CREATE TABLE CATEGORIE (
@@ -35,7 +35,8 @@ CREATE TABLE CONTENIRP (
   numpiece      varchar(20) NOT NULL,
   idcoul        int NOT NULL,
   en_supplement char(1) NOT NULL,
-  quantitep     int
+  quantitep     int,
+  imageP        varchar(200)
 );
 
 CREATE TABLE CONTENU (
@@ -58,7 +59,8 @@ CREATE TABLE FIGURINE (
   PRIMARY KEY (idfig),
   idfig     varchar(12) NOT NULL,
   nomfig   varchar(150),
-  nbparties int
+  nbparties int,
+  imageF    varchar(200)
 );
 
 CREATE TABLE PIECE (

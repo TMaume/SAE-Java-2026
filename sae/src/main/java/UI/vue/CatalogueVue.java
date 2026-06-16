@@ -89,8 +89,8 @@ public class CatalogueVue {
         header.setAlignment(Pos.CENTER_LEFT);
 
         Label lblTitre = new Label("Catalogue des Boîtes LEGO");
-        lblTitre.setStyle("-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
-
+        //lblTitre.setStyle("-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+        lblTitre.getStyleClass().add("titre");
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
@@ -98,7 +98,7 @@ public class CatalogueVue {
         lblInfosTotal.setStyle("-fx-text-fill: #7f8c8d; -fx-font-size: 14px;");
 
         Button btnChangerVue = new Button("Affichage : Grille");
-        btnChangerVue.setStyle("-fx-background-color: #ecf0f1; -fx-border-color: #bdc3c7; -fx-border-radius: 4; -fx-cursor: hand;");
+        btnChangerVue.getStyleClass().add("btn");
         btnChangerVue.setOnAction(e -> basculerVue(btnChangerVue));
 
         header.getChildren().addAll(lblTitre, spacer, lblInfosTotal, btnChangerVue);

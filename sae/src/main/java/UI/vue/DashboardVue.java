@@ -21,7 +21,7 @@ public class DashboardVue {
     private final DashboardController controller;
     private final AuthController authController;
     private Button boutonActif = null;
-    private static boolean theme = true;
+    private static boolean theme = false;
 
     /**
      * Construit le tableau de bord.
@@ -46,9 +46,12 @@ public class DashboardVue {
         conteneurCentral.setPadding(new Insets(30));
         //conteneurCentral.setStyle("-fx-background-color: #fafbfc;");
         conteneurCentral.getChildren().add(creerVueDefaut()); 
+        conteneurCentral.getStyleClass().add("center");
 
         VBox sidebar = creerSidebar(conteneurCentral);
+        sidebar.getStyleClass().add("side");
         HBox header = creerHeader(sidebar);
+        header.getStyleClass().add("head");
 
         root.setTop(header);
         root.setLeft(sidebar);
@@ -214,7 +217,7 @@ public class DashboardVue {
         header.setAlignment(Pos.CENTER_LEFT);
 
         Button btnToggleMenu = new Button("☰");
-        btnToggleMenu.setStyle("-fx-background-color: transparent; -fx-font-size: 18px; -fx-cursor: hand; -fx-text-fill: #2c3e50;");
+        btnToggleMenu.getStyleClass().add("retract");
         btnToggleMenu.setOnAction(e -> {
             boolean estVisible = sidebar.isVisible();
             sidebar.setVisible(!estVisible);
@@ -222,7 +225,6 @@ public class DashboardVue {
         });
 
         Label lblBienvenue = new Label("Bienvenue, " + controller.getUtilisateurConnecte().getIdentifiant());
-        lblBienvenue.setStyle("-fx-font-size: 14px; -fx-text-fill: #555555;");
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS); 
@@ -250,6 +252,7 @@ public class DashboardVue {
         btn.setAlignment(Pos.CENTER_LEFT);
         btn.setMaxWidth(Double.MAX_VALUE);
         btn.setPadding(new Insets(8, 12, 8, 12));
+        btn.getStyleClass().add("btn");
         
         //btn.setStyle("-fx-background-color: transparent; -fx-text-fill: #4f5f6f; -fx-font-size: 13px; -fx-cursor: hand;");
         
@@ -275,7 +278,7 @@ public class DashboardVue {
         if(DashboardVue.theme)str = "sombre";
         s.getStylesheets().clear();
         //s.getStylesheets().add(getClass().getResource(""+str+"-theme.css").toExternalForm());
-        s.getStylesheets().add(getClass().getResource("test.css").toExternalForm());
+        s.getStylesheets().add(getClass().getResource("Test.css").toExternalForm());
         System.out.println(str);
     }
 }

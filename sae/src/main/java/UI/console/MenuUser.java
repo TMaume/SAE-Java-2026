@@ -220,7 +220,7 @@ public class MenuUser {
                         
                         if (qtePossedee < pq.getQuantite()) {
                             int calculManque = pq.getQuantite() - qtePossedee;
-                            manquantes.add(new PieceQuantite(pq.getPiece(), calculManque, false));
+                            manquantes.add(new PieceQuantite(pq.getPiece(), calculManque, false, null));
                         }
                     }
                     
@@ -252,7 +252,7 @@ public class MenuUser {
             } else {
                 int qte = ui.lireEntier("Quantité : ");
                 boolean supp = ui.lireOuiNon("Est-ce une pièce en supplément ? (o/n) : ");
-                piecesChoisies.add(new PieceQuantite(p, qte, supp));
+                piecesChoisies.add(new PieceQuantite(p, qte, supp, null));
                 ui.afficherLigne("Pièce " + p.getNom() + " ajoutée !");
             }
             ajouter = ui.lireOuiNon("Ajouter une autre pièce ? (o/n) : ");

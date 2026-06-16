@@ -104,7 +104,7 @@ public class BoiteBD {
     }
 
     public Boite rechercherBoite(String numBoite) {
-        String sql = "SELECT b.numboite, b.nomboite, b.annee, b.nbpieces, t.idtheme, t.nomtheme, b.image " +
+        String sql = "SELECT b.numboite, b.nomboite, b.annee, b.nbpieces, t.idtheme, t.nomtheme, b.imageB " +
                      "FROM BOITE b " +
                      "JOIN THEME t ON b.idtheme = t.idtheme " +
                      "WHERE b.numboite = ?";
@@ -124,7 +124,7 @@ public class BoiteBD {
                     rs.getString("nomboite"),
                     (Integer) rs.getObject("annee"),
                     theme,
-                    rs.getString("image")
+                    rs.getString("imageB")
                 );
                 boite.setNbPieces((Integer) rs.getObject("nbpieces"));
                 return boite;
@@ -136,7 +136,7 @@ public class BoiteBD {
 
     public List<Boite> listeDesBoites() {
         ArrayList<Boite> res = new ArrayList<>();
-        String sql = "SELECT b.numboite, b.nomboite, b.annee, b.nbpieces, t.idtheme, t.nomtheme, b.image " +
+        String sql = "SELECT b.numboite, b.nomboite, b.annee, b.nbpieces, t.idtheme, t.nomtheme, b.imageB " +
                      "FROM BOITE b " +
                      "JOIN THEME t ON b.idtheme = t.idtheme " +
                      "ORDER BY b.nomboite";
@@ -152,7 +152,7 @@ public class BoiteBD {
                     rs.getString("nomboite"),
                     (Integer) rs.getObject("annee"),
                     theme,
-                    rs.getString("image")
+                    rs.getString("imageB")
                 );
                 boite.setNbPieces((Integer) rs.getObject("nbpieces"));
                 res.add(boite);
@@ -164,7 +164,7 @@ public class BoiteBD {
 
     public List<Boite> listeDesBoitesPaginee(int limite, int offset) {
         ArrayList<Boite> res = new ArrayList<>();
-        String sql = "SELECT b.numboite, b.nomboite, b.annee, b.nbpieces, t.idtheme, t.nomtheme, b.image " +
+        String sql = "SELECT b.numboite, b.nomboite, b.annee, b.nbpieces, t.idtheme, t.nomtheme, b.imageB " +
                      "FROM BOITE b " +
                      "JOIN THEME t ON b.idtheme = t.idtheme " +
                      "ORDER BY b.nomboite " +
@@ -184,7 +184,7 @@ public class BoiteBD {
                         rs.getString("nomboite"),
                         (Integer) rs.getObject("annee"),
                         theme,
-                        rs.getString("image")
+                        rs.getString("imageB")
                     );
                     boite.setNbPieces((Integer) rs.getObject("nbpieces"));
                     res.add(boite);
@@ -216,7 +216,7 @@ public class BoiteBD {
     public List<Boite> rechercherBoitesFiltreesPaginees(String recherche, Integer idTheme, int limite, int offset) {
         ArrayList<Boite> res = new ArrayList<>();
         StringBuilder sql = new StringBuilder(
-            "SELECT b.numboite, b.nomboite, b.annee, b.nbpieces, t.idtheme, t.nomtheme, b.image " +
+            "SELECT b.numboite, b.nomboite, b.annee, b.nbpieces, t.idtheme, t.nomtheme, b.imageB " +
             "FROM BOITE b " +
             "JOIN THEME t ON b.idtheme = t.idtheme " +
             "WHERE 1=1 "
@@ -254,7 +254,7 @@ public class BoiteBD {
                         rs.getString("nomboite"),
                         (Integer) rs.getObject("annee"),
                         theme,
-                        rs.getString("image")
+                        rs.getString("imageB")
                     );
                     boite.setNbPieces((Integer) rs.getObject("nbpieces"));
                     res.add(boite);
@@ -304,7 +304,7 @@ public class BoiteBD {
 
     public List<Boite> listeBoitesParTheme(int idTheme) {
         ArrayList<Boite> res = new ArrayList<>();
-        String sql = "SELECT b.numboite, b.nomboite, b.annee, b.nbpieces, t.idtheme, t.nomtheme, b.image " +
+        String sql = "SELECT b.numboite, b.nomboite, b.annee, b.nbpieces, t.idtheme, t.nomtheme, b.imageB " +
                      "FROM BOITE b " +
                      "JOIN THEME t ON b.idtheme = t.idtheme " +
                      "WHERE b.idtheme = ? ORDER BY b.nomboite";
@@ -322,20 +322,21 @@ public class BoiteBD {
                         rs.getString("nomboite"),
                         (Integer) rs.getObject("annee"),
                         theme,
-                        rs.getString("image")
+                        rs.getString("imageB")
                     );
                     boite.setNbPieces((Integer) rs.getObject("nbpieces"));
                     res.add(boite);
                 }
             }
         } catch (SQLException e) {
+            System.err.println("Erreur lors de la recherche des boîtes par thème : " + e.getMessage());
         }
         return res;
     }
 
     public List<Boite> rechercherBoitesParNom(String nomPartiel) {
         ArrayList<Boite> res = new ArrayList<>();
-        String sql = "SELECT b.numboite, b.nomboite, b.annee, b.nbpieces, t.idtheme, t.nomtheme, b.image " +
+        String sql = "SELECT b.numboite, b.nomboite, b.annee, b.nbpieces, t.idtheme, t.nomtheme, b.imageB " +
                      "FROM BOITE b " +
                      "JOIN THEME t ON b.idtheme = t.idtheme " +
                      "WHERE b.nomboite LIKE ? ORDER BY b.nomboite";
@@ -353,7 +354,7 @@ public class BoiteBD {
                         rs.getString("nomboite"),
                         (Integer) rs.getObject("annee"),
                         theme,
-                        rs.getString("image")
+                        rs.getString("imageB")
                     );
                     boite.setNbPieces((Integer) rs.getObject("nbpieces"));
                     res.add(boite);
@@ -367,7 +368,7 @@ public class BoiteBD {
 
     public List<Boite> rechercherBoitesParPiece(String numPiece) {
         ArrayList<Boite> res = new ArrayList<>();
-        String sql = "SELECT DISTINCT b.numboite, b.nomboite, b.annee, b.nbpieces, t.idtheme, t.nomtheme, b.image " +
+        String sql = "SELECT DISTINCT b.numboite, b.nomboite, b.annee, b.nbpieces, t.idtheme, t.nomtheme, b.imageB " +
                      "FROM BOITE b " +
                      "JOIN THEME t ON b.idtheme = t.idtheme " +
                      "JOIN CONTENU c ON b.numboite = c.numboite " +
@@ -388,7 +389,7 @@ public class BoiteBD {
                         rs.getString("nomboite"),
                         (Integer) rs.getObject("annee"),
                         theme,
-                        rs.getString("image")
+                        rs.getString("imageB")
                     );
                     boite.setNbPieces((Integer) rs.getObject("nbpieces"));
                     res.add(boite);
