@@ -1,17 +1,21 @@
-// package Controller; 
+package UI.Controller;
 
+import App.Boite;
+import App.BoiteService;
+import App.ThemeService;
+import App.Theme;
+import UI.vue.CreerBoiteVue;
 import javafx.collections.FXCollections;
 import javafx.scene.paint.Color;
-
 import java.util.List;
 
 public class AjouterBoiteController {
 
-    private AjouterBoiteView vue;
+    private CreerBoiteVue vue;
     private BoiteService boiteService;
     private ThemeService themeService;
 
-    public AjouterBoiteController(AjouterBoiteView vue, BoiteService boiteService, ThemeService themeService) {
+    public AjouterBoiteController(CreerBoiteVue vue, BoiteService boiteService, ThemeService themeService) {
         this.vue = vue;
         this.boiteService = boiteService;
         this.themeService = themeService;
@@ -43,13 +47,12 @@ public class AjouterBoiteController {
 
         try {
             int annee = Integer.parseInt(anneeStr);
-            
-            Boite nouvelleBoite = new Boite(numero, nom, annee, themeSelectionne);
-
-
+            // TODO: vérifier le 5e paramètre attendu par le constructeur Boite (String, String, Integer, Theme, String)
+            // Remplace "" par la vraie valeur (ex: description, image, état...)
+            Boite nouvelleBoite = new Boite(numero, nom, annee, themeSelectionne, "");
+            boiteService.ajouterBoite(nouvelleBoite); // TODO: vérifie le nom exact de cette méthode dans BoiteService
             afficherMessage("La boîte " + numero + " a été ajoutée avec succès !", Color.GREEN);
             viderChamps();
-
         } catch (NumberFormatException e) {
             afficherMessage("Erreur : L'année doit être un nombre entier valide.", Color.RED);
         }

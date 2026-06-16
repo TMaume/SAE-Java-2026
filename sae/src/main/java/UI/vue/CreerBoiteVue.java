@@ -1,5 +1,6 @@
-package vue;
+package UI.vue;
 
+import App.Theme;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
@@ -7,12 +8,12 @@ import javafx.scene.layout.VBox;
 
 public class CreerBoiteVue extends VBox {
 
-    TextField numeroField;
-    TextField nomField;
-    TextField anneeField;
-    ComboBox<Theme> themeComboBox;
-    Button ajouterButton;
-    Label messageLabel;
+    public TextField numeroField;
+    public TextField nomField;
+    public TextField anneeField;
+    public ComboBox<Theme> themeComboBox;
+    public Button ajouterButton;
+    public Label messageLabel;
 
     public CreerBoiteVue() {
         this.setSpacing(15.0);
@@ -50,4 +51,4 @@ public class CreerBoiteVue extends VBox {
 
         this.getChildren().addAll(titreLabel, grid, ajouterButton, messageLabel);
     }
-}  
+}
