@@ -1,0 +1,162 @@
+/* --- THEME SOMBRE GLOBAL --- */
+.root {
+    -fx-base: #22272e; 
+    -fx-background: #1c2128;
+    -fx-font-family: "Segoe UI", "Arial", sans-serif;
+    -fx-accent: #388bfd;
+    -fx-focus-color: rgba(56, 139, 253, 0.5);
+    -fx-faint-focus-color: rgba(56, 139, 253, 0.2);
+}
+
+/* --- PANNEAUX ET VUES --- */
+.header-pane {
+    -fx-background-color: #22272e;
+    -fx-border-color: #444c56;
+    -fx-border-width: 0 0 1px 0;
+    -fx-padding: 15px;
+}
+.sidebar-pane {
+    -fx-background-color: #22272e;
+    -fx-border-color: #444c56;
+    -fx-border-width: 0 1px 0 0;
+}
+
+/* On regroupe carte-boite (Catalogue) et card (Figurines/Pièces) */
+.card, .carte-boite, .stats-box {
+    -fx-background-color: #22272e;
+    -fx-border-color: #444c56;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 8, 0, 0, 4);
+    -fx-padding: 15px;
+}
+
+/* --- TEXTES --- */
+.label {
+    -fx-text-fill: #e6edf3;
+    -fx-font-size: 14px;
+}
+
+/* On gère à la fois l'anglais et le français pour éviter les bugs */
+.title-label, .titre-label {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #e6edf3;
+}
+.subtitle-label, .soustitre-label {
+    -fx-font-size: 16px;
+    -fx-text-fill: #768390;
+}
+
+/* --- BOUTONS --- */
+.button {
+    -fx-background-color: #373e47;
+    -fx-text-fill: #c9d1d9;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+    -fx-padding: 8px 16px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-border-color: #444c56;
+}
+.button:hover {
+    -fx-background-color: #444c56;
+    -fx-text-fill: #ffffff;
+}
+.button:pressed {
+    -fx-background-color: #2d333b;
+}
+.btn-primary {
+    -fx-background-color: #238636;
+    -fx-text-fill: white;
+    -fx-border-color: transparent;
+}
+.btn-primary:hover {
+    -fx-background-color: #2ea043;
+}
+.btn-danger {
+    -fx-background-color: #da3633;
+    -fx-text-fill: white;
+    -fx-border-color: transparent;
+}
+.btn-danger:hover {
+    -fx-background-color: #f85149;
+}
+
+/* --- CHAMPS DE TEXTE & COMBOBOX --- */
+.text-field, .password-field, .combo-box {
+    -fx-background-color: #2d333b;
+    -fx-border-color: #444c56;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+    -fx-font-size: 14px;
+    -fx-text-fill: #c9d1d9;
+    -fx-padding: 6px 10px;
+}
+.text-field:focused, .password-field:focused, .combo-box:focused {
+    -fx-border-color: #388bfd;
+    -fx-effect: dropshadow(three-pass-box, rgba(56,139,253,0.3), 5, 0, 0, 0);
+}
+
+/* --- LISTES ET TABLEAUX --- */
+.table-view {
+    -fx-background-color: #22272e;
+    -fx-border-color: #444c56;
+    -fx-border-radius: 5px;
+}
+.table-view .column-header-background {
+    -fx-background-color: #2d333b;
+}
+.table-view .column-header, .table-view .filler {
+    -fx-background-color: transparent;
+    -fx-border-color: #444c56;
+    -fx-border-width: 0 1px 1px 0;
+}
+.table-view .table-cell {
+    -fx-text-fill: #e6edf3;
+}
+.table-row-cell:odd {
+    -fx-background-color: #1c2128;
+}
+.table-row-cell:selected {
+    -fx-background-color: #388bfd;
+    -fx-text-fill: white;
+}
+
+/* --- ONGLETS (TAB PANE) --- */
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-background-color: transparent;
+}
+.tab-pane .tab {
+    -fx-background-color: #2d333b;
+    -fx-background-radius: 5px 5px 0 0;
+    -fx-padding: 5px 15px;
+}
+.tab-pane .tab:selected {
+    -fx-background-color: #22272e;
+    -fx-border-color: #444c56 #444c56 transparent #444c56;
+    -fx-border-radius: 5px 5px 0 0;
+}
+.tab-pane .tab-header-area .headers-region .tab .tab-label {
+    -fx-text-fill: #e6edf3;
+    -fx-font-weight: bold;
+}
+
+/* --- SCROLLPANE --- */
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+.scroll-bar:vertical, .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}
+.scroll-bar .thumb {
+    -fx-background-color: #444c56;
+    -fx-background-radius: 5px;
+}
+.scroll-bar .thumb:hover {
+    -fx-background-color: #768390;
+}
