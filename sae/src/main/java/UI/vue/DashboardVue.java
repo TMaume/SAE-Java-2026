@@ -87,6 +87,12 @@ public class DashboardVue {
         activerBouton(btnAddBoite);
     }
 
+    private void afficherModifBoite(StackPane conteneurCentral, Button btnModContenu) {
+        ModifierBoiteVue modifierBoiteVue = new ModifierBoiteVue();
+        controller.chargerContenu(conteneurCentral, modifierBoiteVue);
+        activerBouton(btnModContenu);
+    }
+
     private VBox creerSidebar(StackPane conteneurCentral){
         VBox sidebar = new VBox(10);
         sidebar.setPadding(new Insets(20));
@@ -151,10 +157,7 @@ public class DashboardVue {
                 controller.chargerContenu(conteneurCentral, new Label("Formulaire : Créer un thème (À faire)"));
                 activerBouton(btnAddTheme);
             });
-            btnModContenu.setOnAction(e -> {
-                controller.chargerContenu(conteneurCentral, new Label("Formulaire : Modifier le contenu d'une boîte (À faire)"));
-                activerBouton(btnModContenu);
-            });
+            btnModContenu.setOnAction(e -> afficherModifBoite(conteneurCentral, btnModContenu));
         }
 
         return sidebar;
