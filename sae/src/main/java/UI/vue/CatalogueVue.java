@@ -38,6 +38,7 @@ public class CatalogueVue {
     private Button btnPrecedent;
     private Button btnSuivant;
     private Label lblInfosTotal;
+    private Button btnAjouterBoiteDansCollection;
 
     /**
      * Construit la vue du catalogue.
@@ -381,7 +382,14 @@ public class CatalogueVue {
         Label lblDetails = new Label(strAnnee + " • " + strPieces + " pièces");
         lblDetails.getStyleClass().add("label");
 
-        carte.getChildren().addAll(conteneurImage, lblNumero, lblNom, lblTheme, lblDetails);
+        btnAjouterBoiteDansCollection = new Button("Ajouter à ma collection");
+        btnAjouterBoiteDansCollection.setOnAction(e -> {
+            if (boiteService != null) {
+                boiteService.ajouterBoiteDansCollection(b);
+            }
+        });
+
+        carte.getChildren().addAll(conteneurImage, lblNumero, lblNom, lblTheme, lblDetails, btnAjouterBoiteDansCollection);
         return carte;
     }
 
@@ -431,7 +439,14 @@ public class CatalogueVue {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        ligne.getChildren().addAll(conteneurImage, lblNumero, lblNom, lblTheme, spacer, lblDetails);
+        btnAjouterBoiteDansCollection = new Button("Ajouter à ma collection");
+        btnAjouterBoiteDansCollection.setOnAction(e -> {
+            if (boiteService != null) {
+                boiteService.ajouterBoiteDansCollection(b);
+            }
+        });
+
+        ligne.getChildren().addAll(conteneurImage, lblNumero, lblNom, lblTheme, spacer, lblDetails, btnAjouterBoiteDansCollection);
         return ligne;
     }
 }
