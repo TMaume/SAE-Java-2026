@@ -4,7 +4,6 @@ import javafx.scene.Scene;
 
 public class ParametreController {
     
-    // On utilise une String au lieu d'un boolean pour supporter plus de 2 thèmes
     private static String themeActuel = "Clair"; 
 
     public static String getThemeActuel() {
