@@ -142,11 +142,11 @@ public class DashboardVue {
         activerBouton(btnCreer);
     }
 
-    private void afficherMenuCreation(StackPane conteneurCentral, Button btnCreer) {
-        CreerMenuVue menuVue = new CreerMenuVue(conteneurCentral, controller);
-        controller.chargerContenu(conteneurCentral, menuVue);
-        activerBouton(btnCreer);
-    }
+    // private void afficherMenuCreation(StackPane conteneurCentral, Button btnCreer) {
+    //     CreerMenuVue menuVue = new CreerMenuVue(conteneurCentral, controller);
+    //     controller.chargerContenu(conteneurCentral, menuVue);
+    //     activerBouton(btnCreer);
+    // }
 
     private VBox creerSidebar(StackPane conteneurCentral){
         VBox sidebar = new VBox(10);
