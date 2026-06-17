@@ -2,9 +2,12 @@ package UI.vue;
 
 import UI.Controller.CollectionController;
 import App.RoleUtilisateur;
+import App.Boite;
+import java.util.List;
 import UI.Controller.ParametreController;
 import UI.Controller.AuthController;
 import UI.Controller.DashboardController;
+import UI.Controller.AjouterBoiteController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -102,18 +105,36 @@ public class DashboardVue {
     }
 
     private void afficherModifBoite(StackPane conteneurCentral, Button btnModContenu) {
-        CatalogueVue catalogueVue = new CatalogueVue(controller.getBoiteService(), controller.getThemeService(), controller.getCollectionService(), boite -> {
-            ModifierBoiteVue modifierBoiteVue = new ModifierBoiteVue(
-                boite,
-                controller.getBoiteService(),
-                controller.getThemeService(),
-                controller.getPieceService(),
-                () -> afficherModifBoite(conteneurCentral, btnModContenu)
-            );
-            controller.chargerContenu(conteneurCentral, modifierBoiteVue);
-        });
-        controller.chargerContenu(conteneurCentral, catalogueVue.getVue());
+        CatalogueModifVue catalogueModifVue = new CatalogueModifVue(
+            controller.getBoiteService(),
+            controller.getThemeService(),
+            null,
+            boite -> {
+                ModifierBoiteVue modifierBoiteVue = new ModifierBoiteVue(
+                    boite,
+                    controller.getBoiteService(),
+                    controller.getThemeService(),
+                    controller.getPieceService(),
+                    () -> afficherModifBoite(conteneurCentral, btnModContenu)
+                );
+                controller.chargerContenu(conteneurCentral, modifierBoiteVue);
+            }
+        );
+        controller.chargerContenu(conteneurCentral, catalogueModifVue.getVue());
         activerBouton(btnModContenu);
+    }
+
+    private void afficherCreationBoite(StackPane conteneurCentral, Button btnCreerRoot) {
+        CreerBoiteVue creerBoiteVue = new CreerBoiteVue();
+        new AjouterBoiteController(creerBoiteVue, controller.getBoiteService(), controller.getThemeService());
+        controller.chargerContenu(conteneurCentral, creerBoiteVue);
+        activerBouton(btnCreerRoot); 
+    }
+
+    private void afficherMenuCreation(StackPane conteneurCentral, Button btnCreer) {
+        CreerMenuVue menuVue = new CreerMenuVue(conteneurCentral, controller);
+        controller.chargerContenu(conteneurCentral, menuVue);
+        activerBouton(btnCreer);
     }
 
     private void afficherMenuCreation(StackPane conteneurCentral, Button btnCreer) {

@@ -38,10 +38,13 @@ public class ModifierBoiteVue extends BorderPane {
     private ListView<String> listeComposition;
     private ComboBox<String> comboFiltreContenu;
     
+    // Nouveaux composants pour la recherche visuelle
     private TextField txtRechercheAjout;
     private ComboBox<String> comboTypeAjout;
-    private ListView<String> listeResultatsAjout;
+    private FlowPane conteneurResultatsAjout;
     private TextField txtQuantiteAjout;
+    private Label lblSelection;
+    private String referenceSelectionnee = "";
 
     private ObservableList<Theme> tousLesThemes;
 
@@ -59,8 +62,6 @@ public class ModifierBoiteVue extends BorderPane {
         }
 
         setPadding(new Insets(30));
-        
-        // On laisse juste le fond transparent pour que le thème global s'applique derrière
         setStyle("-fx-background-color: transparent;");
 
         setTop(creerEnTete(actionRetour, "Modification de boîte"));
@@ -132,8 +133,13 @@ public class ModifierBoiteVue extends BorderPane {
         }
     }
 
+    /**
+     * Effectue la recherche et génère les cartes visuelles.
+     */
     private void rechercherElementsAjout(String recherche, String type) {
-        listeResultatsAjout.getItems().clear();
+        conteneurResultatsAjout.getChildren().clear();
+        referenceSelectionnee = "";
+        lblSelection.setText("Aucune sélection");
         
         if (recherche == null || recherche.trim().length() < 2) {
             return;
@@ -144,19 +150,73 @@ public class ModifierBoiteVue extends BorderPane {
         if (type.equals("Pièce") && pieceService != null) {
             List<Piece> resultats = pieceService.rechercherPiecesParMotCle(motCle);
             for (Piece p : resultats) {
-                listeResultatsAjout.getItems().add("[Pièce] Réf: " + p.getNumero() + " - " + p.getNom());
+                String cat = p.getCategorie() != null ? p.getCategorie().getNom() : "";
+                conteneurResultatsAjout.getChildren().add(creerCarteResultat(p.getNumero(), p.getNom(), cat, null));
             }
         } else if (type.equals("Figurine") && boiteService != null) {
             List<Figurine> resultats = boiteService.rechercherFigurinesParMotCle(motCle);
             for (Figurine f : resultats) {
-                listeResultatsAjout.getItems().add("[Figurine] Réf: " + f.getIdFigurine() + " - " + f.getNom());
+                conteneurResultatsAjout.getChildren().add(creerCarteResultat(f.getIdFigurine(), f.getNom(), f.getNbParties() + " parties", f.getImageF()));
             }
         } else if (type.equals("Sous-boîte") && boiteService != null) {
             List<Boite> resultats = boiteService.rechercherBoitesParNom(motCle);
             for (Boite b : resultats) {
-                listeResultatsAjout.getItems().add("[Sous-boîte] N°: " + b.getNumero() + " - " + b.getNom());
+                String infos = (b.getTheme() != null ? b.getTheme().getNom() : "") + " • " + b.getAnnee();
+                conteneurResultatsAjout.getChildren().add(creerCarteResultat(b.getNumero(), b.getNom(), infos, b.getImageBoite()));
             }
         }
+    }
+
+    /**
+     * Crée une carte visuelle sans le bouton "Ajouter à ma collection".
+     */
+    private VBox creerCarteResultat(String ref, String nom, String infos, String urlImage) {
+        VBox carte = new VBox(10);
+        carte.setPadding(new Insets(10));
+        // Style calqué sur ton thème bordeaux/or
+        carte.setStyle("-fx-background-color: #5c1416; -fx-border-color: #d4af37; -fx-border-radius: 5; -fx-background-radius: 5;");
+        carte.setPrefWidth(160);
+        carte.setAlignment(Pos.CENTER);
+
+        ImageView imageView = new ImageView();
+        imageView.setFitWidth(130);
+        imageView.setFitHeight(100);
+        imageView.setPreserveRatio(true);
+        if (urlImage != null && !urlImage.isBlank()) {
+            try {
+                imageView.setImage(new Image(urlImage, true));
+            } catch (Exception e) {}
+        }
+        VBox conteneurImage = new VBox(imageView);
+        conteneurImage.setAlignment(Pos.CENTER);
+        conteneurImage.setStyle("-fx-background-color: white; -fx-background-radius: 3;");
+        conteneurImage.setPrefHeight(110);
+        conteneurImage.setPadding(new Insets(5));
+
+        Label lblRef = new Label("#" + ref);
+        lblRef.setStyle("-fx-text-fill: #d4af37; -fx-font-weight: bold;");
+
+        Label lblNom = new Label(nom);
+        lblNom.setStyle("-fx-text-fill: #d4af37; -fx-font-size: 12px;");
+        lblNom.setWrapText(true);
+        lblNom.setAlignment(Pos.CENTER);
+        lblNom.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+        lblNom.setMinHeight(35);
+
+        Label lblInfos = new Label(infos);
+        lblInfos.setStyle("-fx-text-fill: #d4af37; -fx-font-size: 10px;");
+
+        // Bouton de sélection (Remplace le bouton Collection)
+        Button btnSelect = new Button("Sélectionner");
+        btnSelect.setStyle("-fx-background-color: #3b0d0e; -fx-border-color: #d4af37; -fx-text-fill: #d4af37; -fx-cursor: hand; -fx-border-radius: 3; -fx-background-radius: 3;");
+        btnSelect.setMaxWidth(Double.MAX_VALUE);
+        btnSelect.setOnAction(e -> {
+            referenceSelectionnee = ref;
+            lblSelection.setText("Réf sélectionnée : " + ref);
+        });
+
+        carte.getChildren().addAll(conteneurImage, lblRef, lblNom, lblInfos, btnSelect);
+        return carte;
     }
 
     private HBox creerEnTete(Runnable actionRetour, String titre) {
@@ -307,11 +367,19 @@ public class ModifierBoiteVue extends BorderPane {
         
         barreRecherche.getChildren().addAll(comboTypeAjout, txtRechercheAjout);
         
-        listeResultatsAjout = new ListView<>();
-        listeResultatsAjout.setPrefHeight(120);
+        // C'est ici que la magie opère : la galerie de cartes remplace la vieille liste !
+        conteneurResultatsAjout = new FlowPane(15, 15);
+        conteneurResultatsAjout.setAlignment(Pos.TOP_LEFT);
+        ScrollPane scrollResultats = new ScrollPane(conteneurResultatsAjout);
+        scrollResultats.setFitToWidth(true);
+        scrollResultats.setPrefHeight(250);
+        scrollResultats.setStyle("-fx-background-color: transparent;");
         
         HBox zoneAction = new HBox(15);
         zoneAction.setAlignment(Pos.CENTER_LEFT);
+        
+        lblSelection = new Label("Aucune sélection");
+        lblSelection.setStyle("-fx-font-weight: bold; -fx-text-fill: #e67e22; -fx-min-width: 150px;");
         
         Label lblQuantite = new Label("Qté :");
         txtQuantiteAjout = new TextField("1");
@@ -319,21 +387,19 @@ public class ModifierBoiteVue extends BorderPane {
         
         Button btnAjouter = new Button("➕ Ajouter");
         btnAjouter.getStyleClass().add("button");
-        
         btnAjouter.setOnAction(e -> gererAjoutElement());
         
-        zoneAction.getChildren().addAll(lblQuantite, txtQuantiteAjout, btnAjouter);
+        zoneAction.getChildren().addAll(lblSelection, lblQuantite, txtQuantiteAjout, btnAjouter);
         
-        conteneur.getChildren().addAll(lblTitre, barreRecherche, listeResultatsAjout, zoneAction);
+        conteneur.getChildren().addAll(lblTitre, barreRecherche, scrollResultats, zoneAction);
         return conteneur;
     }
 
     private void gererAjoutElement() {
-        String selection = listeResultatsAjout.getSelectionModel().getSelectedItem();
         String type = comboTypeAjout.getValue();
         
-        if (selection == null) {
-            afficherAlerte(AlertType.WARNING, "Sélection requise", "Veuillez sélectionner un élément dans la liste");
+        if (referenceSelectionnee == null || referenceSelectionnee.isEmpty()) {
+            afficherAlerte(AlertType.WARNING, "Sélection requise", "Veuillez cliquer sur le bouton 'Sélectionner' d'une des cartes.");
             return;
         }
         
@@ -346,17 +412,7 @@ public class ModifierBoiteVue extends BorderPane {
             return;
         }
         
-        String ref = "";
-        try {
-            if (selection.contains("Réf: ")) {
-                ref = selection.split("Réf: ")[1].split(" - ")[0].trim();
-            } else if (selection.contains("N°: ")) {
-                ref = selection.split("N°: ")[1].split(" - ")[0].trim();
-            }
-        } catch (Exception e) {
-            afficherAlerte(AlertType.ERROR, "Erreur de lecture", "Impossible d'analyser la référence.");
-            return;
-        }
+        String ref = referenceSelectionnee;
         
         if (type.equals("Pièce") && pieceService != null) {
             Piece piece = pieceService.rechercherPiece(ref);
@@ -385,6 +441,10 @@ public class ModifierBoiteVue extends BorderPane {
         }
         
         rafraichirAffichage();
+        
+        // On remet à zéro la sélection après un ajout réussi
+        referenceSelectionnee = "";
+        lblSelection.setText("Aucune sélection");
     }
 
     private void rafraichirAffichage() {
