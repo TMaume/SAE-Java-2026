@@ -165,6 +165,8 @@ public class DashboardVue {
             });
 
             sidebar.getChildren().addAll(separator, lblMenuAdmin, btnCreer, btnModContenu);
+
+            // btnModContenu.setOnAction(e -> afficherModifBoite(conteneurCentral, btnModContenu));
         }
 
         return sidebar;
