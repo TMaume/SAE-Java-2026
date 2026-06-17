@@ -23,7 +23,7 @@ public class CreerBoiteVue extends VBox {
     public CreerBoiteVue() {
         this.setSpacing(20.0);
         this.setPadding(new Insets(25.0));
-        this.setMaxWidth(420);
+        this.setMaxWidth(500);
 
         Label titreLabel = new Label("Ajouter une nouvelle boîte");
         titreLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
