@@ -75,7 +75,7 @@ public class LoginVue {
                     PieceService pieceService = new PieceService(pieceBD, categorieBD, couleurBD);
                     
                     // --- Initialisation du CollectionService avec JSON pour l'utilisateur connecté ---
-                    Path cheminJSON = Paths.get("collection_" + u.getIdentifiant().toLowerCase() + ".json");
+                    Path cheminJSON = Paths.get("sauvegardes", "collection_" + u.getIdentifiant().toLowerCase() + ".json");
                     CollectionService collectionService = new CollectionService(cheminJSON, boiteService, pieceService);
                     // -------------------------------------------------------------------------------
 

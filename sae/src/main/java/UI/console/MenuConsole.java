@@ -57,7 +57,7 @@ public class MenuConsole {
             BoiteService boiteService = new BoiteService(boiteBD, contenuBD, contenirpBD, contenirfBD, contenirbBD, themeService);
             
             // --- CORRECTION ICI : Instanciation avec le fichier JSON personnalisé ---
-            Path cheminJSON = Paths.get("collection_" + utilisateur.getIdentifiant().toLowerCase() + ".json");
+            Path cheminJSON = Paths.get("sauvegardes", "collection_" + utilisateur.getIdentifiant().toLowerCase() + ".json");
             CollectionService collection = new CollectionService(cheminJSON, boiteService, pieceService);
             // ------------------------------------------------------------------------
 
