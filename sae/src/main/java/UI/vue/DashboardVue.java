@@ -1,6 +1,5 @@
 package UI.vue;
 
-import UI.Controller.AjouterBoiteController;
 import UI.Controller.CollectionController;
 import App.RoleUtilisateur;
 import UI.Controller.ParametreController;
@@ -36,6 +35,7 @@ public class DashboardVue {
         StackPane conteneurCentral = new StackPane();
         conteneurCentral.setPadding(new Insets(30));
         conteneurCentral.getChildren().add(creerVueDefaut()); 
+        
         VBox sidebar = creerSidebar(conteneurCentral);
         sidebar.getStyleClass().add("sidebar-pane");
         
@@ -101,13 +101,6 @@ public class DashboardVue {
         activerBouton(btnCollection);
     }
 
-    private void afficherCreationBoite(StackPane conteneurCentral, Button btnCreerRoot) {
-        CreerBoiteVue creerBoiteVue = new CreerBoiteVue();
-        new AjouterBoiteController(creerBoiteVue, controller.getBoiteService(), controller.getThemeService());
-        controller.chargerContenu(conteneurCentral, creerBoiteVue);
-        activerBouton(btnCreerRoot); 
-    }
-
     private void afficherModifBoite(StackPane conteneurCentral, Button btnModContenu) {
         CatalogueVue catalogueVue = new CatalogueVue(controller.getBoiteService(), controller.getThemeService(), controller.getCollectionService(), boite -> {
             ModifierBoiteVue modifierBoiteVue = new ModifierBoiteVue(
@@ -124,11 +117,8 @@ public class DashboardVue {
     }
 
     private void afficherMenuCreation(StackPane conteneurCentral, Button btnCreer) {
-        CreerMenuVue menuVue = new CreerMenuVue(
-            () -> afficherCreationBoite(conteneurCentral, btnCreer),
-            () -> { controller.chargerContenu(conteneurCentral, new Label("Formulaire : Ajouter une pièce (À faire)")); },
-            () -> { controller.chargerContenu(conteneurCentral, new Label("Formulaire : Créer un thème (À faire)")); }
-        );
+        // La vue est maintenant totalement autonome, on lui passe juste ce dont elle a besoin pour naviguer
+        CreerMenuVue menuVue = new CreerMenuVue(conteneurCentral, controller);
         controller.chargerContenu(conteneurCentral, menuVue);
         activerBouton(btnCreer);
     }
@@ -222,7 +212,7 @@ public class DashboardVue {
         // BOUTON PARAMÈTRES
         Button btnParametres = new Button("Paramètres");
         try {
-            Image imgParams = new Image(getClass().getResourceAsStream("/images/settings.png"));
+            Image imgParams = new Image(getClass().getResourceAsStream("/UI/images/settings.png"));
             ImageView vueIcone = new ImageView(imgParams);
             vueIcone.setFitHeight(18);
             vueIcone.setFitWidth(18);
