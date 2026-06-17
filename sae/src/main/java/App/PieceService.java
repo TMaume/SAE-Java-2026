@@ -4,6 +4,8 @@ import BD.PieceBD;
 import BD.CategorieBD;
 import BD.CouleurBD;
 import java.util.List;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Gère l'accès aux pièces, catégories et couleurs.
@@ -95,4 +97,22 @@ public class PieceService {
     public Couleur rechercherCouleur(int id) {
         return couleurBD.rechercherCouleur(id);
     }
+
+    /**
+  * Recherche des pièces par mot-clé (Numéro partiel ou nom partiel).
+  */
+    public List<Piece> rechercherPiecesParMotCle(String motCle) {
+        // Liste toutes les pièces depuis la base de données
+        List<Piece> toutesLesPieces = this.pieceBD.listeDesPieces(); 
+        List<Piece> resultats = new ArrayList<>();
+        String motCleMinuscule = motCle.toLowerCase();
+
+        for (Piece p : toutesLesPieces) {
+            if (p.getNumero().toLowerCase().contains(motCleMinuscule) || 
+                (p.getNom() != null && p.getNom().toLowerCase().contains(motCleMinuscule))) {
+                resultats.add(p);
+            }
+        }
+            return resultats;
+        }
 }

@@ -5,6 +5,7 @@ import BD.ContenirbBD;
 import BD.ContenirfBD;
 import BD.ContenirpBD;
 import BD.Contenu;
+import BD.FigurineBD;
 import UI.Exception.BoiteExistanteException;
 
 import java.util.List;
@@ -223,25 +224,6 @@ public class BoiteService {
     }
 
     /**
-     * Ajoute une pièce à une boîte.
-     *
-     * @param numBoite le numéro de la boîte
-     * @param pq la pièce à ajouter
-     * @return true si l'ajout a réussi, false sinon
-     */
-    public boolean ajouterPieceABoite(String numBoite, PieceQuantite pq) {
-        List<Contenu.ContenuDetail> contenus = contenuBD.listeContenusParBoite(numBoite);
-        
-        if (contenus.isEmpty()) {
-            return false;
-        }
-        
-        int idCont = contenus.get(0).getIdCont();
-
-        return contenirpBD.insererContenirp(idCont, pq) > 0;
-    }
-
-    /**
      * Récupère une portion restreinte de boîtes (Pagination).
      *
      * @param page numéro de la page active
@@ -286,4 +268,105 @@ public class BoiteService {
     public int obtenirNombreTotalBoitesFiltrees(String recherche, Integer idTheme) {
         return boiteBD.compterBoitesFiltrees(recherche, idTheme);
     }
+
+    // =========================================================================
+    // NOUVELLES MÉTHODES D'AJOUT, DE RECHERCHE ET DE SUPPRESSION
+    // =========================================================================
+
+    /**
+     * Recherche une figurine par son identifiant en instanciant FigurineBD à la volée
+     * pour ne pas casser le constructeur existant.
+     *
+     * @param idFig L'identifiant de la figurine
+     * @return La figurine trouvée ou null
+     */
+    public Figurine rechercherFigurine(String idFig) {
+        FigurineBD figurineBD = new FigurineBD(boiteBD.getConnexion());
+        return figurineBD.rechercherFigurine(idFig);
+    }
+
+    /**
+     * Ajoute une pièce à une boîte en base de données.
+     */
+    public boolean ajouterPieceABoite(String numBoite, PieceQuantite pq) {
+        List<Contenu.ContenuDetail> contenus = contenuBD.listeContenusParBoite(numBoite);
+        if (contenus.isEmpty()) return false;
+        
+        int idCont = contenus.get(0).getIdCont();
+        return contenirpBD.insererContenirp(idCont, pq) > 0;
+    }
+
+    /**
+     * Ajoute une figurine à une boîte en base de données.
+     */
+    public boolean ajouterFigurineABoite(String numBoite, FigurineQuantite fq) {
+        List<Contenu.ContenuDetail> contenus = contenuBD.listeContenusParBoite(numBoite);
+        if (contenus.isEmpty()) return false;
+        
+        int idCont = contenus.get(0).getIdCont();
+        return contenirfBD.insererContenirf(idCont, fq) > 0;
+    }
+
+    /**
+     * Ajoute une sous-boîte à une boîte en base de données.
+     */
+    public boolean ajouterSousBoiteABoite(String numBoite, BoiteQuantite bq) {
+        List<Contenu.ContenuDetail> contenus = contenuBD.listeContenusParBoite(numBoite);
+        if (contenus.isEmpty()) return false;
+        
+        int idCont = contenus.get(0).getIdCont();
+        return contenirbBD.insererContenirb(idCont, bq) > 0;
+    }
+
+    /**
+     * Retire une pièce d'une boîte en base de données.
+     */
+    public boolean retirerPieceDeBoite(String numBoite, PieceQuantite pq) {
+        List<Contenu.ContenuDetail> contenus = contenuBD.listeContenusParBoite(numBoite);
+        if (contenus.isEmpty()) return false;
+        
+        int idCont = contenus.get(0).getIdCont();
+        return contenirpBD.effacerContenirp(idCont, pq.getPiece().getNumero(), pq.getPiece().getCouleur().getIdCouleur(), pq.isEnSupplement()) > 0;
+    }
+
+    /**
+     * Retire une figurine d'une boîte en base de données.
+     */
+    public boolean retirerFigurineDeBoite(String numBoite, FigurineQuantite fq) {
+        List<Contenu.ContenuDetail> contenus = contenuBD.listeContenusParBoite(numBoite);
+        if (contenus.isEmpty()) return false;
+        
+        int idCont = contenus.get(0).getIdCont();
+        return contenirfBD.effacerContenirf(idCont, fq.getFigurine().getIdFigurine()) > 0;
+    }
+
+    /**
+     * Retire une sous-boîte d'une boîte en base de données.
+     */
+    public boolean retirerSousBoiteDeBoite(String numBoite, BoiteQuantite bq) {
+        List<Contenu.ContenuDetail> contenus = contenuBD.listeContenusParBoite(numBoite);
+        if (contenus.isEmpty()) return false;
+        
+        int idCont = contenus.get(0).getIdCont();
+        return contenirbBD.effacerContenirb(idCont, bq.getBoite().getNumero()) > 0;
+    }
+
+    /**
+     * Recherche des figurines par mot-clé (ID partiel ou nom partiel).
+     */
+    public List<Figurine> rechercherFigurinesParMotCle(String motCle) {
+        FigurineBD figurineBD = new FigurineBD(boiteBD.getConnexion());
+        List<Figurine> toutesLesFigurines = figurineBD.listeDesFigurines();
+        List<Figurine> resultats = new ArrayList<>();
+        String motCleMinuscule = motCle.toLowerCase();
+        
+        for (Figurine f : toutesLesFigurines) {
+            if (f.getIdFigurine().toLowerCase().contains(motCleMinuscule) || 
+                f.getNom().toLowerCase().contains(motCleMinuscule)) {
+                resultats.add(f);
+            }
+        }
+        return resultats;
+    }
+
 }

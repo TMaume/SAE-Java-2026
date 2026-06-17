@@ -4,21 +4,17 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import java.time.LocalDate;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.List;
 
 import App.Boite;
 import App.BoiteQuantite;
 import App.BoiteService;
-import App.BoiteStats;
-import App.Couleur;
 import App.Figurine;
 import App.FigurineQuantite;
 import App.Piece;
@@ -48,9 +44,6 @@ public class ModifierBoiteVue extends BorderPane {
     private TextField txtQuantiteAjout;
 
     private ObservableList<Theme> tousLesThemes;
-    
-    
-    private VBox sectionStatistiques;
 
     public ModifierBoiteVue(Boite boite, BoiteService boiteService, ThemeService themeService, PieceService pieceService, Runnable actionRetour) {
         this.boiteService = boiteService;
@@ -66,9 +59,11 @@ public class ModifierBoiteVue extends BorderPane {
         }
 
         setPadding(new Insets(30));
+        
+        // On laisse juste le fond transparent pour que le thème global s'applique derrière
         setStyle("-fx-background-color: transparent;");
 
-        setTop(creerEnTete(actionRetour, "Modification de la boîte personnalisée"));
+        setTop(creerEnTete(actionRetour, "Modification de boîte"));
         setCenter(creerContenu());
 
         configurerEcouteurs();
@@ -76,13 +71,10 @@ public class ModifierBoiteVue extends BorderPane {
     }
 
     private void configurerEcouteurs() {
-
-        // Le listener reagit en direct a chaque lettre tapee dans la barre de recherche
         txtRechercheTheme.textProperty().addListener((observable, oldValue, newValue) -> {
             appliquerFiltreTheme();
         });
 
-        // Met a jour l affichage de l inventaire quand on change de categorie dans le menu deroulant
         comboFiltreContenu.setOnAction(event -> {
             appliquerFiltreContenu();
         });
@@ -97,8 +89,7 @@ public class ModifierBoiteVue extends BorderPane {
     }
 
     private void appliquerFiltreTheme() {
-
-        String texteRecherche = txtRechercheTheme.getText().trim().toLowerCase(); // trim qui sert a nettoyer le txt de tout espace inutile
+        String texteRecherche = txtRechercheTheme.getText().trim().toLowerCase();
         
         if (texteRecherche.isEmpty()) {
             comboTheme.setItems(tousLesThemes);
@@ -117,7 +108,6 @@ public class ModifierBoiteVue extends BorderPane {
     }
 
     private void appliquerFiltreContenu() {
-
         String filtreSelectionne = comboFiltreContenu.getValue();
         listeComposition.getItems().clear();
 
@@ -142,7 +132,6 @@ public class ModifierBoiteVue extends BorderPane {
         }
     }
 
-    // Lance la recherche dans la base de donnees avec les services selon le type d element choisi
     private void rechercherElementsAjout(String recherche, String type) {
         listeResultatsAjout.getItems().clear();
         
@@ -150,14 +139,23 @@ public class ModifierBoiteVue extends BorderPane {
             return;
         }
         
+        String motCle = recherche.trim();
+        
         if (type.equals("Pièce") && pieceService != null) {
-
-            // Remplacez par la methode de recherche de pieces
-            listeResultatsAjout.getItems().add("Simulation: Pièce trouvée (Réf: " + recherche + ")");
-        } else if (type.equals("Figurine")) {
-            listeResultatsAjout.getItems().add("Simulation: Figurine trouvée (Réf: " + recherche + ")");
-        } else if (type.equals("Sous-boîte")) {
-            listeResultatsAjout.getItems().add("Simulation: Boîte trouvée (Réf: " + recherche + ")");
+            List<Piece> resultats = pieceService.rechercherPiecesParMotCle(motCle);
+            for (Piece p : resultats) {
+                listeResultatsAjout.getItems().add("[Pièce] Réf: " + p.getNumero() + " - " + p.getNom());
+            }
+        } else if (type.equals("Figurine") && boiteService != null) {
+            List<Figurine> resultats = boiteService.rechercherFigurinesParMotCle(motCle);
+            for (Figurine f : resultats) {
+                listeResultatsAjout.getItems().add("[Figurine] Réf: " + f.getIdFigurine() + " - " + f.getNom());
+            }
+        } else if (type.equals("Sous-boîte") && boiteService != null) {
+            List<Boite> resultats = boiteService.rechercherBoitesParNom(motCle);
+            for (Boite b : resultats) {
+                listeResultatsAjout.getItems().add("[Sous-boîte] N°: " + b.getNumero() + " - " + b.getNom());
+            }
         }
     }
 
@@ -166,12 +164,12 @@ public class ModifierBoiteVue extends BorderPane {
         entete.setAlignment(Pos.CENTER_LEFT);
         entete.setPadding(new Insets(0, 0, 30, 0));
 
-        Button btnRetour = new Button("Retour a toutes les boites");
-        btnRetour.setStyle("-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;");
+        Button btnRetour = new Button("◄ Retour");
+        btnRetour.getStyleClass().add("button");
         btnRetour.setOnAction(e -> actionRetour.run());
 
         Label lblTitre = new Label(titre);
-        lblTitre.setStyle("-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+        lblTitre.getStyleClass().add("title-label");
 
         entete.getChildren().addAll(btnRetour, lblTitre);
         return entete;
@@ -182,14 +180,8 @@ public class ModifierBoiteVue extends BorderPane {
         contenu.setAlignment(Pos.TOP_LEFT);
 
         VBox zoneInformations = new VBox(20);
-        
-        // Initialisation de la boite qui va contenir les stats
-        sectionStatistiques = new VBox();
-        sectionStatistiques.getChildren().add(creerSectionStatistiques(this.boite));
-        
         zoneInformations.getChildren().addAll(
-            creerZoneOnglets(),
-            sectionStatistiques
+            creerZoneOnglets()
         );
         HBox.setHgrow(zoneInformations, Priority.ALWAYS);
 
@@ -205,7 +197,7 @@ public class ModifierBoiteVue extends BorderPane {
         VBox conteneurImage = new VBox();
         conteneurImage.setAlignment(Pos.CENTER);
         conteneurImage.setPadding(new Insets(10));
-        conteneurImage.setStyle("-fx-background-color: white; -fx-border-color: #dcdde1; -fx-border-radius: 5; -fx-background-radius: 5;");
+        conteneurImage.getStyleClass().add("card");
         conteneurImage.setPrefWidth(350);
 
         ImageView imageView = new ImageView();
@@ -226,30 +218,28 @@ public class ModifierBoiteVue extends BorderPane {
     private VBox creerZoneOnglets() {
         VBox conteneurGeneral = new VBox(15);
         conteneurGeneral.setPadding(new Insets(20));
-        conteneurGeneral.setStyle("-fx-background-color: white; -fx-border-color: #dcdde1; -fx-border-radius: 5; -fx-background-radius: 5;");
+        conteneurGeneral.getStyleClass().add("card");
 
         TabPane tabPaneEdition = new TabPane();
-        tabPaneEdition.setStyle("-fx-border-color: #bdc3c7; -fx-border-radius: 4;");
         tabPaneEdition.setPrefHeight(350);
 
-        Tab tabInfos = new Tab("Informations textuelles");
+        Tab tabInfos = new Tab("Détails");
         tabInfos.setClosable(false);
         tabInfos.setContent(creerOngletInformations());
         
-        Tab tabAjout = new Tab("Ajouter du contenu");
+        Tab tabAjout = new Tab("Ajouter");
         tabAjout.setClosable(false);
-        tabAjout.setStyle("-fx-background-color: #e67e22; -fx-text-fill: white; -fx-font-weight: bold;");
         tabAjout.setContent(creerOngletAjout());
 
-        Tab tabContenu = new Tab("Contenu de la boîte");
+        Tab tabContenu = new Tab("Inventaire");
         tabContenu.setClosable(false);
         tabContenu.setContent(creerOngletContenu());
 
         tabPaneEdition.getTabs().addAll(tabInfos, tabAjout, tabContenu);
 
-        Button btnSauvegarder = new Button("Enregistrer les informations textuelles");
+        Button btnSauvegarder = new Button("Enregistrer les modifications");
         btnSauvegarder.setMaxWidth(Double.MAX_VALUE);
-        btnSauvegarder.setStyle("-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 10; -fx-cursor: hand;");
+        btnSauvegarder.getStyleClass().add("button");
         btnSauvegarder.setOnAction(e -> gererActionSauvegarde());
 
         conteneurGeneral.getChildren().addAll(tabPaneEdition, btnSauvegarder);
@@ -270,19 +260,19 @@ public class ModifierBoiteVue extends BorderPane {
         String valeurAnnee = boite.getAnnee() != null ? String.valueOf(boite.getAnnee()) : String.valueOf(anneeActuelle);
         txtAnnee = new TextField(valeurAnnee);
 
-        ajouterLigneInfo(grille, 0, "Numéro de référence :", boite.getNumero());
-        ajouterLigneEdition(grille, 1, "Nom de la boîte :", txtNom);
-        ajouterLigneEdition(grille, 2, "Année de production :", txtAnnee);
+        ajouterLigneInfo(grille, 0, "Référence :", boite.getNumero());
+        ajouterLigneEdition(grille, 1, "Nom :", txtNom);
+        ajouterLigneEdition(grille, 2, "Année :", txtAnnee);
 
         VBox zoneTheme = new VBox(10);
-        zoneTheme.setStyle("-fx-background-color: #f8f9fa; -fx-padding: 15; -fx-border-color: #e9ecef; -fx-border-radius: 5;");
+        zoneTheme.setPadding(new Insets(10, 0, 0, 0));
         
-        Label lblTheme = new Label("Rechercher et associer un thème :");
-        lblTheme.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #34495e;");
+        Label lblTheme = new Label("Rechercher un thème :");
+        lblTheme.getStyleClass().add("subtitle-label");
 
         txtRechercheTheme = new TextField();
         txtRechercheTheme.setPromptText("Ex: Star Wars");
-        txtRechercheTheme.setPrefWidth(250);
+        txtRechercheTheme.setPrefWidth(200);
         
         comboTheme = new ComboBox<>();
         configurerControleTheme();
@@ -301,8 +291,8 @@ public class ModifierBoiteVue extends BorderPane {
         VBox conteneur = new VBox(15);
         conteneur.setPadding(new Insets(20));
         
-        Label lblTitre = new Label("Rechercher un élément à ajouter à cette boîte personnalisée");
-        lblTitre.setStyle("-fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+        Label lblTitre = new Label("Rechercher un élément à ajouter");
+        lblTitre.getStyleClass().add("subtitle-label");
         
         HBox barreRecherche = new HBox(10);
         barreRecherche.setAlignment(Pos.CENTER_LEFT);
@@ -323,12 +313,12 @@ public class ModifierBoiteVue extends BorderPane {
         HBox zoneAction = new HBox(15);
         zoneAction.setAlignment(Pos.CENTER_LEFT);
         
-        Label lblQuantite = new Label("Quantité :");
+        Label lblQuantite = new Label("Qté :");
         txtQuantiteAjout = new TextField("1");
-        txtQuantiteAjout.setPrefWidth(60);
+        txtQuantiteAjout.setPrefWidth(50);
         
-        Button btnAjouter = new Button("➕ Ajouter à l'inventaire");
-        btnAjouter.setStyle("-fx-background-color: #2980b9; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;");
+        Button btnAjouter = new Button("➕ Ajouter");
+        btnAjouter.getStyleClass().add("button");
         
         btnAjouter.setOnAction(e -> gererAjoutElement());
         
@@ -356,35 +346,49 @@ public class ModifierBoiteVue extends BorderPane {
             return;
         }
         
-        // Extraction du code et sauvegarde en base puis en local pour actualiser la vue
-        if (type.equals("Pièce")) {
-            Piece piece = new Piece("REF-SIMULEE", "Pièce simulée", null, null); 
-            PieceQuantite pq = new PieceQuantite(piece, quantite, false, null);
-            boite.ajouterPiece(pq);
-            boiteService.ajouterPieceABoite(boite.getNumero(), pq);
-            afficherAlerte(AlertType.INFORMATION, "Succès", "Pièce ajoutée avec succès");
-        } else if (type.equals("Figurine")) {
-            Figurine fig = new Figurine("FIG-SIMULEE", "Figurine simulée", 0, null);
-            FigurineQuantite fq = new FigurineQuantite(fig, quantite);
-            boite.ajouterFigurine(fq);
-            afficherAlerte(AlertType.INFORMATION, "Succès", "Figurine ajoutée avec succès");
-        } else if (type.equals("Sous-boîte")) {
-            Boite b = new Boite("BOX-SIMULEE", "Boîte simulée", 2026, null, null);
-            BoiteQuantite bq = new BoiteQuantite(b, quantite);
-            boite.ajouterBoiteIncluse(bq);
-            afficherAlerte(AlertType.INFORMATION, "Succès", "Sous-boîte ajoutée avec succès");
+        String ref = "";
+        try {
+            if (selection.contains("Réf: ")) {
+                ref = selection.split("Réf: ")[1].split(" - ")[0].trim();
+            } else if (selection.contains("N°: ")) {
+                ref = selection.split("N°: ")[1].split(" - ")[0].trim();
+            }
+        } catch (Exception e) {
+            afficherAlerte(AlertType.ERROR, "Erreur de lecture", "Impossible d'analyser la référence.");
+            return;
         }
         
-        // Appel pour relancer le calcul des pieces et mettre la liste a jour sur l ecran
+        if (type.equals("Pièce") && pieceService != null) {
+            Piece piece = pieceService.rechercherPiece(ref);
+            if (piece != null) {
+                PieceQuantite pq = new PieceQuantite(piece, quantite, false, null);
+                boite.ajouterPiece(pq);
+                boiteService.ajouterPieceABoite(boite.getNumero(), pq);
+                afficherAlerte(AlertType.INFORMATION, "Succès", "Pièce ajoutée avec succès");
+            }
+        } else if (type.equals("Figurine") && boiteService != null) {
+            Figurine fig = boiteService.rechercherFigurine(ref);
+            if (fig != null) {
+                FigurineQuantite fq = new FigurineQuantite(fig, quantite);
+                boite.ajouterFigurine(fq);
+                boiteService.ajouterFigurineABoite(boite.getNumero(), fq);
+                afficherAlerte(AlertType.INFORMATION, "Succès", "Figurine ajoutée avec succès");
+            }
+        } else if (type.equals("Sous-boîte") && boiteService != null) {
+            Boite b = boiteService.rechercherBoiteParNumero(ref);
+            if (b != null) {
+                BoiteQuantite bq = new BoiteQuantite(b, quantite);
+                boite.ajouterBoiteIncluse(bq);
+                boiteService.ajouterSousBoiteABoite(boite.getNumero(), bq);
+                afficherAlerte(AlertType.INFORMATION, "Succès", "Sous-boîte ajoutée avec succès");
+            }
+        }
+        
         rafraichirAffichage();
     }
 
-    // Vide le conteneur des statistiques et le remplace par un nouveau genere avec les dernieres donnees
     private void rafraichirAffichage() {
         appliquerFiltreContenu();
-        
-        VBox nouvellesStats = creerSectionStatistiques(this.boite);
-        sectionStatistiques.getChildren().setAll(nouvellesStats.getChildren());
     }
 
     private void afficherAlerte(AlertType type, String titre, String message) {
@@ -402,8 +406,8 @@ public class ModifierBoiteVue extends BorderPane {
         HBox barreFiltre = new HBox(15);
         barreFiltre.setAlignment(Pos.CENTER_LEFT);
 
-        Label lblFiltre = new Label("Filtrer l'affichage :");
-        lblFiltre.setStyle("-fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+        Label lblFiltre = new Label("Filtrer :");
+        lblFiltre.getStyleClass().add("subtitle-label");
 
         comboFiltreContenu = new ComboBox<>();
         comboFiltreContenu.getItems().addAll("Tout afficher", "Pièces", "Figurines", "Sous-boîtes");
@@ -418,7 +422,6 @@ public class ModifierBoiteVue extends BorderPane {
         return conteneur;
     }
 
-    // Force la liste deroulante a afficher correctement le champ nom de l objet Theme
     private void configurerControleTheme() {
         comboTheme.setItems(tousLesThemes);
         
@@ -448,7 +451,7 @@ public class ModifierBoiteVue extends BorderPane {
         Theme themeSelectionne = comboTheme.getValue();
 
         if (nouveauNom.isEmpty() || nouvelleAnneeStr.isEmpty()) {
-            afficherAlerte(AlertType.WARNING, "Champs incomplets", "Veuillez renseigner le nom et l'année avant de sauvegarder");
+            afficherAlerte(AlertType.WARNING, "Champs incomplets", "Veuillez renseigner le nom et l'année");
             return;
         }
 
@@ -460,102 +463,25 @@ public class ModifierBoiteVue extends BorderPane {
                 boite.setTheme(themeSelectionne);
             }
             
-            afficherAlerte(AlertType.INFORMATION, "Mise à jour réussie", "Les informations textuelles ont été modifiées avec succès");
+            afficherAlerte(AlertType.INFORMATION, "Succès", "Informations modifiées avec succès");
 
         } catch (NumberFormatException ex) {
-            afficherAlerte(AlertType.ERROR, "Erreur de saisie", "L'année de production doit être un nombre entier");
+            afficherAlerte(AlertType.ERROR, "Erreur de saisie", "L'année doit être un nombre entier");
         }
-    }
-
-    private VBox creerSectionStatistiques(Boite boite) {
-        VBox sectionComplete = new VBox(15);
-        sectionComplete.setPadding(new Insets(20));
-        sectionComplete.setStyle("-fx-background-color: white; -fx-border-color: #dcdde1; -fx-border-radius: 5; -fx-background-radius: 5;");
-        
-        Label lblTitreStats = new Label("Statistiques du contenu réel");
-        lblTitreStats.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
-        
-        Separator separator = new Separator();
-        BoiteStats stats = boiteService.calculerStatsBoite(boite.getNumero());
-        
-        if (stats == null || stats.getTotalPieces() == 0) {
-            Label lblVide = new Label("Aucun inventaire détaillé disponible pour cette boîte");
-            lblVide.setStyle("-fx-text-fill: #e74c3c; -fx-font-style: italic;");
-            sectionComplete.getChildren().addAll(lblTitreStats, separator, lblVide);
-            return sectionComplete;
-        }
-
-        HBox conteneurDivise = new HBox(40);
-        conteneurDivise.setAlignment(Pos.TOP_LEFT);
-
-        VBox colonneGauche = new VBox(20);
-        colonneGauche.setPrefWidth(350);
-        colonneGauche.setMaxWidth(350);
-
-        GridPane grilleStats = new GridPane();
-        grilleStats.setVgap(15);
-        grilleStats.setHgap(30);
-        
-        ajouterLigneInfo(grilleStats, 0, "Total de pièces répertoriées :", String.valueOf(stats.getTotalPieces()));
-        ajouterLigneInfo(grilleStats, 1, "Dont pièces en supplément :", String.valueOf(stats.getTotalSupplement()));
-        ajouterLigneInfo(grilleStats, 2, "Nombre de figurines :", String.valueOf(stats.getTotalFigurines()));
-        ajouterLigneInfo(grilleStats, 3, "Sous-boîtes incluses :", String.valueOf(stats.getTotalSousBoites()));
-
-        Label lblCouleurs = new Label("Répartition par couleurs :");
-        lblCouleurs.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
-
-        FlowPane flowCouleurs = new FlowPane(10, 10);
-        flowCouleurs.setPrefWrapLength(320);
-
-        PieChart graphiqueCouleurs = new PieChart();
-        graphiqueCouleurs.setPrefSize(300, 300);
-        graphiqueCouleurs.setLegendVisible(false);
-
-        for (Map.Entry<Couleur, Integer> entree : stats.getRepartitionCouleurs().entrySet()) {
-            Couleur couleur = entree.getKey();
-            int quantite = entree.getValue();
-            String rgbHex = formaterRgb(couleur.getRgb());
-            
-            Label tagCouleur = new Label(couleur.getNom() + " (" + quantite + ")");
-            tagCouleur.setStyle("-fx-background-color: " + rgbHex + "; -fx-border-radius: 5; -fx-background-radius: 5; -fx-padding: 5 10; -fx-font-size: 11px;");
-            flowCouleurs.getChildren().add(tagCouleur);
-
-            PieChart.Data tranche = new PieChart.Data(couleur.getNom(), quantite);
-            graphiqueCouleurs.getData().add(tranche);
-        }
-
-        ScrollPane scrollCouleurs = new ScrollPane(flowCouleurs);
-        scrollCouleurs.setFitToWidth(true);
-        scrollCouleurs.setPrefHeight(120);
-
-        colonneGauche.getChildren().addAll(grilleStats, lblCouleurs, scrollCouleurs);
-        conteneurDivise.getChildren().addAll(colonneGauche, graphiqueCouleurs);
-        HBox.setHgrow(graphiqueCouleurs, Priority.ALWAYS);
-
-        sectionComplete.getChildren().addAll(lblTitreStats, separator, conteneurDivise);
-        return sectionComplete;
     }
 
     private void ajouterLigneInfo(GridPane grille, int ligne, String libelle, String valeur) {
         Label lblLibelle = new Label(libelle);
-        lblLibelle.setStyle("-fx-font-size: 14px; -fx-text-fill: #34495e;");
         Label lblValeur = new Label(valeur);
-        lblValeur.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+        lblValeur.setStyle("-fx-font-weight: bold;");
         grille.add(lblLibelle, 0, ligne);
         grille.add(lblValeur, 1, ligne);
     }
 
     private void ajouterLigneEdition(GridPane grille, int ligne, String libelle, TextField champ) {
         Label lblLibelle = new Label(libelle);
-        lblLibelle.setStyle("-fx-font-size: 14px; -fx-text-fill: #34495e;");
-        champ.setStyle("-fx-font-size: 14px;");
         champ.setPrefWidth(220);
         grille.add(lblLibelle, 0, ligne);
         grille.add(champ, 1, ligne);
-    }
-
-    private String formaterRgb(String rgb) {
-        if (rgb == null || rgb.isBlank()) return "#ffffff";
-        return rgb.startsWith("#") ? rgb : "#" + rgb;
     }
 }
