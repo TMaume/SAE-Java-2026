@@ -44,8 +44,8 @@ public class CreerMenuVue extends VBox {
         });
 
         btnPiece.setOnAction(e -> {
-            Label lblPlaceholder = new Label("Formulaire : Ajouter une pièce (À faire)");
-            controller.chargerContenu(conteneurCentral, lblPlaceholder);
+            CreerPieceVue CreerPieceVue = new CreerPieceVue(controller.getPieceService());
+            controller.chargerContenu(conteneurCentral, CreerPieceVue);
         });
 
         btnTheme.setOnAction(e -> {

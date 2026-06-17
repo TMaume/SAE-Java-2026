@@ -115,4 +115,8 @@ public class PieceService {
         }
             return resultats;
         }
+
+        public boolean idvalide(int id){
+            return pieceBD.idvalide(id);
+        }
 }

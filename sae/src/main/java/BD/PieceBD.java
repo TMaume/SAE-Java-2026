@@ -217,4 +217,16 @@ public class PieceBD {
         }
         return res;
     }
+
+    public boolean idvalide(int id){
+        try{Statement s = createStatement();
+            ResultSet r = s.executeQuery("select numpiece from PIECE");
+        while(!r.isLast()){
+            r.next();
+            if(r.getInt(1) == id) return false;
+        }
+        r.close();
+        return true;}
+        catch(SQLException e) {return false;}
+    }
 }
