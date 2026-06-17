@@ -112,6 +112,11 @@ public class DashboardVue {
         controller.chargerContenu(conteneurCentral, creerBoiteVue);
         activerBouton(btnAddBoite);
     }
+    private void affichageCreationTheme(StackPane conteneurCentral, Button btn) {
+        CreerThemeVue vue = new CreerThemeVue(controller.getThemeService());
+        controller.chargerContenu(conteneurCentral, vue);
+        activerBouton(btn);
+    }
 
     // private void afficherModifBoite(StackPane conteneurCentral, Button btnModContenu) {
     //     ModifierBoiteVue modifierBoiteVue = new ModifierBoiteVue();
@@ -178,10 +183,7 @@ public class DashboardVue {
                 controller.chargerContenu(conteneurCentral, new Label("Formulaire : Ajouter une pièce (À faire)"));
                 activerBouton(btnAddPiece);
             });
-            btnAddTheme.setOnAction(e -> {
-                controller.chargerContenu(conteneurCentral, new Label("Formulaire : Créer un thème (À faire)"));
-                activerBouton(btnAddTheme);
-            });
+            btnAddTheme.setOnAction(e -> affichageCreationTheme(conteneurCentral, btnAddTheme));
             // btnModContenu.setOnAction(e -> afficherModifBoite(conteneurCentral, btnModContenu));
         }
 
