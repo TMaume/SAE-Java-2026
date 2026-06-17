@@ -11,7 +11,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import java.net.URL;
 
 /**
  * Vue principale agissant comme conteneur pour le menu et les sous-vues.
@@ -189,7 +188,7 @@ public class DashboardVue {
     public void activerBouton(Button nouveauBouton) {
         if (boutonActif != null) {
             if(DashboardVue.theme)boutonActif.setStyle("-fx-background-color: #373b41; -fx-text-fill: white; -fx-font-size: 13px; -fx-cursor: hand;");
-            boutonActif.setStyle("-fx-background-color: transparent; -fx-text-fill: #4f5f6f; -fx-font-size: 13px; -fx-cursor: hand;");
+            else boutonActif.setStyle("-fx-background-color: transparent; -fx-text-fill: #4f5f6f; -fx-font-size: 13px; -fx-cursor: hand;");
         }
         if(!DashboardVue.theme)
         nouveauBouton.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 13px; -fx-cursor: hand; -fx-font-weight: bold;");
@@ -270,7 +269,8 @@ public class DashboardVue {
         if (s==null)return;
         if(DashboardVue.theme)str = "sombre";
         s.getStylesheets().clear();
-        s.getStylesheets().add(getClass().getResource(""+str+"-theme.css").toExternalForm());
+        //s.getStylesheets().add(getClass().getResource(""+str+"-theme.css").toExternalForm());
+        s.getStylesheets().add(getClass().getResource("test.css").toExternalForm());
         System.out.println(str);
     }
 }
