@@ -45,3 +45,6 @@ buildNumber.properties
 # Pour utiliser MVN sur nixOS 
 *.nix
 *.lock
+
+*.yml
+init-BD.bat
