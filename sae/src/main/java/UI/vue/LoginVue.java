@@ -3,6 +3,7 @@ package UI.vue;
 import App.*;
 import BD.*;
 import UI.Controller.AuthController;
+import UI.Controller.ParametreController;
 import UI.Controller.DashboardController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -10,6 +11,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class LoginVue {
     private final Stage stage;
@@ -24,10 +28,9 @@ public class LoginVue {
         VBox root = new VBox(15);
         root.setAlignment(Pos.CENTER);
         root.setPadding(new Insets(40));
-        root.setStyle("-fx-background-color: #f4f6f9;");
 
         Label lblTitre = new Label("Briqu'IUTO - Connexion");
-        lblTitre.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+        lblTitre.getStyleClass().add("title-label");
 
         TextField txtIdentifiant = new TextField();
         txtIdentifiant.setPromptText("Identifiant");
@@ -41,23 +44,21 @@ public class LoginVue {
         lblErreur.setStyle("-fx-text-fill: red; -fx-wrap-text: true; -fx-max-width: 300px; -fx-alignment: center;");
 
         Button btnConnexion = new Button("Se connecter");
-        btnConnexion.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold;");
+        btnConnexion.getStyleClass().add("btn-primary");
         btnConnexion.setPrefWidth(250);
 
         Hyperlink linkInscription = new Hyperlink("Pas encore de compte ? S'inscrire");
+        linkInscription.getStyleClass().add("label");
 
-        // ACTIONS
         btnConnexion.setOnAction(e -> {
-            lblErreur.setText(""); // Réinitialise l'erreur
+            lblErreur.setText("");
             Utilisateur u = authController.connecter(txtIdentifiant.getText(), txtMotDePasse.getText(), lblErreur);
             
             if (u != null) {
                 try {
-                    // 1. Connexion à la base de données (utilise tes identifiants si ceux par défaut ne marchent pas)
                     ConnexionMySQL connexion = new ConnexionMySQL();
                     connexion.connecter(null, null, null, null);
 
-                    // 2. Initialisation de la couche d'accès aux données (DAO)
                     BoiteBD boiteBD = new BoiteBD(connexion);
                     ThemeBD themeBD = new ThemeBD(connexion);
                     ThemeParentBD themeParentBD = new ThemeParentBD(connexion);
@@ -69,13 +70,15 @@ public class LoginVue {
                     CategorieBD categorieBD = new CategorieBD(connexion);
                     CouleurBD couleurBD = new CouleurBD(connexion);
 
-                    // 3. Initialisation de la couche Métier (Services)
                     ThemeService themeService = new ThemeService(themeBD, themeParentBD);
                     BoiteService boiteService = new BoiteService(boiteBD, contenuBD, contenirpBD, contenirfBD, contenirbBD, themeService);
                     PieceService pieceService = new PieceService(pieceBD, categorieBD, couleurBD);
-                    CollectionService collectionService = new CollectionService();
+                    
+                    // --- Initialisation du CollectionService avec JSON pour l'utilisateur connecté ---
+                    Path cheminJSON = Paths.get("sauvegardes", "collection_" + u.getIdentifiant().toLowerCase() + ".json");
+                    CollectionService collectionService = new CollectionService(cheminJSON, boiteService, pieceService);
+                    // -------------------------------------------------------------------------------
 
-                    // 4. On passe enfin les VRAIS services au contrôleur du Dashboard
                     DashboardController dashboardController = new DashboardController(u, boiteService, pieceService, themeService, collectionService);
                     DashboardVue dashboardVue = new DashboardVue(stage, dashboardController, authController);
                     dashboardVue.afficher();
@@ -96,9 +99,12 @@ public class LoginVue {
 
         Scene sceneActuelle = stage.getScene();
         if (sceneActuelle == null) {
-            stage.setScene(new Scene(root, 1024, 768));
+            Scene scene = new Scene(root, 1024, 768);
+            stage.setScene(scene);
+            ParametreController.appliquerTheme(scene);
         } else {
             sceneActuelle.setRoot(root);
+            ParametreController.appliquerTheme(sceneActuelle);
         }
     }
 }

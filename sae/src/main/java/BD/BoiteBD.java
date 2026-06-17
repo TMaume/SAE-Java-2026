@@ -37,7 +37,7 @@ public class BoiteBD {
         if (b == null) {
             throw new IllegalArgumentException("boite");
         }
-        String sql = "INSERT INTO BOITE (numboite, nomboite, annee, nbpieces, idtheme) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO BOITE (numboite, nomboite, annee, nbpieces, idtheme, image) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = prepareStatement(sql)) {
             ps.setString(1, b.getNumero());
             ps.setString(2, b.getNom());
@@ -52,6 +52,11 @@ public class BoiteBD {
                 ps.setInt(4, b.getNbPieces());
             }
             ps.setInt(5, b.getTheme().getIdTheme());
+            if (b.getImageBoite() == null || b.getImageBoite().isBlank()) {
+                ps.setNull(6, Types.VARCHAR);
+            } else {
+                ps.setString(6, b.getImageBoite());
+            }
             return ps.executeUpdate();
         } catch (SQLException e) {
             return 0;
@@ -72,7 +77,7 @@ public class BoiteBD {
         if (b == null) {
             throw new IllegalArgumentException("boite");
         }
-        String sql = "UPDATE BOITE SET nomboite = ?, annee = ?, nbpieces = ?, idtheme = ? WHERE numboite = ?";
+        String sql = "UPDATE BOITE SET nomboite = ?, annee = ?, nbpieces = ?, idtheme = ?, image = ? WHERE numboite = ?";
         try (PreparedStatement ps = prepareStatement(sql)) {
             ps.setString(1, b.getNom());
             if (b.getAnnee() == null) {
@@ -86,7 +91,12 @@ public class BoiteBD {
                 ps.setInt(3, b.getNbPieces());
             }
             ps.setInt(4, b.getTheme().getIdTheme());
-            ps.setString(5, b.getNumero());
+            if (b.getImageBoite() == null || b.getImageBoite().isBlank()) {
+                ps.setNull(5, Types.VARCHAR);
+            } else {
+                ps.setString(5, b.getImageBoite());
+            }
+            ps.setString(6, b.getNumero());
             return ps.executeUpdate();
         } catch (SQLException e) {
             return 0;

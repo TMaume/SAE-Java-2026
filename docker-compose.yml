@@ -1,0 +1,21 @@
+services:
+  db:
+    image: mariadb:latest
+    container_name: briquiuto_db
+    # Ajout de l'option pour ignorer la casse des tables
+    command: --local-infile=1 --lower-case-table-names=1
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      # Alignement sur les valeurs par défaut de ton squelette Java
+      MYSQL_DATABASE: dbo22403450   # ← tout en minuscules
+      MYSQL_USER: o22403450
+      MYSQL_PASSWORD: o22403450
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    #Pour acceder a la base de donnée depuis nxOS
+    #mariadb -h 127.0.0.1 -P 3306 -u o22403450 -po22403450
+
+volumes:
+  db_data:

@@ -1,6 +1,8 @@
 package UI.console;
 
 import java.util.Scanner;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import App.BoiteService;
 import App.PieceService;
 import App.ThemeService;
@@ -54,7 +56,10 @@ public class MenuConsole {
             PieceService pieceService = new PieceService(pieceBD, categorieBD, couleurBD);
             BoiteService boiteService = new BoiteService(boiteBD, contenuBD, contenirpBD, contenirfBD, contenirbBD, themeService);
             
-            CollectionService collection = new CollectionService();
+            // --- CORRECTION ICI : Instanciation avec le fichier JSON personnalisé ---
+            Path cheminJSON = Paths.get("sauvegardes", "collection_" + utilisateur.getIdentifiant().toLowerCase() + ".json");
+            CollectionService collection = new CollectionService(cheminJSON, boiteService, pieceService);
+            // ------------------------------------------------------------------------
 
             boolean estAdmin = utilisateur.getRole() == RoleUtilisateur.ADMIN;
             boolean continuer = true;

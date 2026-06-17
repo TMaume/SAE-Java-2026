@@ -42,9 +42,13 @@ buildNumber.properties
 .project
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
+<<<<<<< HEAD
 # Pour utiliser MVN sur nixOS 
 *.nix
 *.lock
 
 *.yml
 init-BD.bat
+=======
+# Pour utiliser MVN sur nixOS 
+>>>>>>> 2b9c42a111ba6b255e2d21be39f371d5e704bb0f

@@ -5,6 +5,8 @@ import BD.ContenirbBD;
 import BD.ContenirfBD;
 import BD.ContenirpBD;
 import BD.Contenu;
+import UI.Exception.BoiteExistanteException;
+
 import java.util.List;
 import java.util.UUID;
 import java.util.ArrayList;
@@ -37,6 +39,19 @@ public class BoiteService {
         this.contenirfBD = contenirfBD;
         this.contenirbBD = contenirbBD;
         this.themeService = themeService;
+    }
+
+    /**
+     * Ajoute une nouvelle boîte en base de données.
+     *
+     * @param boite la boîte à ajouter
+     * @throws BoiteExistanteException si une boîte avec le même numéro existe déjà
+     */
+    public void ajouterBoite(Boite boite) throws BoiteExistanteException {
+        if (rechercherBoiteParNumero(boite.getNumero()) != null) {
+            throw new BoiteExistanteException("Une boîte avec le numéro " + boite.getNumero() + " existe déjà.");
+        }
+        boiteBD.insererBoite(boite);
     }
 
     /**
@@ -229,8 +244,8 @@ public class BoiteService {
     /**
      * Récupère une portion restreinte de boîtes (Pagination).
      *
-     * @param limite nombre maximum de résultats
-     * @param offset décalage initial
+     * @param page numéro de la page active
+     * @param taillePage nombre maximum de résultats par page
      * @return la liste paginée des boîtes
      */
     public List<Boite> listerBoitesPaginees(int page, int taillePage) {

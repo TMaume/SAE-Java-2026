@@ -2,6 +2,7 @@ package UI.vue;
 
 import App.Utilisateur;
 import UI.Controller.AuthController;
+import UI.Controller.ParametreController;
 import UI.Controller.DashboardController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -19,15 +20,13 @@ public class RegisterVue {
         this.authController = authController;
     }
 
-
     public void afficher() {
         VBox root = new VBox(15);
         root.setAlignment(Pos.CENTER);
         root.setPadding(new Insets(40));
-        root.setStyle("-fx-background-color: #f4f6f9;");
 
         Label lblTitre = new Label("Briqu'IUTO - Inscription");
-        lblTitre.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+        lblTitre.getStyleClass().add("title-label");
 
         TextField txtIdentifiant = new TextField();
         txtIdentifiant.setPromptText("Choisissez un identifiant");
@@ -45,12 +44,11 @@ public class RegisterVue {
         lblErreur.setStyle("-fx-text-fill: red;");
 
         Button btnInscription = new Button("Créer mon compte");
-        btnInscription.setStyle("-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold;");
+        btnInscription.getStyleClass().add("btn-primary");
         btnInscription.setPrefWidth(250);
 
         Hyperlink linkConnexion = new Hyperlink("Déjà un compte ? Se connecter");
 
-        // actions
         btnInscription.setOnAction(e -> {
             Utilisateur u = authController.creerCompte(
                 txtIdentifiant.getText(), 
@@ -66,7 +64,6 @@ public class RegisterVue {
         });
 
         linkConnexion.setOnAction(e -> {
-
             LoginVue loginVue = new LoginVue(stage, authController);
             loginVue.afficher(); 
         });
@@ -75,9 +72,12 @@ public class RegisterVue {
 
         Scene sceneActuelle = stage.getScene();
         if (sceneActuelle == null) {
-            stage.setScene(new Scene(root, 1024, 768));
+            Scene scene = new Scene(root, 1024, 768);
+            stage.setScene(scene);
+            ParametreController.appliquerTheme(scene);
         } else {
             sceneActuelle.setRoot(root);
+            ParametreController.appliquerTheme(sceneActuelle);
         }
     }
 }
