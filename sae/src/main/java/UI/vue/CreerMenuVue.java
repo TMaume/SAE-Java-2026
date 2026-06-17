@@ -82,7 +82,7 @@ public class CreerMenuVue extends VBox {
             vueIcone.setPreserveRatio(true);
             contenu.getChildren().add(vueIcone);
         } catch (Exception ex) {
-            Label lblFallback = new Label("➕");
+            Label lblFallback = new Label("+");
             lblFallback.setStyle("-fx-font-size: 60px;");
             contenu.getChildren().add(lblFallback);
         }

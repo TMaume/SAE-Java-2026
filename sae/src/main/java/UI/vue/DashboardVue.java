@@ -239,7 +239,7 @@ public class DashboardVue {
     }
 
     /**
-     * Crée un bouton rectangulaire épais avec une image centrée.
+     * Crée un bouton rectangulaire avec une image centrée.
      */
     private Button creerBoutonMenu(String texte, String iconPath) {
         Button btn = new Button();
