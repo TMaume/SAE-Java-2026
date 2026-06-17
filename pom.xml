@@ -11,11 +11,6 @@
         <maven.compiler.target>21</maven.compiler.target>
         <javafx.version>21.0.1</javafx.version>
     </properties>
-<<<<<<< HEAD
-    
-=======
-
->>>>>>> 2b9c42a111ba6b255e2d21be39f371d5e704bb0f
     <dependencies>
         <dependency>
             <groupId>org.mariadb.jdbc</groupId>
@@ -63,17 +58,12 @@
             <version>17.0.6</version>
         </dependency>
     </dependencies>
-<<<<<<< HEAD
     
-=======
 
->>>>>>> 2b9c42a111ba6b255e2d21be39f371d5e704bb0f
     <build>
         <sourceDirectory>sae/src/main/java</sourceDirectory>
         <testSourceDirectory>sae/src/test/java</testSourceDirectory>
         
-<<<<<<< HEAD
-=======
         <resources>
             <resource>
                 <directory>sae/src/main/java</directory>
@@ -88,7 +78,6 @@
             </resource>
         </resources>
 
->>>>>>> 2b9c42a111ba6b255e2d21be39f371d5e704bb0f
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
