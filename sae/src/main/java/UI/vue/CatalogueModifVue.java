@@ -3,9 +3,9 @@ package UI.vue;
 import App.Boite;
 import App.BoiteService;
 import App.CollectionService;
-import App.EtatBoite;
 import App.Theme;
 import App.ThemeService;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -14,6 +14,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 /**
@@ -24,7 +28,7 @@ public class CatalogueModifVue {
     private final ThemeService themeService;
     private final CollectionService collectionService;
     private final Consumer<Boite> actionClicBoite;
-    
+
     private int pageCourante = 1;
     private final int taillePage = 20;
     private boolean estVueGrille = true;
@@ -35,6 +39,8 @@ public class CatalogueModifVue {
     private VBox conteneurListe;
 
     private TextField txtRecherche;
+    private ListView<String> listeSuggestions;
+    private PopupControl popupSuggestions;
     private ComboBox<Theme> comboTheme;
     private TextField txtPageExacte;
     private Label lblPagination;
@@ -42,14 +48,14 @@ public class CatalogueModifVue {
     private Button btnSuivant;
     private Label lblInfosTotal;
 
-    /**
-     * Construit la vue du catalogue.
-     *
-     * @param boiteService le service de gestion des boîtes
-     * @param themeService le service de gestion des thèmes
-     * @param collectionService le service permettant d'ajouter une boîte à la collection personnelle (peut être null)
-     * @param actionClicBoite l'action déclenchée lors du clic sur une boîte
-     */
+    private static final int DELAI_SUGGESTION_MS = 250;
+    private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor(r -> {
+        Thread t = new Thread(r, "suggestion-scheduler-modif");
+        t.setDaemon(true);
+        return t;
+    });
+    private ScheduledFuture<?> tacheSuggestion;
+
     public CatalogueModifVue(BoiteService boiteService, ThemeService themeService, CollectionService collectionService, Consumer<Boite> actionClicBoite) {
         this.boiteService = boiteService;
         this.themeService = themeService;
@@ -59,18 +65,14 @@ public class CatalogueModifVue {
         chargerPage();
     }
 
-    /**
-     * Retourne le composant racine de la vue.
-     *
-     * @return le BorderPane principal
-     */
     public Node getVue() {
         return root;
     }
 
-    /**
-     * Initialise l'interface globale en assemblant les différentes zones.
-     */
+    // -----------------------------------------------------------------------
+    // CONSTRUCTION DE L'INTERFACE
+    // -----------------------------------------------------------------------
+
     private void initialiserInterface() {
         root = new BorderPane();
         root.getStyleClass().add("root");
@@ -78,22 +80,17 @@ public class CatalogueModifVue {
         VBox enteteGlobal = new VBox(15);
         enteteGlobal.setPadding(new Insets(0, 0, 20, 0));
         enteteGlobal.getChildren().addAll(creerEnTete(), creerBarreFiltres());
-        
+
         root.setTop(enteteGlobal);
         root.setCenter(creerZoneAffichage());
         root.setBottom(creerPiedDePage());
     }
 
-    /**
-     * Crée la partie supérieure contenant le titre et le bouton de changement de vue.
-     *
-     * @return un HBox contenant l'en-tête
-     */
     private HBox creerEnTete() {
         HBox header = new HBox(20);
         header.setAlignment(Pos.CENTER_LEFT);
 
-        Label lblTitre = new Label("Catalogue des boites modifables");
+        Label lblTitre = new Label("Catalogue des boites modifiables");
         lblTitre.getStyleClass().add("titre-label");
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -109,36 +106,22 @@ public class CatalogueModifVue {
         return header;
     }
 
-    /**
-     * Bascule entre l'affichage en grille et en liste.
-     *
-     * @param bouton le bouton ayant déclenché l'action
-     */
     private void basculerVue(Button bouton) {
         estVueGrille = !estVueGrille;
         bouton.setText(estVueGrille ? "Affichage : Grille" : "Affichage : Liste");
         chargerPage();
     }
 
-    /**
-     * Crée la barre de recherche et les filtres.
-     *
-     * @return un HBox contenant les filtres
-     */
     private HBox creerBarreFiltres() {
         HBox barreFiltres = new HBox(10);
         barreFiltres.setAlignment(Pos.CENTER_LEFT);
 
-        txtRecherche = new TextField();
-        txtRecherche.setPromptText("Rechercher par nom...");
-        txtRecherche.setPrefWidth(250);
-        txtRecherche.setOnAction(e -> appliquerFiltres());
+        StackPane conteneurRecherche = creerChampRechercheAvecSuggestions();
 
         comboTheme = new ComboBox<>();
         comboTheme.setPromptText("Tous les thèmes");
         comboTheme.setPrefWidth(200);
         comboTheme.getItems().add(null);
-        
         if (themeService != null) {
             comboTheme.getItems().addAll(themeService.listerThemes());
         }
@@ -151,33 +134,127 @@ public class CatalogueModifVue {
         btnReinitialiser.getStyleClass().add("btn-danger");
         btnReinitialiser.setOnAction(e -> reinitialiserFiltres());
 
-        barreFiltres.getChildren().addAll(txtRecherche, comboTheme, btnFiltrer, btnReinitialiser);
+        barreFiltres.getChildren().addAll(conteneurRecherche, comboTheme, btnFiltrer, btnReinitialiser);
         return barreFiltres;
     }
 
-    /**
-     * Applique les filtres et retourne à la première page.
-     */
+    // -----------------------------------------------------------------------
+    // AUTOCOMPLETION
+    // -----------------------------------------------------------------------
+
+    private StackPane creerChampRechercheAvecSuggestions() {
+        txtRecherche = new TextField();
+        txtRecherche.setPromptText("Rechercher par nom...");
+        txtRecherche.setPrefWidth(250);
+
+        listeSuggestions = new ListView<>();
+        listeSuggestions.setPrefWidth(250);
+        listeSuggestions.setMaxHeight(180);
+        listeSuggestions.getStyleClass().add("suggestions-list");
+
+        popupSuggestions = new PopupControl();
+        popupSuggestions.setAutoHide(true);
+        popupSuggestions.getScene().setRoot(listeSuggestions);
+
+        listeSuggestions.setOnMouseClicked(e -> {
+            String valeur = listeSuggestions.getSelectionModel().getSelectedItem();
+            if (valeur != null) {
+                txtRecherche.setText(valeur);
+                popupSuggestions.hide();
+                appliquerFiltres();
+            }
+        });
+
+        txtRecherche.textProperty().addListener((obs, ancien, nouveau) -> {
+            if (tacheSuggestion != null) tacheSuggestion.cancel(false);
+
+            if (nouveau == null || nouveau.trim().length() < 2) {
+                popupSuggestions.hide();
+                return;
+            }
+
+            tacheSuggestion = scheduler.schedule(
+                () -> Platform.runLater(() -> afficherSuggestions(nouveau.trim())),
+                DELAI_SUGGESTION_MS, TimeUnit.MILLISECONDS
+            );
+        });
+
+        txtRecherche.setOnAction(e -> {
+            popupSuggestions.hide();
+            appliquerFiltres();
+        });
+
+        txtRecherche.setOnKeyPressed(e -> {
+            switch (e.getCode()) {
+                case ESCAPE -> popupSuggestions.hide();
+                case DOWN -> {
+                    if (popupSuggestions.isShowing()) {
+                        listeSuggestions.requestFocus();
+                        listeSuggestions.getSelectionModel().selectFirst();
+                    }
+                }
+                default -> {}
+            }
+        });
+
+        listeSuggestions.setOnKeyPressed(e -> {
+            switch (e.getCode()) {
+                case ENTER -> {
+                    String valeur = listeSuggestions.getSelectionModel().getSelectedItem();
+                    if (valeur != null) {
+                        txtRecherche.setText(valeur);
+                        popupSuggestions.hide();
+                        appliquerFiltres();
+                    }
+                }
+                case ESCAPE -> popupSuggestions.hide();
+                default -> {}
+            }
+        });
+
+        return new StackPane(txtRecherche);
+    }
+
+    private void afficherSuggestions(String motCle) {
+        if (boiteService == null) return;
+
+        List<Boite> resultats = boiteService.rechercherBoitesParNom(motCle);
+        if (resultats.isEmpty()) {
+            popupSuggestions.hide();
+            return;
+        }
+
+        listeSuggestions.getItems().clear();
+        int max = Math.min(resultats.size(), 8);
+        for (int i = 0; i < max; i++) {
+            listeSuggestions.getItems().add(resultats.get(i).getNom());
+        }
+
+        if (!popupSuggestions.isShowing() && txtRecherche.getScene() != null) {
+            javafx.geometry.Bounds bounds = txtRecherche.localToScreen(txtRecherche.getBoundsInLocal());
+            if (bounds != null) {
+                popupSuggestions.show(txtRecherche, bounds.getMinX(), bounds.getMaxY() + 2);
+            }
+        }
+    }
+
+    // -----------------------------------------------------------------------
+    // FILTRES ET NAVIGATION
+    // -----------------------------------------------------------------------
+
     private void appliquerFiltres() {
         pageCourante = 1;
         chargerPage();
     }
 
-    /**
-     * Efface les filtres et retourne à la première page.
-     */
     private void reinitialiserFiltres() {
         txtRecherche.clear();
         comboTheme.setValue(null);
+        popupSuggestions.hide();
         pageCourante = 1;
         chargerPage();
     }
 
-    /**
-     * Crée la zone centrale avec barre de défilement contenant la grille ou la liste.
-     *
-     * @return un ScrollPane configuré
-     */
     private ScrollPane creerZoneAffichage() {
         scrollPane = new ScrollPane();
         scrollPane.setFitToWidth(true);
@@ -193,11 +270,6 @@ public class CatalogueModifVue {
         return scrollPane;
     }
 
-    /**
-     * Crée le pied de page avec les contrôles de pagination.
-     *
-     * @return un HBox contenant la pagination
-     */
     private HBox creerPiedDePage() {
         HBox footer = new HBox(15);
         footer.setAlignment(Pos.CENTER);
@@ -226,9 +298,6 @@ public class CatalogueModifVue {
         return footer;
     }
 
-    /**
-     * Recule d'une page si possible.
-     */
     private void pagePrecedente() {
         if (pageCourante > 1) {
             pageCourante--;
@@ -236,53 +305,33 @@ public class CatalogueModifVue {
         }
     }
 
-    /**
-     * Avance d'une page.
-     */
     private void pageSuivante() {
         pageCourante++;
         chargerPage();
     }
 
-    /**
-     * Tente de naviguer vers la page saisie dans le champ texte.
-     */
     private void allerAPageExacte() {
         try {
-            int pageDemandee = Integer.parseInt(txtPageExacte.getText());
-            pageCourante = pageDemandee;
-            chargerPage();
-        } catch (NumberFormatException ex) {
-            chargerPage();
-        }
+            pageCourante = Integer.parseInt(txtPageExacte.getText());
+        } catch (NumberFormatException ignored) {}
+        chargerPage();
     }
 
-    /**
-     * Récupère les données depuis le service et met à jour l'affichage.
-     */
+    // -----------------------------------------------------------------------
+    // CHARGEMENT
+    // -----------------------------------------------------------------------
+
     private void chargerPage() {
-        if (boiteService == null) {
-            return;
-        }
+        if (boiteService == null) return;
 
         String recherche = txtRecherche.getText();
         Theme themeSelectionne = comboTheme.getValue();
         Integer idTheme = (themeSelectionne != null) ? themeSelectionne.getIdTheme() : null;
 
         int totalBoites = boiteService.obtenirNombreTotalBoitesFiltrees(recherche, idTheme);
-        int totalPages = (int) Math.ceil((double) totalBoites / taillePage);
-        
-        if (totalPages == 0) {
-            totalPages = 1;
-        }
+        int totalPages = Math.max(1, (int) Math.ceil((double) totalBoites / taillePage));
 
-        if (pageCourante > totalPages) {
-            pageCourante = totalPages;
-        }
-        
-        if (pageCourante < 1) {
-            pageCourante = 1;
-        }
+        pageCourante = Math.max(1, Math.min(pageCourante, totalPages));
 
         mettreAJourTextesPagination(totalBoites, totalPages);
 
@@ -293,14 +342,11 @@ public class CatalogueModifVue {
         } else {
             afficherVueListe(boites);
         }
+
+        // Remonter en haut du scroll après chaque chargement de page
+        Platform.runLater(() -> scrollPane.setVvalue(0));
     }
 
-    /**
-     * Met à jour les étiquettes et boutons de la pagination.
-     *
-     * @param totalBoites le nombre total de boîtes trouvées
-     * @param totalPages le nombre total de pages
-     */
     private void mettreAJourTextesPagination(int totalBoites, int totalPages) {
         lblInfosTotal.setText(totalBoites + " boîtes trouvées");
         txtPageExacte.setText(String.valueOf(pageCourante));
@@ -313,11 +359,10 @@ public class CatalogueModifVue {
         btnSuivant.setDisable(pageCourante >= totalPages);
     }
 
-    /**
-     * Affiche la liste des boîtes sous forme de cartes.
-     *
-     * @param boites la liste des boîtes à afficher
-     */
+    // -----------------------------------------------------------------------
+    // AFFICHAGE
+    // -----------------------------------------------------------------------
+
     private void afficherVueGrille(List<Boite> boites) {
         conteneurGrille.getChildren().clear();
         for (Boite b : boites) {
@@ -326,11 +371,6 @@ public class CatalogueModifVue {
         scrollPane.setContent(conteneurGrille);
     }
 
-    /**
-     * Affiche la liste des boîtes sous forme de liste détaillée.
-     *
-     * @param boites la liste des boîtes à afficher
-     */
     private void afficherVueListe(List<Boite> boites) {
         conteneurListe.getChildren().clear();
         for (Boite b : boites) {
@@ -339,12 +379,6 @@ public class CatalogueModifVue {
         scrollPane.setContent(conteneurListe);
     }
 
-    /**
-     * Construit l'interface graphique d'une carte représentant une boîte.
-     *
-     * @param b la boîte à représenter
-     * @return un VBox contenant la carte
-     */
     private VBox creerCarteBoite(Boite b) {
         VBox carte = new VBox(10);
         carte.getStyleClass().add("carte");
@@ -361,8 +395,7 @@ public class CatalogueModifVue {
 
         String url = b.getImageBoite();
         if (url != null && !url.isBlank()) {
-            Image image = new Image(url, true);
-            imageView.setImage(image);
+            imageView.setImage(new Image(url, true));
         }
 
         VBox conteneurImage = new VBox(imageView);
@@ -381,7 +414,7 @@ public class CatalogueModifVue {
         Label lblTheme = new Label("Thème : " + nomTheme);
         lblTheme.getStyleClass().add("label");
 
-        String strAnnee = (b.getAnnee() != null) ? String.valueOf(b.getAnnee()) : "N/A";
+        String strAnnee  = (b.getAnnee()    != null) ? String.valueOf(b.getAnnee())    : "N/A";
         String strPieces = (b.getNbPieces() != null) ? String.valueOf(b.getNbPieces()) : "?";
         Label lblDetails = new Label(strAnnee + " • " + strPieces + " pièces");
         lblDetails.getStyleClass().add("label");
@@ -390,12 +423,6 @@ public class CatalogueModifVue {
         return carte;
     }
 
-    /**
-     * Construit l'interface graphique d'une ligne représentant une boîte.
-     *
-     * @param b la boîte à représenter
-     * @return un HBox contenant la ligne
-     */
     private HBox creerLigneBoite(Boite b) {
         HBox ligne = new HBox(20);
         ligne.setPadding(new Insets(10, 15, 10, 15));
@@ -410,10 +437,9 @@ public class CatalogueModifVue {
 
         String url = b.getImageBoite();
         if (url != null && !url.isBlank()) {
-            Image image = new Image(url, true);
-            imageView.setImage(image);
+            imageView.setImage(new Image(url, true));
         }
-        
+
         VBox conteneurImage = new VBox(imageView);
         conteneurImage.setAlignment(Pos.CENTER);
         conteneurImage.setPrefWidth(70);
@@ -428,7 +454,7 @@ public class CatalogueModifVue {
         Label lblTheme = new Label(nomTheme);
         lblTheme.getStyleClass().add("label");
 
-        String strAnnee = (b.getAnnee() != null) ? String.valueOf(b.getAnnee()) : "N/A";
+        String strAnnee  = (b.getAnnee()    != null) ? String.valueOf(b.getAnnee())    : "N/A";
         String strPieces = (b.getNbPieces() != null) ? String.valueOf(b.getNbPieces()) : "?";
         Label lblDetails = new Label(strAnnee + "  |  " + strPieces + " pcs");
         lblDetails.getStyleClass().add("label");
