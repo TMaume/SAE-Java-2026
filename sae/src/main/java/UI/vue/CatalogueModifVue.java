@@ -93,7 +93,7 @@ public class CatalogueModifVue {
         HBox header = new HBox(20);
         header.setAlignment(Pos.CENTER_LEFT);
 
-        Label lblTitre = new Label("Catalogue des Boîtes LEGO");
+        Label lblTitre = new Label("Catalogue des boites modifables");
         lblTitre.getStyleClass().add("titre-label");
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);

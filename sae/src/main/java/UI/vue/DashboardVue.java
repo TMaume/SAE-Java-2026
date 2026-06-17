@@ -3,6 +3,7 @@ package UI.vue;
 import UI.Controller.CollectionController;
 import App.RoleUtilisateur;
 import App.Boite;
+import App.CollectionItem;
 import java.util.List;
 import UI.Controller.ParametreController;
 import UI.Controller.AuthController;
@@ -89,19 +90,40 @@ public class DashboardVue {
         CollectionController collectionController = new CollectionController(
             collectionVue, 
             controller.getCollectionService(), 
-            itemClique -> {
-                DetailBoiteVue detailVue = new DetailBoiteVue(
-                    itemClique.getBoite(), 
-                    controller.getBoiteService(),
-                    controller.getCollectionService(),
-                    () -> afficherCollection(conteneurCentral, btnCollection)
-                );
-                controller.chargerContenu(conteneurCentral, detailVue);
-            }
+            itemClique -> afficherGestionItem(conteneurCentral, btnCollection, itemClique)
         );
 
         controller.chargerContenu(conteneurCentral, collectionVue.getVue());
         activerBouton(btnCollection);
+    }
+
+    // --- MISE À JOUR : Ajout du 5ème argument pour l'action de modification perso ---
+    private void afficherGestionItem(StackPane conteneurCentral, Button btnCollection, CollectionItem itemClique) {
+        GestionItemCollectionVue gestionVue = new GestionItemCollectionVue(
+            itemClique, 
+            controller.getCollectionService(),
+            () -> afficherCollection(conteneurCentral, btnCollection),
+            () -> { 
+                DetailBoiteVue detailVue = new DetailBoiteVue(
+                    itemClique.getBoite(),
+                    controller.getBoiteService(),
+                    controller.getCollectionService(),
+                    () -> afficherGestionItem(conteneurCentral, btnCollection, itemClique)
+                );
+                controller.chargerContenu(conteneurCentral, detailVue);
+            },
+            () -> { // 5ème argument : Ce qu'il se passe quand on clique sur "Modifier ma création"
+                ModifierBoitePersoVue modifPersoVue = new ModifierBoitePersoVue(
+                    itemClique,
+                    controller.getCollectionService(),
+                    controller.getThemeService(),
+                    controller.getPieceService(),
+                    () -> afficherGestionItem(conteneurCentral, btnCollection, itemClique)
+                );
+                controller.chargerContenu(conteneurCentral, modifPersoVue);
+            }
+        );
+        controller.chargerContenu(conteneurCentral, gestionVue);
     }
 
     private void afficherModifBoite(StackPane conteneurCentral, Button btnModContenu) {
@@ -137,12 +159,6 @@ public class DashboardVue {
         activerBouton(btnCreer);
     }
 
-    // private void afficherMenuCreation(StackPane conteneurCentral, Button btnCreer) {
-    //     CreerMenuVue menuVue = new CreerMenuVue(conteneurCentral, controller);
-    //     controller.chargerContenu(conteneurCentral, menuVue);
-    //     activerBouton(btnCreer);
-    // }
-
     private VBox creerSidebar(StackPane conteneurCentral){
         VBox sidebar = new VBox(10);
         sidebar.setPadding(new Insets(20));
@@ -160,9 +176,16 @@ public class DashboardVue {
 
         btnCatalogue.setOnAction(e -> { resetCompteurEasterEgg(); afficherCatalogue(conteneurCentral, btnCatalogue); });
         btnCollection.setOnAction(e -> { resetCompteurEasterEgg(); afficherCollection(conteneurCentral, btnCollection); });
+        
         btnComposer.setOnAction(e -> { 
             resetCompteurEasterEgg(); 
-            controller.chargerContenu(conteneurCentral, new Label("Vue : Outil de composition personnalisée (À faire)")); 
+            ComposerBoiteVue composerVue = new ComposerBoiteVue(
+                controller.getCollectionService(),
+                controller.getThemeService(),
+                controller.getPieceService(), 
+                () -> afficherCollection(conteneurCentral, btnCollection)
+            );
+            controller.chargerContenu(conteneurCentral, composerVue);
             activerBouton(btnComposer); 
         });
 
@@ -186,8 +209,6 @@ public class DashboardVue {
             });
 
             sidebar.getChildren().addAll(separator, lblMenuAdmin, btnCreer, btnModContenu);
-
-            // btnModContenu.setOnAction(e -> afficherModifBoite(conteneurCentral, btnModContenu));
         }
 
         return sidebar;
@@ -231,7 +252,6 @@ public class DashboardVue {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS); 
 
-        // BOUTON PARAMÈTRES
         Button btnParametres = new Button("Paramètres");
         try {
             Image imgParams = new Image(getClass().getResourceAsStream("/UI/images/settings.png"));
@@ -260,13 +280,9 @@ public class DashboardVue {
         return header;
     }
 
-    /**
-     * Crée un bouton rectangulaire avec une image centrée.
-     */
     private Button creerBoutonMenu(String texte, String iconPath) {
         Button btn = new Button();
         btn.setMaxWidth(Double.MAX_VALUE);
-        
         btn.setPrefHeight(100); 
 
         VBox contenuBouton = new VBox(8); 
@@ -291,7 +307,6 @@ public class DashboardVue {
         lblTexte.setStyle("-fx-text-alignment: center; -fx-font-weight: bold; -fx-text-fill: inherit; -fx-font-size: 13px;");
 
         contenuBouton.getChildren().add(lblTexte);
-        
         btn.setGraphic(contenuBouton);
         btn.getStyleClass().add("button");
         
