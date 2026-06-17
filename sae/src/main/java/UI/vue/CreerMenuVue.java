@@ -1,19 +1,25 @@
 package UI.vue;
 
+import UI.Controller.AjouterBoiteController;
+import UI.Controller.DashboardController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 public class CreerMenuVue extends VBox {
 
-    private Button btnBoite;
-    private Button btnPiece;
-    private Button btnTheme;
-
-    public CreerMenuVue() {
+    /**
+     * Constructeur de la vue.
+     * @param conteneurCentral Le panneau central de l'application où l'on va charger les formulaires
+     * @param controller Le contrôleur principal qui contient les services (BoiteService, etc.)
+     */
+    public CreerMenuVue(StackPane conteneurCentral, DashboardController controller) {
         setAlignment(Pos.CENTER);
         setSpacing(40);
         setPadding(new Insets(40));
@@ -27,25 +33,35 @@ public class CreerMenuVue extends VBox {
         HBox conteneurBoutons = new HBox(40);
         conteneurBoutons.setAlignment(Pos.CENTER);
 
-        btnBoite = creerGrosBouton("Ajouter une boîte", "/images/add_box.png");
-        btnPiece = creerGrosBouton("Ajouter une pièce", "/images/add_piece.png");
-        btnTheme = creerGrosBouton("Créer un thème", "/images/add_theme.png");
+        Button btnBoite = creerGrosBouton("Ajouter une boîte", "/UI/images/add_box.png");
+        Button btnPiece = creerGrosBouton("Ajouter une pièce", "/UI/images/add_piece.png");
+        Button btnTheme = creerGrosBouton("Créer un thème", "/UI/images/add_theme.png");
+
+        // --- GESTION DES CLICS DIRECTEMENT DANS CETTE CLASSE ---
+        
+        btnBoite.setOnAction(e -> {
+            // Création de la vue et du contrôleur pour l'ajout de boîte
+            CreerBoiteVue creerBoiteVue = new CreerBoiteVue();
+            new AjouterBoiteController(creerBoiteVue, controller.getBoiteService(), controller.getThemeService());
+            // On remplace le menu par le formulaire d'ajout
+            controller.chargerContenu(conteneurCentral, creerBoiteVue);
+        });
+
+        btnPiece.setOnAction(e -> {
+            Label lblPlaceholder = new Label("Formulaire : Ajouter une pièce (À faire)");
+            controller.chargerContenu(conteneurCentral, lblPlaceholder);
+        });
+
+        btnTheme.setOnAction(e -> {
+            Label lblPlaceholder = new Label("Formulaire : Créer un thème (À faire)");
+            controller.chargerContenu(conteneurCentral, lblPlaceholder);
+        });
+
+        // --------------------------------------------------------
 
         conteneurBoutons.getChildren().addAll(btnBoite, btnPiece, btnTheme);
 
         getChildren().addAll(lblTitre, lblSousTitre, conteneurBoutons);
-    }
-
-    public Button getBtnBoite() {
-        return btnBoite;
-    }
-
-    public Button getBtnPiece() {
-        return btnPiece;
-    }
-
-    public Button getBtnTheme() {
-        return btnTheme;
     }
 
     private Button creerGrosBouton(String texte, String iconPath) {
@@ -58,9 +74,18 @@ public class CreerMenuVue extends VBox {
         VBox contenu = new VBox(25);
         contenu.setAlignment(Pos.CENTER);
 
-        Label lblFallback = new Label("+");
-        lblFallback.setStyle("-fx-font-size: 60px;");
-        contenu.getChildren().add(lblFallback);
+        try {
+            Image img = new Image(getClass().getResourceAsStream(iconPath));
+            ImageView vueIcone = new ImageView(img);
+            vueIcone.setFitHeight(80);
+            vueIcone.setFitWidth(80);
+            vueIcone.setPreserveRatio(true);
+            contenu.getChildren().add(vueIcone);
+        } catch (Exception ex) {
+            Label lblFallback = new Label("➕");
+            lblFallback.setStyle("-fx-font-size: 60px;");
+            contenu.getChildren().add(lblFallback);
+        }
     
         Label lblTexte = new Label(texte);
         lblTexte.getStyleClass().add("label");
