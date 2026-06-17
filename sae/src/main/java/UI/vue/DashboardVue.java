@@ -7,6 +7,7 @@ import java.util.List;
 import UI.Controller.ParametreController;
 import UI.Controller.AuthController;
 import UI.Controller.DashboardController;
+import UI.Controller.AjouterBoiteController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -104,7 +105,6 @@ public class DashboardVue {
     }
 
     private void afficherModifBoite(StackPane conteneurCentral, Button btnModContenu) {
-<<<<<<< HEAD
         CatalogueModifVue catalogueModifVue = new CatalogueModifVue(
             controller.getBoiteService(),
             controller.getThemeService(),
@@ -130,23 +130,6 @@ public class DashboardVue {
         controller.chargerContenu(conteneurCentral, creerBoiteVue);
         activerBouton(btnCreerRoot); 
     }
-
-
-=======
-        CatalogueVue catalogueVue = new CatalogueVue(controller.getBoiteService(), controller.getThemeService(), controller.getCollectionService(), boite -> {
-            ModifierBoiteVue modifierBoiteVue = new ModifierBoiteVue(
-                boite,
-                controller.getBoiteService(),
-                controller.getThemeService(),
-                controller.getPieceService(),
-                () -> afficherModifBoite(conteneurCentral, btnModContenu)
-            );
-            controller.chargerContenu(conteneurCentral, modifierBoiteVue);
-        });
-        controller.chargerContenu(conteneurCentral, catalogueVue.getVue());
-        activerBouton(btnModContenu);
-    }
->>>>>>> 2ea1f60 (Encore modif)
 
     private void afficherMenuCreation(StackPane conteneurCentral, Button btnCreer) {
         CreerMenuVue menuVue = new CreerMenuVue(conteneurCentral, controller);
