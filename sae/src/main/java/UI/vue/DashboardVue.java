@@ -143,7 +143,7 @@ public class DashboardVue {
         sidebar.getChildren().add(lblMenuClient);
 
         Button btnCatalogue = creerBoutonMenu("Consulter le catalogue", "/UI/images/flyer.png");
-        Button btnCollection = creerBoutonMenu("Gérer ma collection", "/UI/images/archive-document.png");
+        Button btnCollection = creerBoutonMenu("Gérer ma collection", "/UI/images/treasure-chest.png");
         Button btnComposer = creerBoutonMenu("Composer une boîte", "/UI/images/box.png");
 
         sidebar.getChildren().addAll(btnCatalogue, btnCollection, btnComposer);
