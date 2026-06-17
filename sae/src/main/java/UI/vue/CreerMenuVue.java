@@ -4,14 +4,16 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class CreerMenuVue extends VBox {
 
-    public CreerMenuVue(Runnable actionAjouterBoite, Runnable actionAjouterPiece, Runnable actionCreerTheme) {
+    private Button btnBoite;
+    private Button btnPiece;
+    private Button btnTheme;
+
+    public CreerMenuVue() {
         setAlignment(Pos.CENTER);
         setSpacing(40);
         setPadding(new Insets(40));
@@ -25,18 +27,25 @@ public class CreerMenuVue extends VBox {
         HBox conteneurBoutons = new HBox(40);
         conteneurBoutons.setAlignment(Pos.CENTER);
 
-        Button btnBoite = creerGrosBouton("Ajouter une boîte", "/images/add_box.png");
-        btnBoite.setOnAction(e -> actionAjouterBoite.run());
-
-        Button btnPiece = creerGrosBouton("Ajouter une pièce", "/images/add_piece.png");
-        btnPiece.setOnAction(e -> actionAjouterPiece.run());
-
-        Button btnTheme = creerGrosBouton("Créer un thème", "/images/add_theme.png");
-        btnTheme.setOnAction(e -> actionCreerTheme.run());
+        btnBoite = creerGrosBouton("Ajouter une boîte", "/images/add_box.png");
+        btnPiece = creerGrosBouton("Ajouter une pièce", "/images/add_piece.png");
+        btnTheme = creerGrosBouton("Créer un thème", "/images/add_theme.png");
 
         conteneurBoutons.getChildren().addAll(btnBoite, btnPiece, btnTheme);
 
         getChildren().addAll(lblTitre, lblSousTitre, conteneurBoutons);
+    }
+
+    public Button getBtnBoite() {
+        return btnBoite;
+    }
+
+    public Button getBtnPiece() {
+        return btnPiece;
+    }
+
+    public Button getBtnTheme() {
+        return btnTheme;
     }
 
     private Button creerGrosBouton(String texte, String iconPath) {
