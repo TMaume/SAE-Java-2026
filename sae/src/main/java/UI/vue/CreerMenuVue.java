@@ -37,13 +37,9 @@ public class CreerMenuVue extends VBox {
         Button btnPiece = creerGrosBouton("Ajouter une pièce", "/UI/images/add_piece.png");
         Button btnTheme = creerGrosBouton("Créer un thème", "/UI/images/add_theme.png");
 
-        // --- GESTION DES CLICS DIRECTEMENT DANS CETTE CLASSE ---
-        
         btnBoite.setOnAction(e -> {
-            // Création de la vue et du contrôleur pour l'ajout de boîte
             CreerBoiteVue creerBoiteVue = new CreerBoiteVue();
             new AjouterBoiteController(creerBoiteVue, controller.getBoiteService(), controller.getThemeService());
-            // On remplace le menu par le formulaire d'ajout
             controller.chargerContenu(conteneurCentral, creerBoiteVue);
         });
 
@@ -56,8 +52,6 @@ public class CreerMenuVue extends VBox {
             Label lblPlaceholder = new Label("Formulaire : Créer un thème (À faire)");
             controller.chargerContenu(conteneurCentral, lblPlaceholder);
         });
-
-        // --------------------------------------------------------
 
         conteneurBoutons.getChildren().addAll(btnBoite, btnPiece, btnTheme);
 

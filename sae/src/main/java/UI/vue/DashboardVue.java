@@ -117,7 +117,6 @@ public class DashboardVue {
     }
 
     private void afficherMenuCreation(StackPane conteneurCentral, Button btnCreer) {
-        // La vue est maintenant totalement autonome, on lui passe juste ce dont elle a besoin pour naviguer
         CreerMenuVue menuVue = new CreerMenuVue(conteneurCentral, controller);
         controller.chargerContenu(conteneurCentral, menuVue);
         activerBouton(btnCreer);
