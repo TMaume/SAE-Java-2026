@@ -75,4 +75,8 @@ public class ThemeService {
     public boolean definirParent(int idTheme, Integer idThemePere) {
         return themeParentBD.definirParent(idTheme, idThemePere) > 0;
     }
+
+    public boolean idvalide(int id){
+        return themeBD.idvalide(id);
+    }
 }

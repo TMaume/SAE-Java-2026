@@ -130,6 +130,11 @@ public class DashboardVue {
         controller.chargerContenu(conteneurCentral, creerBoiteVue);
         activerBouton(btnCreerRoot); 
     }
+    private void affichageCreationTheme(StackPane conteneurCentral, Button btn) {
+        CreerThemeVue vue = new CreerThemeVue(controller.getThemeService());
+        controller.chargerContenu(conteneurCentral, vue);
+        activerBouton(btn);
+    }
 
     private void afficherMenuCreation(StackPane conteneurCentral, Button btnCreer) {
         CreerMenuVue menuVue = new CreerMenuVue(conteneurCentral, controller);
@@ -186,6 +191,8 @@ public class DashboardVue {
             });
 
             sidebar.getChildren().addAll(separator, lblMenuAdmin, btnCreer, btnModContenu);
+            btnAddTheme.setOnAction(e -> affichageCreationTheme(conteneurCentral, btnAddTheme));
+            // btnModContenu.setOnAction(e -> afficherModifBoite(conteneurCentral, btnModContenu));
         }
 
         return sidebar;
