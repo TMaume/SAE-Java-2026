@@ -49,8 +49,8 @@ public class CreerMenuVue extends VBox {
         });
 
         btnTheme.setOnAction(e -> {
-            Label lblPlaceholder = new Label("Formulaire : Créer un thème (À faire)");
-            controller.chargerContenu(conteneurCentral, lblPlaceholder);
+            CreerThemeVue CreerThemeVue = new CreerThemeVue(controller.getThemeService());
+            controller.chargerContenu(conteneurCentral, CreerThemeVue);
         });
 
         conteneurBoutons.getChildren().addAll(btnBoite, btnPiece, btnTheme);
@@ -93,4 +93,5 @@ public class CreerMenuVue extends VBox {
 
         return btn;
     }
+
 }
