@@ -73,7 +73,7 @@ public class DashboardVue {
     }
 
     private void afficherCatalogue(StackPane conteneurCentral, Button btnCatalogue) {
-        CatalogueVue catalogueVue = new CatalogueVue(controller.getBoiteService(), controller.getThemeService(), boite -> {
+        CatalogueVue catalogueVue = new CatalogueVue(controller.getBoiteService(), controller.getThemeService(), controller.getCollectionService(), boite -> {
             // APRÈS
             DetailBoiteVue detailVue = new DetailBoiteVue(boite, controller.getBoiteService(), controller.getCollectionService(), () -> afficherCatalogue(conteneurCentral, btnCatalogue));
             controller.chargerContenu(conteneurCentral, detailVue);
@@ -113,11 +113,11 @@ public class DashboardVue {
         activerBouton(btnAddBoite);
     }
 
-    private void afficherModifBoite(StackPane conteneurCentral, Button btnModContenu) {
-        ModifierBoiteVue modifierBoiteVue = new ModifierBoiteVue();
-        controller.chargerContenu(conteneurCentral, modifierBoiteVue);
-        activerBouton(btnModContenu);
-    }
+    // private void afficherModifBoite(StackPane conteneurCentral, Button btnModContenu) {
+    //     ModifierBoiteVue modifierBoiteVue = new ModifierBoiteVue();
+    //     controller.chargerContenu(conteneurCentral, modifierBoiteVue);
+    //     activerBouton(btnModContenu);
+    // }
 
     private VBox creerSidebar(StackPane conteneurCentral){
         VBox sidebar = new VBox(10);
@@ -182,7 +182,7 @@ public class DashboardVue {
                 controller.chargerContenu(conteneurCentral, new Label("Formulaire : Créer un thème (À faire)"));
                 activerBouton(btnAddTheme);
             });
-            btnModContenu.setOnAction(e -> afficherModifBoite(conteneurCentral, btnModContenu));
+            // btnModContenu.setOnAction(e -> afficherModifBoite(conteneurCentral, btnModContenu));
         }
 
         return sidebar;

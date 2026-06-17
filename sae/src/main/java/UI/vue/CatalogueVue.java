@@ -2,6 +2,8 @@ package UI.vue;
 
 import App.Boite;
 import App.BoiteService;
+import App.CollectionService;
+import App.EtatBoite;
 import App.Theme;
 import App.ThemeService;
 import javafx.geometry.Insets;
@@ -20,6 +22,7 @@ import java.util.function.Consumer;
 public class CatalogueVue {
     private final BoiteService boiteService;
     private final ThemeService themeService;
+    private final CollectionService collectionService;
     private final Consumer<Boite> actionClicBoite;
     
     private int pageCourante = 1;
@@ -45,11 +48,13 @@ public class CatalogueVue {
      *
      * @param boiteService le service de gestion des boîtes
      * @param themeService le service de gestion des thèmes
+     * @param collectionService le service permettant d'ajouter une boîte à la collection personnelle (peut être null)
      * @param actionClicBoite l'action déclenchée lors du clic sur une boîte
      */
-    public CatalogueVue(BoiteService boiteService, ThemeService themeService, Consumer<Boite> actionClicBoite) {
+    public CatalogueVue(BoiteService boiteService, ThemeService themeService, CollectionService collectionService, Consumer<Boite> actionClicBoite) {
         this.boiteService = boiteService;
         this.themeService = themeService;
+        this.collectionService = collectionService;
         this.actionClicBoite = actionClicBoite;
         initialiserInterface();
         chargerPage();
@@ -384,8 +389,8 @@ public class CatalogueVue {
 
         btnAjouterBoiteDansCollection = new Button("Ajouter à ma collection");
         btnAjouterBoiteDansCollection.setOnAction(e -> {
-            if (boiteService != null) {
-                boiteService.ajouterBoiteDansCollection(b);
+            if (collectionService != null) {
+                collectionService.ajouterBoite(b, EtatBoite.COMPLETE);
             }
         });
 
@@ -441,8 +446,8 @@ public class CatalogueVue {
 
         btnAjouterBoiteDansCollection = new Button("Ajouter à ma collection");
         btnAjouterBoiteDansCollection.setOnAction(e -> {
-            if (boiteService != null) {
-                boiteService.ajouterBoiteDansCollection(b);
+            if (collectionService != null) {
+                collectionService.ajouterBoite(b, EtatBoite.COMPLETE);
             }
         });
 
