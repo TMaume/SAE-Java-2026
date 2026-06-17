@@ -1,7 +1,7 @@
 package UI.vue;
 
 import UI.Controller.AjouterBoiteController;
-import UI.Controller.CollectionController; // Ajout de l'import pour le nouveau controller
+import UI.Controller.CollectionController;
 import App.RoleUtilisateur;
 import UI.Controller.ParametreController;
 import UI.Controller.AuthController;
@@ -36,7 +36,6 @@ public class DashboardVue {
         StackPane conteneurCentral = new StackPane();
         conteneurCentral.setPadding(new Insets(30));
         conteneurCentral.getChildren().add(creerVueDefaut()); 
-
         VBox sidebar = creerSidebar(conteneurCentral);
         sidebar.getStyleClass().add("sidebar-pane");
         
@@ -74,7 +73,6 @@ public class DashboardVue {
 
     private void afficherCatalogue(StackPane conteneurCentral, Button btnCatalogue) {
         CatalogueVue catalogueVue = new CatalogueVue(controller.getBoiteService(), controller.getThemeService(), controller.getCollectionService(), boite -> {
-            // APRÈS
             DetailBoiteVue detailVue = new DetailBoiteVue(boite, controller.getBoiteService(), controller.getCollectionService(), () -> afficherCatalogue(conteneurCentral, btnCatalogue));
             controller.chargerContenu(conteneurCentral, detailVue);
         });
@@ -82,7 +80,6 @@ public class DashboardVue {
         activerBouton(btnCatalogue);
     }
 
-    // --- NOUVELLE MÉTHODE POUR LA COLLECTION ---
     private void afficherCollection(StackPane conteneurCentral, Button btnCollection) {
         CollectionVue collectionVue = new CollectionVue();
 
@@ -90,7 +87,6 @@ public class DashboardVue {
             collectionVue, 
             controller.getCollectionService(), 
             itemClique -> {
-                // On réutilise DetailBoiteVue : on lui passe la boîte et on configure le retour vers la collection !
                 DetailBoiteVue detailVue = new DetailBoiteVue(
                     itemClique.getBoite(), 
                     controller.getBoiteService(),
@@ -104,13 +100,12 @@ public class DashboardVue {
         controller.chargerContenu(conteneurCentral, collectionVue.getVue());
         activerBouton(btnCollection);
     }
-    // -------------------------------------------
 
-    private void afficherCreationBoite(StackPane conteneurCentral, Button btnAddBoite) {
+    private void afficherCreationBoite(StackPane conteneurCentral, Button btnCreerRoot) {
         CreerBoiteVue creerBoiteVue = new CreerBoiteVue();
         new AjouterBoiteController(creerBoiteVue, controller.getBoiteService(), controller.getThemeService());
         controller.chargerContenu(conteneurCentral, creerBoiteVue);
-        activerBouton(btnAddBoite);
+        activerBouton(btnCreerRoot); 
     }
 
     private void afficherModifBoite(StackPane conteneurCentral, Button btnModContenu) {
@@ -128,6 +123,16 @@ public class DashboardVue {
         activerBouton(btnModContenu);
     }
 
+    private void afficherMenuCreation(StackPane conteneurCentral, Button btnCreer) {
+        CreerMenuVue menuVue = new CreerMenuVue(
+            () -> afficherCreationBoite(conteneurCentral, btnCreer),
+            () -> { controller.chargerContenu(conteneurCentral, new Label("Formulaire : Ajouter une pièce (À faire)")); },
+            () -> { controller.chargerContenu(conteneurCentral, new Label("Formulaire : Créer un thème (À faire)")); }
+        );
+        controller.chargerContenu(conteneurCentral, menuVue);
+        activerBouton(btnCreer);
+    }
+
     private VBox creerSidebar(StackPane conteneurCentral){
         VBox sidebar = new VBox(10);
         sidebar.setPadding(new Insets(20));
@@ -137,35 +142,18 @@ public class DashboardVue {
         lblMenuClient.getStyleClass().add("subtitle-label");
         sidebar.getChildren().add(lblMenuClient);
 
-        Button btnCatalogue = creerBoutonMenu("Consulter le catalogue");
-        Button btnTheme = creerBoutonMenu("Explorer par thème");
-        Button btnStats = creerBoutonMenu("Statistiques d'une boîte");
-        Button btnPiece = creerBoutonMenu("Rechercher par pièce");
-        Button btnCollection = creerBoutonMenu("Gérer ma collection");
-        Button btnComposer = creerBoutonMenu("Composer une boîte");
+        Button btnCatalogue = creerBoutonMenu("Consulter le catalogue", "/UI/images/flyer.png");
+        Button btnCollection = creerBoutonMenu("Gérer ma collection", "/UI/images/treasure-chest.png");
+        Button btnComposer = creerBoutonMenu("Composer une boîte", "/UI/images/box.png");
 
-        sidebar.getChildren().addAll(btnCatalogue, btnTheme, btnStats, btnPiece, btnCollection, btnComposer);
+        sidebar.getChildren().addAll(btnCatalogue, btnCollection, btnComposer);
 
-        btnCatalogue.setOnAction(e -> afficherCatalogue(conteneurCentral, btnCatalogue));
-
-        btnTheme.setOnAction(e -> {
-            controller.chargerContenu(conteneurCentral, new Label("Vue : Exploration par thèmes (À faire)"));
-            activerBouton(btnTheme);
-        });
-        btnStats.setOnAction(e -> {
-            controller.chargerContenu(conteneurCentral, new Label("Vue : Statistiques détaillées (À faire)"));
-            activerBouton(btnStats);
-        });
-        btnPiece.setOnAction(e -> {
-            controller.chargerContenu(conteneurCentral, new Label("Vue : Recherche par pièces (À faire)"));
-            activerBouton(btnPiece);
-        });
-        
-        btnCollection.setOnAction(e -> afficherCollection(conteneurCentral, btnCollection));
-        
-        btnComposer.setOnAction(e -> {
-            controller.chargerContenu(conteneurCentral, new Label("Vue : Outil de composition personnalisée (À faire)"));
-            activerBouton(btnComposer);
+        btnCatalogue.setOnAction(e -> { resetCompteurEasterEgg(); afficherCatalogue(conteneurCentral, btnCatalogue); });
+        btnCollection.setOnAction(e -> { resetCompteurEasterEgg(); afficherCollection(conteneurCentral, btnCollection); });
+        btnComposer.setOnAction(e -> { 
+            resetCompteurEasterEgg(); 
+            controller.chargerContenu(conteneurCentral, new Label("Vue : Outil de composition personnalisée (À faire)")); 
+            activerBouton(btnComposer); 
         });
 
         if (controller.getUtilisateurConnecte().getRole() == RoleUtilisateur.ADMIN) {
@@ -175,23 +163,19 @@ public class DashboardVue {
             Label lblMenuAdmin = new Label("Options Administrateur");
             lblMenuAdmin.getStyleClass().add("subtitle-label");
 
-            Button btnAddBoite = creerBoutonMenu("[Admin] Ajouter une boîte");
-            Button btnAddPiece = creerBoutonMenu("[Admin] Ajouter une pièce");
-            Button btnAddTheme = creerBoutonMenu("[Admin] Créer un thème");
-            Button btnModContenu = creerBoutonMenu("[Admin] Modifier un contenu");
-
-            sidebar.getChildren().addAll(separator, lblMenuAdmin, btnAddBoite, btnAddPiece, btnAddTheme, btnModContenu);
-
-            btnAddBoite.setOnAction(e -> afficherCreationBoite(conteneurCentral, btnAddBoite));
-            btnAddPiece.setOnAction(e -> {
-                controller.chargerContenu(conteneurCentral, new Label("Formulaire : Ajouter une pièce (À faire)"));
-                activerBouton(btnAddPiece);
+            Button btnCreer = creerBoutonMenu("Créer...", "/UI/images/admin.png");
+            btnCreer.setOnAction(e -> {
+                resetCompteurEasterEgg();
+                afficherMenuCreation(conteneurCentral, btnCreer);
             });
-            btnAddTheme.setOnAction(e -> {
-                controller.chargerContenu(conteneurCentral, new Label("Formulaire : Créer un thème (À faire)"));
-                activerBouton(btnAddTheme);
+
+            Button btnModContenu = creerBoutonMenu("Modifier contenu", "/UI/images/edit.png");
+            btnModContenu.setOnAction(e -> { 
+                resetCompteurEasterEgg(); 
+                afficherModifBoite(conteneurCentral, btnModContenu); 
             });
-             btnModContenu.setOnAction(e -> afficherModifBoite(conteneurCentral, btnModContenu));
+
+            sidebar.getChildren().addAll(separator, lblMenuAdmin, btnCreer, btnModContenu);
         }
 
         return sidebar;
@@ -222,13 +206,9 @@ public class DashboardVue {
 
             compteurEasterEgg++;
             if (compteurEasterEgg == 30) {
-
                 ParametreController.setThemeActuel("TripleT");
-
                 ParametreController.appliquerTheme(stage.getScene());
-
                 this.afficher(); 
-                
                 compteurEasterEgg = 0;
             }
         });
@@ -268,11 +248,41 @@ public class DashboardVue {
         return header;
     }
 
-    private Button creerBoutonMenu(String texte) {
-        Button btn = new Button(texte);
-        btn.setAlignment(Pos.CENTER_LEFT);
+    /**
+     * Crée un bouton rectangulaire épais avec une image centrée.
+     */
+    private Button creerBoutonMenu(String texte, String iconPath) {
+        Button btn = new Button();
         btn.setMaxWidth(Double.MAX_VALUE);
-        btn.setPadding(new Insets(8, 12, 8, 12));
+        
+        btn.setPrefHeight(100); 
+
+        VBox contenuBouton = new VBox(8); 
+        contenuBouton.setAlignment(Pos.CENTER);
+
+        try {
+            Image img = new Image(getClass().getResourceAsStream(iconPath));
+            ImageView vueIcone = new ImageView(img);
+            vueIcone.setFitHeight(36);
+            vueIcone.setFitWidth(36);
+            vueIcone.setPreserveRatio(true);
+            contenuBouton.getChildren().add(vueIcone);
+        } catch (Exception ex) {
+            Label lblFallback = new Label("📦");
+            lblFallback.setStyle("-fx-font-size: 24px;");
+            contenuBouton.getChildren().add(lblFallback);
+        }
+
+        Label lblTexte = new Label(texte);
+        lblTexte.setWrapText(true);
+        lblTexte.setAlignment(Pos.CENTER);
+        lblTexte.setStyle("-fx-text-alignment: center; -fx-font-weight: bold; -fx-text-fill: inherit; -fx-font-size: 13px;");
+
+        contenuBouton.getChildren().add(lblTexte);
+        
+        btn.setGraphic(contenuBouton);
+        btn.getStyleClass().add("button");
+        
         return btn;
     }
 
