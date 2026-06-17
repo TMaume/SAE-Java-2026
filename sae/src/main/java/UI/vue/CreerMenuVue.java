@@ -49,19 +49,10 @@ public class CreerMenuVue extends VBox {
         VBox contenu = new VBox(25);
         contenu.setAlignment(Pos.CENTER);
 
-        try {
-            Image img = new Image(getClass().getResourceAsStream(iconPath));
-            ImageView vueIcone = new ImageView(img);
-            vueIcone.setFitHeight(80);
-            vueIcone.setFitWidth(80);
-            vueIcone.setPreserveRatio(true);
-            contenu.getChildren().add(vueIcone);
-        } catch (Exception ex) {
-            Label lblFallback = new Label("+");
-            lblFallback.setStyle("-fx-font-size: 60px;");
-            contenu.getChildren().add(lblFallback);
-        }
-
+        Label lblFallback = new Label("+");
+        lblFallback.setStyle("-fx-font-size: 60px;");
+        contenu.getChildren().add(lblFallback);
+    
         Label lblTexte = new Label(texte);
         lblTexte.getStyleClass().add("label");
         lblTexte.setStyle("-fx-font-weight: bold; -fx-font-size: 18px;");
