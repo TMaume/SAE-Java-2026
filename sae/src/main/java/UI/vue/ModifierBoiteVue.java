@@ -166,7 +166,7 @@ public class ModifierBoiteVue extends BorderPane {
         entete.setAlignment(Pos.CENTER_LEFT);
         entete.setPadding(new Insets(0, 0, 30, 0));
 
-        Button btnRetour = new Button("◄ Retour au catalogue");
+        Button btnRetour = new Button("Retour a toutes les boites");
         btnRetour.setStyle("-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;");
         btnRetour.setOnAction(e -> actionRetour.run());
 
