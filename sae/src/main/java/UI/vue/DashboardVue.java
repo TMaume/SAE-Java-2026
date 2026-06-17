@@ -3,6 +3,8 @@ package UI.vue;
 import UI.Controller.AjouterBoiteController;
 import UI.Controller.CollectionController; // Ajout de l'import pour le nouveau controller
 import App.RoleUtilisateur;
+import App.Boite;
+import java.util.List;
 import UI.Controller.ParametreController;
 import UI.Controller.AuthController;
 import UI.Controller.DashboardController;
@@ -106,6 +108,26 @@ public class DashboardVue {
     }
     // -------------------------------------------
 
+    private void afficherModifBoite(StackPane conteneurCentral, Button btnModContenu) {
+        CatalogueModifVue catalogueModifVue = new CatalogueModifVue(
+            controller.getBoiteService(),
+            controller.getThemeService(),
+            null,
+            boite -> {
+                ModifierBoiteVue modifierBoiteVue = new ModifierBoiteVue(
+                    boite,
+                    controller.getBoiteService(),
+                    controller.getThemeService(),
+                    controller.getPieceService(),
+                    () -> afficherModifBoite(conteneurCentral, btnModContenu)
+                );
+                controller.chargerContenu(conteneurCentral, modifierBoiteVue);
+            }
+        );
+        controller.chargerContenu(conteneurCentral, catalogueModifVue.getVue());
+        activerBouton(btnModContenu);
+    }
+
     private void afficherCreationBoite(StackPane conteneurCentral, Button btnAddBoite) {
         CreerBoiteVue creerBoiteVue = new CreerBoiteVue();
         new AjouterBoiteController(creerBoiteVue, controller.getBoiteService(), controller.getThemeService());
@@ -113,20 +135,7 @@ public class DashboardVue {
         activerBouton(btnAddBoite);
     }
 
-    private void afficherModifBoite(StackPane conteneurCentral, Button btnModContenu) {
-        CatalogueVue catalogueVue = new CatalogueVue(controller.getBoiteService(), controller.getThemeService(), controller.getCollectionService(), boite -> {
-            ModifierBoiteVue modifierBoiteVue = new ModifierBoiteVue(
-                boite,
-                controller.getBoiteService(),
-                controller.getThemeService(),
-                controller.getPieceService(),
-                () -> afficherModifBoite(conteneurCentral, btnModContenu)
-            );
-            controller.chargerContenu(conteneurCentral, modifierBoiteVue);
-        });
-        controller.chargerContenu(conteneurCentral, catalogueVue.getVue());
-        activerBouton(btnModContenu);
-    }
+
 
     private VBox creerSidebar(StackPane conteneurCentral){
         VBox sidebar = new VBox(10);
