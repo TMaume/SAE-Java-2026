@@ -39,6 +39,10 @@ public class ModifierBoiteVue extends BorderPane {
     private ListView<String> listeComposition;
     private ComboBox<String> comboFiltreContenu;
 
+    // Référence vers les objets réels correspondant à chaque ligne affichée
+    // dans listeComposition, dans le même ordre que les libellés textuels.
+    private List<Object> objetsComposition = new java.util.ArrayList<>();
+
     // Composants pour la recherche en tableau
     private TextField txtRechercheAjout;
     private ComboBox<String> comboTypeAjout;
@@ -111,22 +115,29 @@ public class ModifierBoiteVue extends BorderPane {
     private void appliquerFiltreContenu() {
         String filtre = comboFiltreContenu.getValue();
         listeComposition.getItems().clear();
+        objetsComposition.clear();
 
         boolean pieces    = filtre.equals("Tout afficher") || filtre.equals("Pièces");
         boolean figurines = filtre.equals("Tout afficher") || filtre.equals("Figurines");
         boolean sousBoites = filtre.equals("Tout afficher") || filtre.equals("Sous-boîtes");
 
         if (pieces && boite.getPieces() != null)
-            for (PieceQuantite pq : boite.getPieces())
+            for (PieceQuantite pq : boite.getPieces()) {
                 listeComposition.getItems().add("[Pièce] Réf: " + pq.getPiece().getNumero() + " | Quantité: " + pq.getQuantite());
+                objetsComposition.add(pq);
+            }
 
         if (figurines && boite.getFigurines() != null)
-            for (FigurineQuantite fq : boite.getFigurines())
+            for (FigurineQuantite fq : boite.getFigurines()) {
                 listeComposition.getItems().add("[Figurine] Réf: " + fq.getFigurine().getIdFigurine() + " | Quantité: " + fq.getQuantite());
+                objetsComposition.add(fq);
+            }
 
         if (sousBoites && boite.getBoitesIncluses() != null)
-            for (BoiteQuantite bq : boite.getBoitesIncluses())
+            for (BoiteQuantite bq : boite.getBoitesIncluses()) {
                 listeComposition.getItems().add("[Sous-boîte] N°: " + bq.getBoite().getNumero() + " | Quantité: " + bq.getQuantite());
+                objetsComposition.add(bq);
+            }
     }
 
     // -----------------------------------------------------------------------
@@ -398,9 +409,13 @@ public class ModifierBoiteVue extends BorderPane {
         barreFiltre.getChildren().addAll(lblFiltre, comboFiltreContenu);
 
         listeComposition = new ListView<>();
-        listeComposition.setPrefHeight(250);
+        listeComposition.setPrefHeight(220);
 
-        conteneur.getChildren().addAll(barreFiltre, listeComposition);
+        Button btnSupprimerElement = new Button("🗑 Supprimer l'élément sélectionné");
+        btnSupprimerElement.getStyleClass().add("btn-danger");
+        btnSupprimerElement.setOnAction(e -> gererSuppressionElement());
+
+        conteneur.getChildren().addAll(barreFiltre, listeComposition, btnSupprimerElement);
         return conteneur;
     }
 
@@ -464,6 +479,52 @@ public class ModifierBoiteVue extends BorderPane {
         rafraichirAffichage();
         referenceSelectionnee = "";
         lblSelection.setText("Aucune sélection");
+    }
+
+    /**
+     * Supprime, en base et en mémoire, l'élément actuellement sélectionné
+     * dans la liste d'inventaire (pièce, figurine ou sous-boîte).
+     */
+    private void gererSuppressionElement() {
+        int indexSelectionne = listeComposition.getSelectionModel().getSelectedIndex();
+
+        if (indexSelectionne < 0 || indexSelectionne >= objetsComposition.size()) {
+            afficherAlerte(AlertType.WARNING, "Sélection requise", "Veuillez sélectionner un élément à supprimer dans la liste.");
+            return;
+        }
+
+        Object objetSelectionne = objetsComposition.get(indexSelectionne);
+
+        Alert confirmation = new Alert(AlertType.CONFIRMATION);
+        confirmation.setTitle("Confirmation");
+        confirmation.setHeaderText(null);
+        confirmation.setContentText("Voulez-vous vraiment supprimer cet élément de la boîte ?");
+        if (confirmation.showAndWait().filter(reponse -> reponse == ButtonType.OK).isEmpty()) {
+            return;
+        }
+
+        boolean succes = false;
+
+        if (objetSelectionne instanceof PieceQuantite pq) {
+            succes = boiteService.retirerPieceDeBoite(boite.getNumero(), pq);
+            if (succes) boite.getPieces().remove(pq);
+
+        } else if (objetSelectionne instanceof FigurineQuantite fq) {
+            succes = boiteService.retirerFigurineDeBoite(boite.getNumero(), fq);
+            if (succes) boite.getFigurines().remove(fq);
+
+        } else if (objetSelectionne instanceof BoiteQuantite bq) {
+            succes = boiteService.retirerSousBoiteDeBoite(boite.getNumero(), bq);
+            if (succes) boite.getBoitesIncluses().remove(bq);
+        }
+
+        if (succes) {
+            afficherAlerte(AlertType.INFORMATION, "Succès", "Élément supprimé avec succès.");
+        } else {
+            afficherAlerte(AlertType.ERROR, "Erreur", "La suppression a échoué en base de données.");
+        }
+
+        rafraichirAffichage();
     }
 
     private void gererActionSauvegarde() {

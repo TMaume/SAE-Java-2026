@@ -97,7 +97,6 @@ public class DashboardVue {
         activerBouton(btnCollection);
     }
 
-    // --- MISE À JOUR : Ajout du 5ème argument pour l'action de modification perso ---
     private void afficherGestionItem(StackPane conteneurCentral, Button btnCollection, CollectionItem itemClique) {
         GestionItemCollectionVue gestionVue = new GestionItemCollectionVue(
             itemClique, 
@@ -112,7 +111,7 @@ public class DashboardVue {
                 );
                 controller.chargerContenu(conteneurCentral, detailVue);
             },
-            () -> { // 5ème argument : Ce qu'il se passe quand on clique sur "Modifier ma création"
+            () -> { 
                 ModifierBoitePersoVue modifPersoVue = new ModifierBoitePersoVue(
                     itemClique,
                     controller.getCollectionService(),
@@ -177,12 +176,14 @@ public class DashboardVue {
         btnCatalogue.setOnAction(e -> { resetCompteurEasterEgg(); afficherCatalogue(conteneurCentral, btnCatalogue); });
         btnCollection.setOnAction(e -> { resetCompteurEasterEgg(); afficherCollection(conteneurCentral, btnCollection); });
         
+        // --- MISE A JOUR : On passe le boiteService ici pour pouvoir chercher les figurines ---
         btnComposer.setOnAction(e -> { 
             resetCompteurEasterEgg(); 
             ComposerBoiteVue composerVue = new ComposerBoiteVue(
                 controller.getCollectionService(),
                 controller.getThemeService(),
                 controller.getPieceService(), 
+                controller.getBoiteService(), // <-- L'ajout important est ici
                 () -> afficherCollection(conteneurCentral, btnCollection)
             );
             controller.chargerContenu(conteneurCentral, composerVue);
