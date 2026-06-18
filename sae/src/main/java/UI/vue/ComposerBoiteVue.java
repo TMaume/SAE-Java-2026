@@ -19,7 +19,7 @@ public class ComposerBoiteVue extends HBox {
     private final CollectionService collectionService;
     private final ThemeService themeService;
     private final PieceService pieceService;
-    private final BoiteService boiteService; // Indispensable pour chercher les figurines
+    private final BoiteService boiteService;
     private final Runnable actionApresCreation;
 
     // Champs Formulaire Boîte
@@ -146,7 +146,7 @@ public class ComposerBoiteVue extends HBox {
         txtQuantiteAjout = new TextField("1");
         txtQuantiteAjout.setPrefWidth(50);
 
-        Button btnAjouterItem = new Button("➕ Ajouter");
+        Button btnAjouterItem = new Button("+ Ajouter");
         btnAjouterItem.getStyleClass().add("button");
         btnAjouterItem.setOnAction(e -> gererAjoutElement());
 
