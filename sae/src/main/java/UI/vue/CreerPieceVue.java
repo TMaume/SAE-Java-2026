@@ -17,7 +17,7 @@ import UI.Controller.ControlNvPiece;
 
     private GridPane g = new GridPane();
     private ControlNvPiece c;
-    private Label titre = new Label("Ajouter un thème");
+    private Label titre = new Label("Ajouter une piece");
     private TextField tf = new TextField();
     private TextField tf2 = new TextField();
     private ComboBox<Categorie> cat = new ComboBox<>();

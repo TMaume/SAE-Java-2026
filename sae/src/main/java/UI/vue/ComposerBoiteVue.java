@@ -107,7 +107,7 @@ public class ComposerBoiteVue extends HBox {
         
         comboTypeItem = new ComboBox<>(FXCollections.observableArrayList("Pièce", "Figurine"));
         comboTypeItem.setValue("Pièce");
-        comboTypeItem.setPrefWidth(100);
+        comboTypeItem.setPrefWidth(150);
 
         txtRefAjout = new TextField();
         txtRefAjout.setPromptText("Réf/ID");
