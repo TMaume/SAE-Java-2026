@@ -1,0 +1,353 @@
+@startuml
+skinparam style strictuml
+hide empty members
+
+package "Vue" {
+
+  class LoginVue {
+    --
+    + afficher() : void
+  }
+
+  class RegisterVue {
+    --
+    + afficher() : void
+  }
+
+  class DashboardVue {
+    --
+    + afficher() : void
+  }
+
+  class CatalogueVue {
+    --
+    + getVue() : Node
+  }
+
+  class DetailBoiteVue {
+    --
+    + afficher() : void
+  }
+
+  class CollectionVue {
+    --
+    + getVue() : Node
+  }
+
+  class GestionItemCollectionVue {
+    --
+    + afficher() : void
+  }
+
+  class ComposerBoiteVue {
+    --
+    + getVue() : Node
+  }
+
+  class ModifierBoiteVue {
+    --
+    + getVue() : Node
+  }
+
+  class CreerBoiteVue
+  class CreerPieceVue
+  class CreerThemeVue
+  class ParametresVue
+
+}
+
+package "Controller" {
+
+  class AuthController {
+    --
+    + connecter(id : String, mdp : String) : Utilisateur
+    + creerCompte(id : String, mdp : String) : Utilisateur
+  }
+
+  class DashboardController {
+    --
+    + chargerContenu(pane : StackPane, vue : Node) : void
+    + getBoiteService() : BoiteService
+    + getCollectionService() : CollectionService
+  }
+
+  class CollectionController {
+    --
+    + chargerCollection() : void
+  }
+
+  class AjouterBoiteController {
+    --
+    + ajouterACollection(b : Boite) : void
+  }
+
+  class ParametreController {
+    --
+    + {static} appliquerTheme(scene : Scene) : void
+  }
+
+  class ControlNvPiece {
+    --
+    + creerPiece() : void
+  }
+
+  class ControlNvTheme {
+    --
+    + creerTheme() : void
+  }
+
+}
+
+package "Metier" {
+
+  class Theme {
+    - idTheme : int
+    - nom : String
+    - parent : Theme
+    --
+    + getNom() : String
+    + getParent() : Theme
+    + getIdThemePere() : Integer
+  }
+
+  class Categorie {
+    - idCategorie : int
+    - nom : String
+    --
+    + getNom() : String
+  }
+
+  class Couleur {
+    - idCouleur : int
+    - nom : String
+    - rgb : String
+    - transparent : boolean
+    --
+    + getRgb() : String
+    + isTransparent() : boolean
+  }
+
+  class Piece {
+    - numero : String
+    - nom : String
+    --
+    + getNumero() : String
+    + avecCouleur(c : Couleur) : Piece
+  }
+
+  class Figurine {
+    - idFigurine : String
+    - nom : String
+    - nbParties : Integer
+    --
+    + getIdFigurine() : String
+  }
+
+  abstract class Boite {
+    - numero : String
+    - nom : String
+    - annee : Integer
+    - imageBoite : String
+    --
+    + getNumero() : String
+    + calculerNbPieces() : int
+    + ajouterPiece(pq : PieceQuantite) : void
+    + ajouterFigurine(fq : FigurineQuantite) : void
+  }
+
+  class BoitePersonnalisee {
+    - personnalisee : boolean = true
+    --
+    + setPersonnalisee(b : boolean) : void
+  }
+
+  class PieceQuantite {
+    - quantite : int
+    - enSupplement : boolean
+    --
+    + getQuantite() : int
+    + isEnSupplement() : boolean
+  }
+
+  class FigurineQuantite {
+    - quantite : int
+    --
+    + getQuantite() : int
+  }
+
+  class BoiteQuantite {
+    - quantite : int
+    --
+    + getQuantite() : int
+  }
+
+  enum EtatBoite {
+    COMPLETE
+    INCOMPLETE
+  }
+
+  class CollectionItem {
+    - dateAjout : LocalDate
+    - construite : boolean
+    - imagePersonnelle : String
+    - boitePersonnalisee : boolean
+    --
+    + isConstruite() : boolean
+    + setEtat(e : EtatBoite) : void
+    + getPiecesManquantes() : List
+  }
+
+  class CollectionPersonnelle {
+    - cheminFichier : Path
+    --
+    + ajouterBoite(b : Boite, e : EtatBoite) : void
+    + supprimerItem(num : String) : void
+    + listerCollection() : List
+    + sauvegarderDansJSON() : void
+  }
+
+  class BoiteStats {
+    - totalPieces : int
+    - totalFigurines : int
+    - totalSousBoites : int
+    - totalSupplement : int
+    --
+    + getTotalPieces() : int
+    + getRepartitionCouleurs() : Map
+  }
+
+  enum RoleUtilisateur {
+    ADMIN
+    UTILISATEUR
+  }
+
+  class Utilisateur {
+    - identifiant : String
+    - motDePasse : String
+    --
+    + verifierMotDePasse(s : String) : boolean
+    + getRole() : RoleUtilisateur
+  }
+
+}
+
+package "DAO" {
+
+  class ConnexionMySQL {
+    - url : String
+    - user : String
+    - password : String
+    --
+    + getConnexion() : Connection
+  }
+
+  interface IBoiteDAO {
+    + listeDesBoites() : List<Boite>
+    + rechercherBoite(num : String) : Boite
+    + insererBoite(b : Boite) : void
+    + compterBoites() : int
+  }
+
+  interface IPieceDAO {
+    + listeDesPieces() : List<Piece>
+    + rechercherPiece(num : String) : Piece
+    + insererPiece(p : Piece) : int
+  }
+
+  interface IThemeDAO {
+    + listeDesThemes() : List<Theme>
+    + rechercherTheme(id : int) : Theme
+    + insererTheme(t : Theme) : int
+    + listeSousThemes(idPere : int) : List<Theme>
+  }
+
+  interface ICollectionDAO {
+    + listeContenusParBoite(num : String) : List
+    + insererContenirp(idCont : int, pq : PieceQuantite) : int
+    + insererContenirf(idCont : int, fq : FigurineQuantite) : int
+  }
+
+  class BoiteDAOJdbc {
+    + listeDesBoitesPaginee(limit : int, offset : int) : List
+    + rechercherBoitesParNom(nom : String) : List
+    + listeBoitesParTheme(idTheme : int) : List
+  }
+
+  class PieceDAOJdbc {
+    + listeDesCouleurs() : List<Couleur>
+    + rechercherCouleur(id : int) : Couleur
+    + listeDesCategories() : List<Categorie>
+  }
+
+  class ThemeDAOJdbc {
+    + definirParent(idTheme : int, idPere : Integer) : int
+  }
+
+  class CollectionDAOJdbc {
+    + listeContenirpParContenu(idCont : int) : List
+    + listeContenirfParContenu(idCont : int) : List
+    + listeContenirbParContenu(idCont : int) : List
+  }
+
+}
+
+' ─── Héritage
+Boite <|-- BoitePersonnalisee
+
+' ─── Implémentations DAO
+IBoiteDAO      <|.. BoiteDAOJdbc
+IPieceDAO      <|.. PieceDAOJdbc
+IThemeDAO      <|.. ThemeDAOJdbc
+ICollectionDAO <|.. CollectionDAOJdbc
+
+' ─── DAO → ConnexionMySQL
+BoiteDAOJdbc      ..> ConnexionMySQL
+PieceDAOJdbc      ..> ConnexionMySQL
+ThemeDAOJdbc      ..> ConnexionMySQL
+CollectionDAOJdbc ..> ConnexionMySQL
+
+' ─── CollectionPersonnelle → DAO
+CollectionPersonnelle ..> IBoiteDAO
+CollectionPersonnelle ..> IPieceDAO
+CollectionPersonnelle ..> IThemeDAO
+CollectionPersonnelle ..> ICollectionDAO
+
+' ─── Vue → Controller
+LoginVue      ..> AuthController
+RegisterVue   ..> AuthController
+DashboardVue  ..> DashboardController
+CollectionVue ..> CollectionController
+CreerPieceVue ..> ControlNvPiece
+CreerThemeVue ..> ControlNvTheme
+DetailBoiteVue ..> AjouterBoiteController
+ParametresVue  ..> ParametreController
+
+' ─── Controller → Metier
+AuthController       ..> Utilisateur
+DashboardController  ..> CollectionPersonnelle
+DashboardController  ..> BoiteStats
+CollectionController ..> CollectionPersonnelle
+AjouterBoiteController ..> CollectionPersonnelle
+ControlNvPiece       ..> Piece
+ControlNvTheme       ..> Theme
+
+' ─── Associations métier
+Theme            -->        Theme            : parent
+Piece        "*" --> "1"    Categorie
+Piece            -->        Couleur
+PieceQuantite    -->        Piece
+FigurineQuantite -->        Figurine
+BoiteQuantite    -->        Boite
+Boite        "1" --> "1"    Theme
+Boite        "1" --> "1"    EtatBoite
+Boite        "1" *-- "*"    PieceQuantite
+Boite        "1" *-- "*"    FigurineQuantite
+Boite        "1" *-- "*"    BoiteQuantite    : sous-boîtes
+CollectionItem   -->        Boite
+CollectionItem   -->        EtatBoite
+CollectionItem "1" *-- "*"  PieceQuantite    : manquantes
+CollectionPersonnelle "1" *-- "*" CollectionItem
+BoiteStats       -->        Couleur
+Utilisateur      -->        RoleUtilisateur
+
+@enduml
