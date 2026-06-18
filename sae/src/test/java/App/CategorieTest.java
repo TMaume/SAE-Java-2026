@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 public class CategorieTest {
 
-    // Verifie la conversion du nom null en chaine vide
+    // Verification nom null
     @Test
     void constructeur_nomNull_devientChaineVide() {
         Categorie categorie = new Categorie(1, null);

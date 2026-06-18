@@ -11,7 +11,7 @@ public class BoiteTest {
     private Theme theme;
     private Couleur couleur;
 
-    // Initialise les objets communs aux tests
+    // Initialisation objets partages
     @BeforeEach
     public void setUp() {
         theme = new Theme(1, "Castle", null);
@@ -19,7 +19,7 @@ public class BoiteTest {
         boite = new Boite("10305", "Castle", 2021, theme, "url_image.jpg");
     }
 
-    // Verifie la levee dexception pour un numero invalide
+    // Verification numero invalide
     @Test
     public void testConstructeurErreurSiNumeroInvalide() {
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
@@ -29,7 +29,7 @@ public class BoiteTest {
         assertEquals("numero", exception.getMessage());
     }
 
-    // Verifie le calcul avec plusieurs ajouts
+    // Verification calcul pieces
     @Test
     public void testCalculerNbPiecesAvecPlusieursAdditions() {
         Categorie cat1 = new Categorie(1, "Briques");

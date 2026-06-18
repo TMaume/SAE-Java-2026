@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 public class BoiteStatsTest {
 
-    // Verifie que la repartition des couleurs est immuable
+    // Verification repartition immuable
     @Test
     void repartitionCouleurs_estImmuable() {
         Map<Couleur, Integer> couleurs = new LinkedHashMap<>();

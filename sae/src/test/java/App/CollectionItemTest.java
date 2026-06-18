@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 public class CollectionItemTest {
 
-    // Verifie la levee dexception pour une boite null
+    // Verification boite null
     @Test
     void constructeur_boiteNull_declencheException() {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
@@ -15,7 +15,7 @@ public class CollectionItemTest {
         assertEquals("boite", exception.getMessage());
     }
 
-    // Verifie la conversion detat null en etat incomplet
+    // Verification etat null
     @Test
     void constructeur_etatNull_devientIncomplete() {
         Boite boite = new Boite("10305", "Castle", 2021, new Theme(1, "Castle", null), null);

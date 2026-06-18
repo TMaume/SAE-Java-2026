@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 public class CouleurTest {
 
-    // Verifie la conversion des valeurs null en chaines vides
+    // Verification valeurs nulles
     @Test
     void constructeur_valeursNullDeviennentChainesVides() {
         Couleur couleur = new Couleur(1, null, null, true);
