@@ -174,7 +174,7 @@ public class GestionItemCollectionVue extends BorderPane {
         btnEnregistrer.setMaxWidth(Double.MAX_VALUE);
         btnEnregistrer.setOnAction(e -> gererSauvegarde());
 
-        Button btnSupprimer = new Button("🗑️ Supprimer de ma collection");
+        Button btnSupprimer = new Button("Supprimer de ma collection");
         btnSupprimer.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold;");
         btnSupprimer.setMaxWidth(Double.MAX_VALUE);
         btnSupprimer.setOnAction(e -> gererSuppression());
