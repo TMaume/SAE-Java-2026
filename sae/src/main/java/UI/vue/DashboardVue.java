@@ -297,7 +297,7 @@ public class DashboardVue {
             vueIcone.setPreserveRatio(true);
             contenuBouton.getChildren().add(vueIcone);
         } catch (Exception ex) {
-            Label lblFallback = new Label("📦");
+            Label lblFallback = new Label(" ");
             lblFallback.setStyle("-fx-font-size: 24px;");
             contenuBouton.getChildren().add(lblFallback);
         }

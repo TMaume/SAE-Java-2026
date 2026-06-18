@@ -13,6 +13,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -24,6 +25,7 @@ import java.util.function.Consumer;
  * Vue affichant le catalogue des boîtes LEGO (sans bouton collection) pour la modification admin.
  */
 public class CatalogueModifVue {
+    
     private final BoiteService boiteService;
     private final ThemeService themeService;
     private final CollectionService collectionService;
@@ -33,21 +35,33 @@ public class CatalogueModifVue {
     private final int taillePage = 20;
     private boolean estVueGrille = true;
 
-    private BorderPane root;
-    private ScrollPane scrollPane;
-    private FlowPane conteneurGrille;
-    private VBox conteneurListe;
+    // Composants principaux
+    private BorderPane root = new BorderPane();
+    private ScrollPane scrollPane = new ScrollPane();
+    private FlowPane fpGrille = new FlowPane(20, 20);
+    private VBox vbListe = new VBox(15);
 
-    private TextField txtRecherche;
-    private ListView<String> listeSuggestions;
-    private PopupControl popupSuggestions;
-    private ComboBox<Theme> comboTheme;
-    private TextField txtPageExacte;
-    private Label lblPagination;
-    private Button btnPrecedent;
-    private Button btnSuivant;
-    private Label lblInfosTotal;
+    // En-tête
+    private Label lblTitre = new Label("Catalogue des boites modifiables");
+    private Label lblTotal = new Label();
+    private Button btnVue = new Button("Affichage : Grille");
 
+    // Barre de filtres et autocomplétion
+    private TextField tfRecherche = new TextField();
+    private ListView<String> listSuggest = new ListView<>();
+    private PopupControl popupSuggest = new PopupControl();
+    private ComboBox<Theme> comboTheme = new ComboBox<>();
+    private Button btnFiltrer = new Button("Filtrer");
+    private Button btnReset = new Button("Réinitialiser");
+
+    // Pagination (Pied de page)
+    private Button btnPrec = new Button("◄ Précédent");
+    private TextField tfPage = new TextField();
+    private Label lblPage = new Label("Page ");
+    private Label lblSurTotal = new Label();
+    private Button btnSuiv = new Button("Suivant ►");
+
+    // Scheduler pour l'autocomplétion
     private static final int DELAI_SUGGESTION_MS = 250;
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor(r -> {
         Thread t = new Thread(r, "suggestion-scheduler-modif");
@@ -61,6 +75,7 @@ public class CatalogueModifVue {
         this.themeService = themeService;
         this.collectionService = collectionService;
         this.actionClicBoite = actionClicBoite;
+        
         initialiserInterface();
         chargerPage();
     }
@@ -74,7 +89,6 @@ public class CatalogueModifVue {
     // -----------------------------------------------------------------------
 
     private void initialiserInterface() {
-        root = new BorderPane();
         root.getStyleClass().add("root");
 
         VBox enteteGlobal = new VBox(15);
@@ -90,19 +104,17 @@ public class CatalogueModifVue {
         HBox header = new HBox(20);
         header.setAlignment(Pos.CENTER_LEFT);
 
-        Label lblTitre = new Label("Catalogue des boites modifiables");
         lblTitre.getStyleClass().add("titre-label");
+        
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        lblInfosTotal = new Label();
-        lblInfosTotal.getStyleClass().add("soustitre-label");
+        lblTotal.getStyleClass().add("soustitre-label");
 
-        Button btnChangerVue = new Button("Affichage : Grille");
-        btnChangerVue.getStyleClass().add("button");
-        btnChangerVue.setOnAction(e -> basculerVue(btnChangerVue));
+        btnVue.getStyleClass().add("button");
+        btnVue.setOnAction(e -> basculerVue(btnVue));
 
-        header.getChildren().addAll(lblTitre, spacer, lblInfosTotal, btnChangerVue);
+        header.getChildren().addAll(lblTitre, spacer, lblTotal, btnVue);
         return header;
     }
 
@@ -118,7 +130,6 @@ public class CatalogueModifVue {
 
         StackPane conteneurRecherche = creerChampRechercheAvecSuggestions();
 
-        comboTheme = new ComboBox<>();
         comboTheme.setPromptText("Tous les thèmes");
         comboTheme.setPrefWidth(200);
         comboTheme.getItems().add(null);
@@ -126,15 +137,13 @@ public class CatalogueModifVue {
             comboTheme.getItems().addAll(themeService.listerThemes());
         }
 
-        Button btnFiltrer = new Button("Filtrer");
         btnFiltrer.getStyleClass().add("btn-primary");
         btnFiltrer.setOnAction(e -> appliquerFiltres());
 
-        Button btnReinitialiser = new Button("Réinitialiser");
-        btnReinitialiser.getStyleClass().add("btn-danger");
-        btnReinitialiser.setOnAction(e -> reinitialiserFiltres());
+        btnReset.getStyleClass().add("btn-danger");
+        btnReset.setOnAction(e -> reinitialiserFiltres());
 
-        barreFiltres.getChildren().addAll(conteneurRecherche, comboTheme, btnFiltrer, btnReinitialiser);
+        barreFiltres.getChildren().addAll(conteneurRecherche, comboTheme, btnFiltrer, btnReset);
         return barreFiltres;
     }
 
@@ -143,33 +152,30 @@ public class CatalogueModifVue {
     // -----------------------------------------------------------------------
 
     private StackPane creerChampRechercheAvecSuggestions() {
-        txtRecherche = new TextField();
-        txtRecherche.setPromptText("Rechercher par nom...");
-        txtRecherche.setPrefWidth(250);
+        tfRecherche.setPromptText("Rechercher par nom...");
+        tfRecherche.setPrefWidth(250);
 
-        listeSuggestions = new ListView<>();
-        listeSuggestions.setPrefWidth(250);
-        listeSuggestions.setMaxHeight(180);
-        listeSuggestions.getStyleClass().add("suggestions-list");
+        listSuggest.setPrefWidth(250);
+        listSuggest.setMaxHeight(180);
+        listSuggest.getStyleClass().add("suggestions-list");
 
-        popupSuggestions = new PopupControl();
-        popupSuggestions.setAutoHide(true);
-        popupSuggestions.getScene().setRoot(listeSuggestions);
+        popupSuggest.setAutoHide(true);
+        popupSuggest.getScene().setRoot(listSuggest);
 
-        listeSuggestions.setOnMouseClicked(e -> {
-            String valeur = listeSuggestions.getSelectionModel().getSelectedItem();
+        listSuggest.setOnMouseClicked(e -> {
+            String valeur = listSuggest.getSelectionModel().getSelectedItem();
             if (valeur != null) {
-                txtRecherche.setText(valeur);
-                popupSuggestions.hide();
+                tfRecherche.setText(valeur);
+                popupSuggest.hide();
                 appliquerFiltres();
             }
         });
 
-        txtRecherche.textProperty().addListener((obs, ancien, nouveau) -> {
+        tfRecherche.textProperty().addListener((obs, ancien, nouveau) -> {
             if (tacheSuggestion != null) tacheSuggestion.cancel(false);
 
             if (nouveau == null || nouveau.trim().length() < 2) {
-                popupSuggestions.hide();
+                popupSuggest.hide();
                 return;
             }
 
@@ -179,40 +185,40 @@ public class CatalogueModifVue {
             );
         });
 
-        txtRecherche.setOnAction(e -> {
-            popupSuggestions.hide();
+        tfRecherche.setOnAction(e -> {
+            popupSuggest.hide();
             appliquerFiltres();
         });
 
-        txtRecherche.setOnKeyPressed(e -> {
+        tfRecherche.setOnKeyPressed(e -> {
             switch (e.getCode()) {
-                case ESCAPE -> popupSuggestions.hide();
+                case ESCAPE -> popupSuggest.hide();
                 case DOWN -> {
-                    if (popupSuggestions.isShowing()) {
-                        listeSuggestions.requestFocus();
-                        listeSuggestions.getSelectionModel().selectFirst();
+                    if (popupSuggest.isShowing()) {
+                        listSuggest.requestFocus();
+                        listSuggest.getSelectionModel().selectFirst();
                     }
                 }
                 default -> {}
             }
         });
 
-        listeSuggestions.setOnKeyPressed(e -> {
+        listSuggest.setOnKeyPressed(e -> {
             switch (e.getCode()) {
                 case ENTER -> {
-                    String valeur = listeSuggestions.getSelectionModel().getSelectedItem();
+                    String valeur = listSuggest.getSelectionModel().getSelectedItem();
                     if (valeur != null) {
-                        txtRecherche.setText(valeur);
-                        popupSuggestions.hide();
+                        tfRecherche.setText(valeur);
+                        popupSuggest.hide();
                         appliquerFiltres();
                     }
                 }
-                case ESCAPE -> popupSuggestions.hide();
+                case ESCAPE -> popupSuggest.hide();
                 default -> {}
             }
         });
 
-        return new StackPane(txtRecherche);
+        return new StackPane(tfRecherche);
     }
 
     private void afficherSuggestions(String motCle) {
@@ -220,20 +226,20 @@ public class CatalogueModifVue {
 
         List<Boite> resultats = boiteService.rechercherBoitesParNom(motCle);
         if (resultats.isEmpty()) {
-            popupSuggestions.hide();
+            popupSuggest.hide();
             return;
         }
 
-        listeSuggestions.getItems().clear();
+        listSuggest.getItems().clear();
         int max = Math.min(resultats.size(), 8);
         for (int i = 0; i < max; i++) {
-            listeSuggestions.getItems().add(resultats.get(i).getNom());
+            listSuggest.getItems().add(resultats.get(i).getNom());
         }
 
-        if (!popupSuggestions.isShowing() && txtRecherche.getScene() != null) {
-            javafx.geometry.Bounds bounds = txtRecherche.localToScreen(txtRecherche.getBoundsInLocal());
+        if (!popupSuggest.isShowing() && tfRecherche.getScene() != null) {
+            javafx.geometry.Bounds bounds = tfRecherche.localToScreen(tfRecherche.getBoundsInLocal());
             if (bounds != null) {
-                popupSuggestions.show(txtRecherche, bounds.getMinX(), bounds.getMaxY() + 2);
+                popupSuggest.show(tfRecherche, bounds.getMinX(), bounds.getMaxY() + 2);
             }
         }
     }
@@ -248,24 +254,21 @@ public class CatalogueModifVue {
     }
 
     private void reinitialiserFiltres() {
-        txtRecherche.clear();
+        tfRecherche.clear();
         comboTheme.setValue(null);
-        popupSuggestions.hide();
+        popupSuggest.hide();
         pageCourante = 1;
         chargerPage();
     }
 
     private ScrollPane creerZoneAffichage() {
-        scrollPane = new ScrollPane();
         scrollPane.setFitToWidth(true);
         scrollPane.getStyleClass().add("scroll-pane");
 
-        conteneurGrille = new FlowPane(20, 20);
-        conteneurGrille.setPadding(new Insets(10));
-        conteneurGrille.setAlignment(Pos.TOP_LEFT);
+        fpGrille.setPadding(new Insets(10));
+        fpGrille.setAlignment(Pos.TOP_LEFT);
 
-        conteneurListe = new VBox(15);
-        conteneurListe.setPadding(new Insets(10));
+        vbListe.setPadding(new Insets(10));
 
         return scrollPane;
     }
@@ -275,26 +278,21 @@ public class CatalogueModifVue {
         footer.setAlignment(Pos.CENTER);
         footer.setPadding(new Insets(20, 0, 0, 0));
 
-        btnPrecedent = new Button("◄ Précédent");
-        btnPrecedent.getStyleClass().add("button");
-        btnPrecedent.setOnAction(e -> pagePrecedente());
+        btnPrec.getStyleClass().add("button");
+        btnPrec.setOnAction(e -> pagePrecedente());
 
-        lblPagination = new Label("Page ");
-        lblPagination.getStyleClass().add("label");
+        lblPage.getStyleClass().add("label");
 
-        txtPageExacte = new TextField();
-        txtPageExacte.setPrefWidth(50);
-        txtPageExacte.setAlignment(Pos.CENTER);
-        txtPageExacte.setOnAction(e -> allerAPageExacte());
+        tfPage.setPrefWidth(50);
+        tfPage.setAlignment(Pos.CENTER);
+        tfPage.setOnAction(e -> allerAPageExacte());
 
-        Label lblSurTotal = new Label();
         lblSurTotal.getStyleClass().add("label");
 
-        btnSuivant = new Button("Suivant ►");
-        btnSuivant.getStyleClass().add("button");
-        btnSuivant.setOnAction(e -> pageSuivante());
+        btnSuiv.getStyleClass().add("button");
+        btnSuiv.setOnAction(e -> pageSuivante());
 
-        footer.getChildren().addAll(btnPrecedent, lblPagination, txtPageExacte, lblSurTotal, btnSuivant);
+        footer.getChildren().addAll(btnPrec, lblPage, tfPage, lblSurTotal, btnSuiv);
         return footer;
     }
 
@@ -312,7 +310,7 @@ public class CatalogueModifVue {
 
     private void allerAPageExacte() {
         try {
-            pageCourante = Integer.parseInt(txtPageExacte.getText());
+            pageCourante = Integer.parseInt(tfPage.getText());
         } catch (NumberFormatException ignored) {}
         chargerPage();
     }
@@ -324,7 +322,7 @@ public class CatalogueModifVue {
     private void chargerPage() {
         if (boiteService == null) return;
 
-        String recherche = txtRecherche.getText();
+        String recherche = tfRecherche.getText();
         Theme themeSelectionne = comboTheme.getValue();
         Integer idTheme = (themeSelectionne != null) ? themeSelectionne.getIdTheme() : null;
 
@@ -343,20 +341,15 @@ public class CatalogueModifVue {
             afficherVueListe(boites);
         }
 
-        // Remonter en haut du scroll après chaque chargement de page
         Platform.runLater(() -> scrollPane.setVvalue(0));
     }
 
     private void mettreAJourTextesPagination(int totalBoites, int totalPages) {
-        lblInfosTotal.setText(totalBoites + " boîtes trouvées");
-        txtPageExacte.setText(String.valueOf(pageCourante));
-
-        HBox footer = (HBox) root.getBottom();
-        Label lblSurTotal = (Label) footer.getChildren().get(3);
+        lblTotal.setText(totalBoites + " boîtes trouvées");
+        tfPage.setText(String.valueOf(pageCourante));
         lblSurTotal.setText(" sur " + totalPages);
-
-        btnPrecedent.setDisable(pageCourante <= 1);
-        btnSuivant.setDisable(pageCourante >= totalPages);
+        btnPrec.setDisable(pageCourante <= 1);
+        btnSuiv.setDisable(pageCourante >= totalPages);
     }
 
     // -----------------------------------------------------------------------
@@ -364,19 +357,19 @@ public class CatalogueModifVue {
     // -----------------------------------------------------------------------
 
     private void afficherVueGrille(List<Boite> boites) {
-        conteneurGrille.getChildren().clear();
+        fpGrille.getChildren().clear();
         for (Boite b : boites) {
-            conteneurGrille.getChildren().add(creerCarteBoite(b));
+            fpGrille.getChildren().add(creerCarteBoite(b));
         }
-        scrollPane.setContent(conteneurGrille);
+        scrollPane.setContent(fpGrille);
     }
 
     private void afficherVueListe(List<Boite> boites) {
-        conteneurListe.getChildren().clear();
+        vbListe.getChildren().clear();
         for (Boite b : boites) {
-            conteneurListe.getChildren().add(creerLigneBoite(b));
+            vbListe.getChildren().add(creerLigneBoite(b));
         }
-        scrollPane.setContent(conteneurListe);
+        scrollPane.setContent(vbListe);
     }
 
     private VBox creerCarteBoite(Boite b) {
@@ -465,4 +458,20 @@ public class CatalogueModifVue {
         ligne.getChildren().addAll(conteneurImage, lblNumero, lblNom, lblTheme, spacer, lblDetails);
         return ligne;
     }
+
+    // -----------------------------------------------------------------------
+    // GETTERS
+    // -----------------------------------------------------------------------
+
+    public TextField getTfRecherche() { return tfRecherche; }
+    public ComboBox<Theme> getComboTheme() { return comboTheme; }
+    public Button getBtnFiltrer() { return btnFiltrer; }
+    public Button getBtnReset() { return btnReset; }
+    public Button getBtnVue() { return btnVue; }
+    public Button getBtnPrec() { return btnPrec; }
+    public Button getBtnSuiv() { return btnSuiv; }
+    public TextField getTfPage() { return tfPage; }
+    public Label getLblTotal() { return lblTotal; }
+    public FlowPane getFpGrille() { return fpGrille; }
+    public VBox getVbListe() { return vbListe; }
 }

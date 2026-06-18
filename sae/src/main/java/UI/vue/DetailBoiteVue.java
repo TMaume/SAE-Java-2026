@@ -35,14 +35,16 @@ public class DetailBoiteVue extends BorderPane {
     private final CollectionService collectionService;
     private final Boite boiteComplete;
     
-    private int pageCourantePieces = 1;
-    private final int taillePagePieces = 20;
-    private FlowPane conteneurPiecesGrille;
-    private Label lblPaginationPieces;
-    private Button btnPrecedentPieces;
-    private Button btnSuivantPieces;
-    private Button btnAjouterCollection;
-    private Label lblMessageCollection;
+    private int pageCourante = 1;
+    private final int taillePage = 20;
+    
+    // Instanciation directe et nomenclature raccourcie
+    private FlowPane fpPieces = new FlowPane(20, 20);
+    private Label lblPage = new Label();
+    private Button btnPrec = new Button("◄ Précédent");
+    private Button btnSuiv = new Button("Suivant ►");
+    private Button btnAjout = new Button("Ajouter à ma collection");
+    private Label lblMsg = new Label();
 
     /**
      * Construit la vue détaillée d'une boîte (sans gestion de la collection personnelle).
@@ -148,19 +150,19 @@ public class DetailBoiteVue extends BorderPane {
     private BorderPane creerContenuPieces(Boite boite) {
         BorderPane conteneurGlobal = new BorderPane();
         conteneurGlobal.setPadding(new Insets(20));
-        conteneurPiecesGrille = new FlowPane(20, 20);
-        conteneurPiecesGrille.setAlignment(Pos.TOP_LEFT);
+        
+        fpPieces.setAlignment(Pos.TOP_LEFT);
         
         if (boite.getPieces() == null || boite.getPieces().isEmpty()) {
             Label lblVide = new Label("Aucun inventaire de pièces répertorié pour cette boîte.");
             lblVide.getStyleClass().add("subtitle-label");
             lblVide.setStyle("-fx-font-style: italic;");
-            conteneurPiecesGrille.getChildren().add(lblVide);
-            conteneurGlobal.setCenter(conteneurPiecesGrille);
+            fpPieces.getChildren().add(lblVide);
+            conteneurGlobal.setCenter(fpPieces);
             return conteneurGlobal;
         }
         
-        ScrollPane scroll = new ScrollPane(conteneurPiecesGrille);
+        ScrollPane scroll = new ScrollPane(fpPieces);
         scroll.setFitToWidth(true);
         scroll.getStyleClass().add("scroll-pane");
         conteneurGlobal.setCenter(scroll);
@@ -169,27 +171,24 @@ public class DetailBoiteVue extends BorderPane {
         footer.setAlignment(Pos.CENTER);
         footer.setPadding(new Insets(20, 0, 0, 0));
         
-        btnPrecedentPieces = new Button("◄ Précédent");
-        btnPrecedentPieces.getStyleClass().add("btn-primary");
-        btnPrecedentPieces.setOnAction(e -> {
-            if (pageCourantePieces > 1) {
-                pageCourantePieces--;
+        btnPrec.getStyleClass().add("btn-primary");
+        btnPrec.setOnAction(e -> {
+            if (pageCourante > 1) {
+                pageCourante--;
                 chargerPagePieces(boite);
             }
         });
         
-        lblPaginationPieces = new Label();
-        lblPaginationPieces.getStyleClass().add("label");
-        lblPaginationPieces.setStyle("-fx-font-weight: bold;");
+        lblPage.getStyleClass().add("label");
+        lblPage.setStyle("-fx-font-weight: bold;");
         
-        btnSuivantPieces = new Button("Suivant ►");
-        btnSuivantPieces.getStyleClass().add("btn-primary");
-        btnSuivantPieces.setOnAction(e -> {
-            pageCourantePieces++;
+        btnSuiv.getStyleClass().add("btn-primary");
+        btnSuiv.setOnAction(e -> {
+            pageCourante++;
             chargerPagePieces(boite);
         });
         
-        footer.getChildren().addAll(btnPrecedentPieces, lblPaginationPieces, btnSuivantPieces);
+        footer.getChildren().addAll(btnPrec, lblPage, btnSuiv);
         conteneurGlobal.setBottom(footer);
         
         chargerPagePieces(boite);
@@ -198,22 +197,22 @@ public class DetailBoiteVue extends BorderPane {
 
     private void chargerPagePieces(Boite boite) {
         int totalItems = boite.getPieces().size();
-        int totalPages = (int) Math.ceil((double) totalItems / taillePagePieces);
+        int totalPages = (int) Math.ceil((double) totalItems / taillePage);
         
         if (totalPages == 0) totalPages = 1;
-        if (pageCourantePieces > totalPages) pageCourantePieces = totalPages;
-        if (pageCourantePieces < 1) pageCourantePieces = 1;
+        if (pageCourante > totalPages) pageCourante = totalPages;
+        if (pageCourante < 1) pageCourante = 1;
         
-        lblPaginationPieces.setText("Page " + pageCourantePieces + " sur " + totalPages);
-        btnPrecedentPieces.setDisable(pageCourantePieces <= 1);
-        btnSuivantPieces.setDisable(pageCourantePieces >= totalPages);
+        lblPage.setText("Page " + pageCourante + " sur " + totalPages);
+        btnPrec.setDisable(pageCourante <= 1);
+        btnSuiv.setDisable(pageCourante >= totalPages);
         
-        conteneurPiecesGrille.getChildren().clear();
-        int indexDebut = (pageCourantePieces - 1) * taillePagePieces;
-        int indexFin = Math.min(indexDebut + taillePagePieces, totalItems);
+        fpPieces.getChildren().clear();
+        int indexDebut = (pageCourante - 1) * taillePage;
+        int indexFin = Math.min(indexDebut + taillePage, totalItems);
         
         for (int i = indexDebut; i < indexFin; i++) {
-            conteneurPiecesGrille.getChildren().add(creerCartePiece(boite.getPieces().get(i)));
+            fpPieces.getChildren().add(creerCartePiece(boite.getPieces().get(i)));
         }
     }
 
@@ -221,11 +220,10 @@ public class DetailBoiteVue extends BorderPane {
         VBox carte = new VBox(10);
         carte.setPadding(new Insets(15));
         carte.getStyleClass().add("card");
-        carte.setStyle("-fx-cursor: hand;"); // Indique que c'est cliquable
+        carte.setStyle("-fx-cursor: hand;");
         carte.setPrefWidth(220);
         carte.setAlignment(Pos.CENTER);
         
-        // --- Événement de clic pour ouvrir le popup ---
         carte.setOnMouseClicked(e -> afficherPopupPiece(pq));
 
         ImageView imageView = new ImageView();
@@ -304,11 +302,10 @@ public class DetailBoiteVue extends BorderPane {
         VBox carte = new VBox(10);
         carte.setPadding(new Insets(15));
         carte.getStyleClass().add("card");
-        carte.setStyle("-fx-cursor: hand;"); // Indique que c'est cliquable
+        carte.setStyle("-fx-cursor: hand;");
         carte.setPrefWidth(220);
         carte.setAlignment(Pos.CENTER);
 
-        // --- Événement de clic pour ouvrir le popup ---
         carte.setOnMouseClicked(e -> afficherPopupFigurine(fq));
 
         ImageView imageView = new ImageView();
@@ -349,10 +346,6 @@ public class DetailBoiteVue extends BorderPane {
         carte.getChildren().addAll(conteneurImage, lblId, lblNom, lblQte);
         return carte;
     }
-
-    // ====================================================================================
-    // NOUVELLES MÉTHODES POUR LES POP-UPS DE DÉTAILS
-    // ====================================================================================
 
     private void afficherPopupPiece(PieceQuantite pq) {
         Stage popup = new Stage();
@@ -408,7 +401,7 @@ public class DetailBoiteVue extends BorderPane {
         root.getChildren().addAll(lblNom, conteneurImage, grille, btnFermer);
 
         Scene scene = new Scene(root, 450, 650);
-        ParametreController.appliquerTheme(scene); // Application du thème global
+        ParametreController.appliquerTheme(scene);
         popup.setScene(scene);
         popup.showAndWait();
     }
@@ -464,12 +457,10 @@ public class DetailBoiteVue extends BorderPane {
         root.getChildren().addAll(lblNom, conteneurImage, grille, btnFermer);
 
         Scene scene = new Scene(root, 450, 600);
-        ParametreController.appliquerTheme(scene); // Application du thème global
+        ParametreController.appliquerTheme(scene);
         popup.setScene(scene);
         popup.showAndWait();
     }
-    
-    // ====================================================================================
 
     private VBox creerSectionImage(Boite boite) {
         VBox conteneurImage = new VBox();
@@ -495,27 +486,24 @@ public class DetailBoiteVue extends BorderPane {
         }
         conteneurImage.getChildren().add(imageView);
  
-        // --- Bouton "Ajouter à ma collection" ---
         VBox conteneurAction = new VBox(8);
         conteneurAction.setAlignment(Pos.CENTER);
         conteneurAction.setPadding(new Insets(15, 0, 0, 0));
  
-        btnAjouterCollection = new Button("Ajouter à ma collection");
-        btnAjouterCollection.getStyleClass().add("btn-primary");
-        btnAjouterCollection.setMaxWidth(Double.MAX_VALUE);
+        btnAjout.getStyleClass().add("btn-primary");
+        btnAjout.setMaxWidth(Double.MAX_VALUE);
  
-        lblMessageCollection = new Label();
-        lblMessageCollection.setStyle("-fx-font-size: 11px;");
-        lblMessageCollection.setWrapText(true);
+        lblMsg.setStyle("-fx-font-size: 11px;");
+        lblMsg.setWrapText(true);
  
         if (collectionService == null) {
-            btnAjouterCollection.setDisable(true);
+            btnAjout.setDisable(true);
         } else {
             mettreAJourBoutonCollection(boite);
-            btnAjouterCollection.setOnAction(e -> ajouterALaCollection(boite));
+            btnAjout.setOnAction(e -> ajouterALaCollection(boite));
         }
  
-        conteneurAction.getChildren().addAll(btnAjouterCollection, lblMessageCollection);
+        conteneurAction.getChildren().addAll(btnAjout, lblMsg);
         conteneurImage.getChildren().add(conteneurAction);
         
         return conteneurImage;
@@ -524,23 +512,23 @@ public class DetailBoiteVue extends BorderPane {
     private void ajouterALaCollection(Boite boite) {
         try {
             collectionService.ajouterBoite(boite, EtatBoite.COMPLETE);
-            lblMessageCollection.setText("Boîte ajoutée à votre collection !");
-            lblMessageCollection.setStyle("-fx-font-size: 11px; -fx-text-fill: #27ae60; -fx-font-weight: bold;");
+            lblMsg.setText("Boîte ajoutée à votre collection !");
+            lblMsg.setStyle("-fx-font-size: 11px; -fx-text-fill: #27ae60; -fx-font-weight: bold;");
             mettreAJourBoutonCollection(boite);
         } catch (Exception ex) {
-            lblMessageCollection.setText("Erreur lors de l'ajout : " + ex.getMessage());
-            lblMessageCollection.setStyle("-fx-font-size: 11px; -fx-text-fill: #e74c3c;");
+            lblMsg.setText("Erreur lors de l'ajout : " + ex.getMessage());
+            lblMsg.setStyle("-fx-font-size: 11px; -fx-text-fill: #e74c3c;");
         }
     }
  
     private void mettreAJourBoutonCollection(Boite boite) {
         CollectionItem item = collectionService.obtenerItem(boite.getNumero());
         if (item != null) {
-            btnAjouterCollection.setText("Déjà dans ma collection");
-            btnAjouterCollection.setDisable(true);
+            btnAjout.setText("Déjà dans ma collection");
+            btnAjout.setDisable(true);
         } else {
-            btnAjouterCollection.setText("Ajouter à ma collection");
-            btnAjouterCollection.setDisable(false);
+            btnAjout.setText("Ajouter à ma collection");
+            btnAjout.setDisable(false);
         }
     }
  
@@ -657,4 +645,12 @@ public class DetailBoiteVue extends BorderPane {
         grille.add(lblLibelle, 0, ligne);
         grille.add(lblValeur, 1, ligne);
     }
+    
+    // --- Getters ---
+    public FlowPane getFpPieces() { return fpPieces; }
+    public Label getLblPage() { return lblPage; }
+    public Button getBtnPrec() { return btnPrec; }
+    public Button getBtnSuiv() { return btnSuiv; }
+    public Button getBtnAjout() { return btnAjout; }
+    public Label getLblMsg() { return lblMsg; }
 }
