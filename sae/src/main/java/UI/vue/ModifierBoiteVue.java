@@ -1,5 +1,6 @@
 package UI.vue;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -34,14 +35,14 @@ public class ModifierBoiteVue extends BorderPane {
     private TextField txtAnnee;
     private TextField txtRechercheTheme;
     private ComboBox<Theme> comboTheme;
-    
+
     private ListView<String> listeComposition;
     private ComboBox<String> comboFiltreContenu;
-    
-    // Nouveaux composants pour la recherche visuelle
+
+    // Composants pour la recherche en tableau
     private TextField txtRechercheAjout;
     private ComboBox<String> comboTypeAjout;
-    private FlowPane conteneurResultatsAjout;
+    private TableView<String[]> tableResultats;
     private TextField txtQuantiteAjout;
     private Label lblSelection;
     private String referenceSelectionnee = "";
@@ -52,7 +53,7 @@ public class ModifierBoiteVue extends BorderPane {
         this.boiteService = boiteService;
         this.themeService = themeService;
         this.pieceService = pieceService;
-        
+
         Boite boiteComplete = boiteService.chargerBoiteComplete(boite.getNumero());
         this.boite = (boiteComplete != null) ? boiteComplete : boite;
 
@@ -72,152 +73,129 @@ public class ModifierBoiteVue extends BorderPane {
     }
 
     private void configurerEcouteurs() {
-        txtRechercheTheme.textProperty().addListener((observable, oldValue, newValue) -> {
-            appliquerFiltreTheme();
-        });
+        txtRechercheTheme.textProperty().addListener((obs, o, n) -> appliquerFiltreTheme());
 
-        comboFiltreContenu.setOnAction(event -> {
-            appliquerFiltreContenu();
-        });
-        
-        txtRechercheAjout.textProperty().addListener((observable, oldValue, newValue) -> {
-            rechercherElementsAjout(newValue, comboTypeAjout.getValue());
-        });
-        
-        comboTypeAjout.setOnAction(event -> {
+        comboFiltreContenu.setOnAction(e -> appliquerFiltreContenu());
+
+        txtRechercheAjout.textProperty().addListener((obs, o, n) ->
+                rechercherElementsAjout(n, comboTypeAjout.getValue()));
+
+        comboTypeAjout.setOnAction(e -> {
+            configurerColonnesTableau(comboTypeAjout.getValue());
             rechercherElementsAjout(txtRechercheAjout.getText(), comboTypeAjout.getValue());
         });
     }
 
+    // -----------------------------------------------------------------------
+    // FILTRAGE THEME
+    // -----------------------------------------------------------------------
+
     private void appliquerFiltreTheme() {
-        String texteRecherche = txtRechercheTheme.getText().trim().toLowerCase();
-        
-        if (texteRecherche.isEmpty()) {
+        String texte = txtRechercheTheme.getText().trim().toLowerCase();
+        if (texte.isEmpty()) {
             comboTheme.setItems(tousLesThemes);
         } else {
-            ObservableList<Theme> themesFiltres = FXCollections.observableArrayList();
+            ObservableList<Theme> filtres = FXCollections.observableArrayList();
             for (Theme t : tousLesThemes) {
-                if (t.getNom().toLowerCase().contains(texteRecherche)) {
-                    themesFiltres.add(t);
-                }
+                if (t.getNom().toLowerCase().contains(texte)) filtres.add(t);
             }
-            comboTheme.setItems(themesFiltres);
-            if (!themesFiltres.isEmpty()) {
-                comboTheme.show();
-            }
+            comboTheme.setItems(filtres);
+            if (!filtres.isEmpty()) comboTheme.show();
         }
     }
 
+    // -----------------------------------------------------------------------
+    // FILTRAGE INVENTAIRE
+    // -----------------------------------------------------------------------
+
     private void appliquerFiltreContenu() {
-        String filtreSelectionne = comboFiltreContenu.getValue();
+        String filtre = comboFiltreContenu.getValue();
         listeComposition.getItems().clear();
 
-        boolean afficherPieces = filtreSelectionne.equals("Tout afficher") || filtreSelectionne.equals("Pièces");
-        boolean afficherFigurines = filtreSelectionne.equals("Tout afficher") || filtreSelectionne.equals("Figurines");
-        boolean afficherSousBoites = filtreSelectionne.equals("Tout afficher") || filtreSelectionne.equals("Sous-boîtes");
+        boolean pieces    = filtre.equals("Tout afficher") || filtre.equals("Pièces");
+        boolean figurines = filtre.equals("Tout afficher") || filtre.equals("Figurines");
+        boolean sousBoites = filtre.equals("Tout afficher") || filtre.equals("Sous-boîtes");
 
-        if (afficherPieces && boite.getPieces() != null) {
-            for (PieceQuantite pq : boite.getPieces()) {
+        if (pieces && boite.getPieces() != null)
+            for (PieceQuantite pq : boite.getPieces())
                 listeComposition.getItems().add("[Pièce] Réf: " + pq.getPiece().getNumero() + " | Quantité: " + pq.getQuantite());
-            }
-        }
-        if (afficherFigurines && boite.getFigurines() != null) {
-            for (FigurineQuantite fq : boite.getFigurines()) {
+
+        if (figurines && boite.getFigurines() != null)
+            for (FigurineQuantite fq : boite.getFigurines())
                 listeComposition.getItems().add("[Figurine] Réf: " + fq.getFigurine().getIdFigurine() + " | Quantité: " + fq.getQuantite());
-            }
-        }
-        if (afficherSousBoites && boite.getBoitesIncluses() != null) {
-            for (BoiteQuantite bq : boite.getBoitesIncluses()) {
+
+        if (sousBoites && boite.getBoitesIncluses() != null)
+            for (BoiteQuantite bq : boite.getBoitesIncluses())
                 listeComposition.getItems().add("[Sous-boîte] N°: " + bq.getBoite().getNumero() + " | Quantité: " + bq.getQuantite());
-            }
-        }
+    }
+
+    // -----------------------------------------------------------------------
+    // RECHERCHE → TABLEAU
+    // -----------------------------------------------------------------------
+
+    /**
+     * Configure les colonnes du tableau selon le type sélectionné.
+     */
+    @SuppressWarnings("unchecked")
+    private void configurerColonnesTableau(String type) {
+        tableResultats.getColumns().clear();
+
+        TableColumn<String[], String> colRef = new TableColumn<>("Référence");
+        colRef.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()[0]));
+        colRef.setPrefWidth(120);
+
+        TableColumn<String[], String> colNom = new TableColumn<>("Nom");
+        colNom.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()[1]));
+        colNom.setPrefWidth(200);
+
+        TableColumn<String[], String> colInfo = new TableColumn<>(
+                type.equals("Pièce") ? "Catégorie"
+                : type.equals("Figurine") ? "Nb parties"
+                : "Thème • Année");
+        colInfo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()[2]));
+        colInfo.setPrefWidth(150);
+
+        tableResultats.getColumns().addAll(colRef, colNom, colInfo);
     }
 
     /**
-     * Effectue la recherche et génère les cartes visuelles.
+     * Effectue la recherche et remplit le tableau.
      */
     private void rechercherElementsAjout(String recherche, String type) {
-        conteneurResultatsAjout.getChildren().clear();
+        tableResultats.getItems().clear();
         referenceSelectionnee = "";
         lblSelection.setText("Aucune sélection");
-        
-        if (recherche == null || recherche.trim().length() < 2) {
-            return;
-        }
-        
+
+        if (recherche == null || recherche.trim().length() < 2) return;
+
         String motCle = recherche.trim();
-        
+
         if (type.equals("Pièce") && pieceService != null) {
             List<Piece> resultats = pieceService.rechercherPiecesParMotCle(motCle);
             for (Piece p : resultats) {
-                String cat = p.getCategorie() != null ? p.getCategorie().getNom() : "";
-                conteneurResultatsAjout.getChildren().add(creerCarteResultat(p.getNumero(), p.getNom(), cat, null));
+                String cat = (p.getCategorie() != null) ? p.getCategorie().getNom() : "";
+                tableResultats.getItems().add(new String[]{p.getNumero(), p.getNom(), cat});
             }
+
         } else if (type.equals("Figurine") && boiteService != null) {
             List<Figurine> resultats = boiteService.rechercherFigurinesParMotCle(motCle);
             for (Figurine f : resultats) {
-                conteneurResultatsAjout.getChildren().add(creerCarteResultat(f.getIdFigurine(), f.getNom(), f.getNbParties() + " parties", f.getImageF()));
+                String parties = f.getNbParties() != null ? f.getNbParties() + " parties" : "";
+                tableResultats.getItems().add(new String[]{f.getIdFigurine(), f.getNom(), parties});
             }
+
         } else if (type.equals("Sous-boîte") && boiteService != null) {
             List<Boite> resultats = boiteService.rechercherBoitesParNom(motCle);
             for (Boite b : resultats) {
                 String infos = (b.getTheme() != null ? b.getTheme().getNom() : "") + " • " + b.getAnnee();
-                conteneurResultatsAjout.getChildren().add(creerCarteResultat(b.getNumero(), b.getNom(), infos, b.getImageBoite()));
+                tableResultats.getItems().add(new String[]{b.getNumero(), b.getNom(), infos});
             }
         }
     }
 
-    /**
-     * Crée une carte visuelle sans le bouton "Ajouter à ma collection".
-     */
-    private VBox creerCarteResultat(String ref, String nom, String infos, String urlImage) {
-        VBox carte = new VBox(10);
-        carte.setPadding(new Insets(10));
-        // Style calqué sur ton thème bordeaux/or
-        carte.setStyle("-fx-background-color: #5c1416; -fx-border-color: #d4af37; -fx-border-radius: 5; -fx-background-radius: 5;");
-        carte.setPrefWidth(160);
-        carte.setAlignment(Pos.CENTER);
-
-        ImageView imageView = new ImageView();
-        imageView.setFitWidth(130);
-        imageView.setFitHeight(100);
-        imageView.setPreserveRatio(true);
-        if (urlImage != null && !urlImage.isBlank()) {
-            try {
-                imageView.setImage(new Image(urlImage, true));
-            } catch (Exception e) {}
-        }
-        VBox conteneurImage = new VBox(imageView);
-        conteneurImage.setAlignment(Pos.CENTER);
-        conteneurImage.setStyle("-fx-background-color: white; -fx-background-radius: 3;");
-        conteneurImage.setPrefHeight(110);
-        conteneurImage.setPadding(new Insets(5));
-
-        Label lblRef = new Label("#" + ref);
-        lblRef.setStyle("-fx-text-fill: #d4af37; -fx-font-weight: bold;");
-
-        Label lblNom = new Label(nom);
-        lblNom.setStyle("-fx-text-fill: #d4af37; -fx-font-size: 12px;");
-        lblNom.setWrapText(true);
-        lblNom.setAlignment(Pos.CENTER);
-        lblNom.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
-        lblNom.setMinHeight(35);
-
-        Label lblInfos = new Label(infos);
-        lblInfos.setStyle("-fx-text-fill: #d4af37; -fx-font-size: 10px;");
-
-        // Bouton de sélection (Remplace le bouton Collection)
-        Button btnSelect = new Button("Sélectionner");
-        btnSelect.setStyle("-fx-background-color: #3b0d0e; -fx-border-color: #d4af37; -fx-text-fill: #d4af37; -fx-cursor: hand; -fx-border-radius: 3; -fx-background-radius: 3;");
-        btnSelect.setMaxWidth(Double.MAX_VALUE);
-        btnSelect.setOnAction(e -> {
-            referenceSelectionnee = ref;
-            lblSelection.setText("Réf sélectionnée : " + ref);
-        });
-
-        carte.getChildren().addAll(conteneurImage, lblRef, lblNom, lblInfos, btnSelect);
-        return carte;
-    }
+    // -----------------------------------------------------------------------
+    // CONSTRUCTION DE L'UI
+    // -----------------------------------------------------------------------
 
     private HBox creerEnTete(Runnable actionRetour, String titre) {
         HBox entete = new HBox(20);
@@ -240,16 +218,10 @@ public class ModifierBoiteVue extends BorderPane {
         contenu.setAlignment(Pos.TOP_LEFT);
 
         VBox zoneInformations = new VBox(20);
-        zoneInformations.getChildren().addAll(
-            creerZoneOnglets()
-        );
+        zoneInformations.getChildren().add(creerZoneOnglets());
         HBox.setHgrow(zoneInformations, Priority.ALWAYS);
 
-        contenu.getChildren().addAll(
-            creerSectionImage(this.boite),
-            zoneInformations
-        );
-
+        contenu.getChildren().addAll(creerSectionImage(this.boite), zoneInformations);
         return contenu;
     }
 
@@ -267,8 +239,7 @@ public class ModifierBoiteVue extends BorderPane {
 
         String url = boite.getImageBoite();
         if (url != null && !url.isBlank()) {
-            Image image = new Image(url, true);
-            imageView.setImage(image);
+            imageView.setImage(new Image(url, true));
         }
 
         conteneurImage.getChildren().add(imageView);
@@ -280,13 +251,13 @@ public class ModifierBoiteVue extends BorderPane {
         conteneurGeneral.setPadding(new Insets(20));
         conteneurGeneral.getStyleClass().add("card");
 
-        TabPane tabPaneEdition = new TabPane();
-        tabPaneEdition.setPrefHeight(350);
+        TabPane tabPane = new TabPane();
+        tabPane.setPrefHeight(380);
 
         Tab tabInfos = new Tab("Détails");
         tabInfos.setClosable(false);
         tabInfos.setContent(creerOngletInformations());
-        
+
         Tab tabAjout = new Tab("Ajouter");
         tabAjout.setClosable(false);
         tabAjout.setContent(creerOngletAjout());
@@ -295,16 +266,20 @@ public class ModifierBoiteVue extends BorderPane {
         tabContenu.setClosable(false);
         tabContenu.setContent(creerOngletContenu());
 
-        tabPaneEdition.getTabs().addAll(tabInfos, tabAjout, tabContenu);
+        tabPane.getTabs().addAll(tabInfos, tabAjout, tabContenu);
 
         Button btnSauvegarder = new Button("Enregistrer les modifications");
         btnSauvegarder.setMaxWidth(Double.MAX_VALUE);
         btnSauvegarder.getStyleClass().add("button");
         btnSauvegarder.setOnAction(e -> gererActionSauvegarde());
 
-        conteneurGeneral.getChildren().addAll(tabPaneEdition, btnSauvegarder);
+        conteneurGeneral.getChildren().addAll(tabPane, btnSauvegarder);
         return conteneurGeneral;
     }
+
+    // -----------------------------------------------------------------------
+    // ONGLETS
+    // -----------------------------------------------------------------------
 
     private VBox creerOngletInformations() {
         VBox conteneur = new VBox(20);
@@ -315,10 +290,8 @@ public class ModifierBoiteVue extends BorderPane {
         grille.setHgap(40);
 
         txtNom = new TextField(boite.getNom() != null ? boite.getNom() : "");
-        
         int anneeActuelle = LocalDate.now().getYear();
-        String valeurAnnee = boite.getAnnee() != null ? String.valueOf(boite.getAnnee()) : String.valueOf(anneeActuelle);
-        txtAnnee = new TextField(valeurAnnee);
+        txtAnnee = new TextField(boite.getAnnee() != null ? String.valueOf(boite.getAnnee()) : String.valueOf(anneeActuelle));
 
         ajouterLigneInfo(grille, 0, "Référence :", boite.getNumero());
         ajouterLigneEdition(grille, 1, "Nom :", txtNom);
@@ -326,14 +299,14 @@ public class ModifierBoiteVue extends BorderPane {
 
         VBox zoneTheme = new VBox(10);
         zoneTheme.setPadding(new Insets(10, 0, 0, 0));
-        
+
         Label lblTheme = new Label("Rechercher un thème :");
         lblTheme.getStyleClass().add("subtitle-label");
 
         txtRechercheTheme = new TextField();
         txtRechercheTheme.setPromptText("Ex: Star Wars");
         txtRechercheTheme.setPrefWidth(200);
-        
+
         comboTheme = new ComboBox<>();
         configurerControleTheme();
 
@@ -342,121 +315,70 @@ public class ModifierBoiteVue extends BorderPane {
         ligneTheme.getChildren().addAll(txtRechercheTheme, comboTheme);
 
         zoneTheme.getChildren().addAll(lblTheme, ligneTheme);
-
         conteneur.getChildren().addAll(grille, zoneTheme);
         return conteneur;
     }
-    
+
+    @SuppressWarnings("unchecked")
     private VBox creerOngletAjout() {
-        VBox conteneur = new VBox(15);
+        VBox conteneur = new VBox(12);
         conteneur.setPadding(new Insets(20));
-        
+
         Label lblTitre = new Label("Rechercher un élément à ajouter");
         lblTitre.getStyleClass().add("subtitle-label");
-        
+
+        // Barre de recherche
         HBox barreRecherche = new HBox(10);
         barreRecherche.setAlignment(Pos.CENTER_LEFT);
-        
+
         comboTypeAjout = new ComboBox<>();
         comboTypeAjout.getItems().addAll("Pièce", "Figurine", "Sous-boîte");
         comboTypeAjout.setValue("Pièce");
-        
+
         txtRechercheAjout = new TextField();
-        txtRechercheAjout.setPromptText("Mot-clé ou référence");
-        txtRechercheAjout.setPrefWidth(200);
-        
+        txtRechercheAjout.setPromptText("Mot-clé ou référence (min. 2 caractères)");
+        txtRechercheAjout.setPrefWidth(250);
+        HBox.setHgrow(txtRechercheAjout, Priority.ALWAYS);
+
         barreRecherche.getChildren().addAll(comboTypeAjout, txtRechercheAjout);
-        
-        // C'est ici que la magie opère : la galerie de cartes remplace la vieille liste !
-        conteneurResultatsAjout = new FlowPane(15, 15);
-        conteneurResultatsAjout.setAlignment(Pos.TOP_LEFT);
-        ScrollPane scrollResultats = new ScrollPane(conteneurResultatsAjout);
-        scrollResultats.setFitToWidth(true);
-        scrollResultats.setPrefHeight(250);
-        scrollResultats.setStyle("-fx-background-color: transparent;");
-        
-        HBox zoneAction = new HBox(15);
+
+        // Tableau des résultats
+        tableResultats = new TableView<>();
+        tableResultats.setPlaceholder(new Label("Aucun résultat — saisissez au moins 2 caractères"));
+        tableResultats.setPrefHeight(220);
+        tableResultats.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        // Sélection dans le tableau → maj label
+        tableResultats.getSelectionModel().selectedItemProperty().addListener((obs, oldRow, newRow) -> {
+            if (newRow != null) {
+                referenceSelectionnee = newRow[0];
+                lblSelection.setText("Réf sélectionnée : " + newRow[0] + " — " + newRow[1]);
+            }
+        });
+
+        // Initialiser les colonnes pour le type par défaut (Pièce)
+        configurerColonnesTableau("Pièce");
+
+        // Zone action
+        HBox zoneAction = new HBox(12);
         zoneAction.setAlignment(Pos.CENTER_LEFT);
-        
+
         lblSelection = new Label("Aucune sélection");
-        lblSelection.setStyle("-fx-font-weight: bold; -fx-text-fill: #e67e22; -fx-min-width: 150px;");
-        
-        Label lblQuantite = new Label("Qté :");
+        lblSelection.setStyle("-fx-font-weight: bold; -fx-text-fill: #e67e22;");
+        HBox.setHgrow(lblSelection, Priority.ALWAYS);
+
+        Label lblQte = new Label("Qté :");
         txtQuantiteAjout = new TextField("1");
-        txtQuantiteAjout.setPrefWidth(50);
-        
+        txtQuantiteAjout.setPrefWidth(55);
+
         Button btnAjouter = new Button("➕ Ajouter");
         btnAjouter.getStyleClass().add("button");
         btnAjouter.setOnAction(e -> gererAjoutElement());
-        
-        zoneAction.getChildren().addAll(lblSelection, lblQuantite, txtQuantiteAjout, btnAjouter);
-        
-        conteneur.getChildren().addAll(lblTitre, barreRecherche, scrollResultats, zoneAction);
+
+        zoneAction.getChildren().addAll(lblSelection, lblQte, txtQuantiteAjout, btnAjouter);
+
+        conteneur.getChildren().addAll(lblTitre, barreRecherche, tableResultats, zoneAction);
         return conteneur;
-    }
-
-    private void gererAjoutElement() {
-        String type = comboTypeAjout.getValue();
-        
-        if (referenceSelectionnee == null || referenceSelectionnee.isEmpty()) {
-            afficherAlerte(AlertType.WARNING, "Sélection requise", "Veuillez cliquer sur le bouton 'Sélectionner' d'une des cartes.");
-            return;
-        }
-        
-        int quantite;
-        try {
-            quantite = Integer.parseInt(txtQuantiteAjout.getText().trim()); 
-            if (quantite <= 0) throw new NumberFormatException();
-        } catch (NumberFormatException ex) {
-            afficherAlerte(AlertType.WARNING, "Quantité invalide", "Veuillez saisir un nombre entier positif");
-            return;
-        }
-        
-        String ref = referenceSelectionnee;
-        
-        if (type.equals("Pièce") && pieceService != null) {
-            Piece piece = pieceService.rechercherPiece(ref);
-            if (piece != null) {
-                PieceQuantite pq = new PieceQuantite(piece, quantite, false, null);
-                boite.ajouterPiece(pq);
-                boiteService.ajouterPieceABoite(boite.getNumero(), pq);
-                afficherAlerte(AlertType.INFORMATION, "Succès", "Pièce ajoutée avec succès");
-            }
-        } else if (type.equals("Figurine") && boiteService != null) {
-            Figurine fig = boiteService.rechercherFigurine(ref);
-            if (fig != null) {
-                FigurineQuantite fq = new FigurineQuantite(fig, quantite);
-                boite.ajouterFigurine(fq);
-                boiteService.ajouterFigurineABoite(boite.getNumero(), fq);
-                afficherAlerte(AlertType.INFORMATION, "Succès", "Figurine ajoutée avec succès");
-            }
-        } else if (type.equals("Sous-boîte") && boiteService != null) {
-            Boite b = boiteService.rechercherBoiteParNumero(ref);
-            if (b != null) {
-                BoiteQuantite bq = new BoiteQuantite(b, quantite);
-                boite.ajouterBoiteIncluse(bq);
-                boiteService.ajouterSousBoiteABoite(boite.getNumero(), bq);
-                afficherAlerte(AlertType.INFORMATION, "Succès", "Sous-boîte ajoutée avec succès");
-            }
-        }
-        
-        rafraichirAffichage();
-        
-        // On remet à zéro la sélection après un ajout réussi
-        referenceSelectionnee = "";
-        lblSelection.setText("Aucune sélection");
-    }
-
-    private void rafraichirAffichage() {
-        appliquerFiltreContenu();
-    }
-
-    private void afficherAlerte(AlertType type, String titre, String message) {
-        Alert alerte = new Alert(type);
-        alerte.setTitle(titre);
-        alerte.setHeaderText(null);
-        alerte.setContentText(message);
-        alerte.showAndWait();
     }
 
     private VBox creerOngletContenu() {
@@ -482,66 +404,134 @@ public class ModifierBoiteVue extends BorderPane {
         return conteneur;
     }
 
+    // -----------------------------------------------------------------------
+    // LOGIQUE MÉTIER
+    // -----------------------------------------------------------------------
+
+    private void gererAjoutElement() {
+        String type = comboTypeAjout.getValue();
+
+        if (referenceSelectionnee == null || referenceSelectionnee.isEmpty()) {
+            afficherAlerte(AlertType.WARNING, "Sélection requise", "Veuillez sélectionner une ligne dans le tableau.");
+            return;
+        }
+
+        int quantite;
+        try {
+            quantite = Integer.parseInt(txtQuantiteAjout.getText().trim());
+            if (quantite <= 0) throw new NumberFormatException();
+        } catch (NumberFormatException ex) {
+            afficherAlerte(AlertType.WARNING, "Quantité invalide", "Veuillez saisir un nombre entier positif.");
+            return;
+        }
+
+        String ref = referenceSelectionnee;
+
+        if (type.equals("Pièce") && pieceService != null) {
+            Piece piece = pieceService.rechercherPiece(ref);
+            if (piece != null) {
+                PieceQuantite pq = new PieceQuantite(piece, quantite, false, null);
+                boite.ajouterPiece(pq);
+                boiteService.ajouterPieceABoite(boite.getNumero(), pq);
+                afficherAlerte(AlertType.INFORMATION, "Succès", "Pièce ajoutée avec succès.");
+            } else {
+                afficherAlerte(AlertType.ERROR, "Introuvable", "Pièce introuvable en base (réf : " + ref + ").");
+            }
+
+        } else if (type.equals("Figurine") && boiteService != null) {
+            Figurine fig = boiteService.rechercherFigurine(ref);
+            if (fig != null) {
+                FigurineQuantite fq = new FigurineQuantite(fig, quantite);
+                boite.ajouterFigurine(fq);
+                boiteService.ajouterFigurineABoite(boite.getNumero(), fq);
+                afficherAlerte(AlertType.INFORMATION, "Succès", "Figurine ajoutée avec succès.");
+            } else {
+                afficherAlerte(AlertType.ERROR, "Introuvable", "Figurine introuvable en base (réf : " + ref + ").");
+            }
+
+        } else if (type.equals("Sous-boîte") && boiteService != null) {
+            Boite b = boiteService.rechercherBoiteParNumero(ref);
+            if (b != null) {
+                BoiteQuantite bq = new BoiteQuantite(b, quantite);
+                boite.ajouterBoiteIncluse(bq);
+                boiteService.ajouterSousBoiteABoite(boite.getNumero(), bq);
+                afficherAlerte(AlertType.INFORMATION, "Succès", "Sous-boîte ajoutée avec succès.");
+            } else {
+                afficherAlerte(AlertType.ERROR, "Introuvable", "Boîte introuvable en base (réf : " + ref + ").");
+            }
+        }
+
+        rafraichirAffichage();
+        referenceSelectionnee = "";
+        lblSelection.setText("Aucune sélection");
+    }
+
+    private void gererActionSauvegarde() {
+        String nouveauNom = txtNom.getText().trim();
+        String anneeStr = txtAnnee.getText().trim();
+        Theme themeSelectionne = comboTheme.getValue();
+
+        if (nouveauNom.isEmpty() || anneeStr.isEmpty()) {
+            afficherAlerte(AlertType.WARNING, "Champs incomplets", "Veuillez renseigner le nom et l'année.");
+            return;
+        }
+
+        try {
+            int nouvelleAnnee = Integer.parseInt(anneeStr);
+            boite.setNom(nouveauNom);
+            boite.setAnnee(nouvelleAnnee);
+            if (themeSelectionne != null) boite.setTheme(themeSelectionne);
+            afficherAlerte(AlertType.INFORMATION, "Succès", "Informations modifiées avec succès.");
+        } catch (NumberFormatException ex) {
+            afficherAlerte(AlertType.ERROR, "Erreur de saisie", "L'année doit être un nombre entier.");
+        }
+    }
+
+    private void rafraichirAffichage() {
+        appliquerFiltreContenu();
+    }
+
+    // -----------------------------------------------------------------------
+    // HELPERS
+    // -----------------------------------------------------------------------
+
     private void configurerControleTheme() {
         comboTheme.setItems(tousLesThemes);
-        
         comboTheme.setCellFactory(lv -> new ListCell<>() {
-            @Override
-            protected void updateItem(Theme item, boolean empty) {
+            @Override protected void updateItem(Theme item, boolean empty) {
                 super.updateItem(item, empty);
                 setText((empty || item == null) ? null : item.getNom());
             }
         });
         comboTheme.setButtonCell(new ListCell<>() {
-            @Override
-            protected void updateItem(Theme item, boolean empty) {
+            @Override protected void updateItem(Theme item, boolean empty) {
                 super.updateItem(item, empty);
                 setText((empty || item == null) ? null : item.getNom());
             }
         });
-
-        if (boite.getTheme() != null) {
-            comboTheme.setValue(boite.getTheme());
-        }
-    }
-
-    private void gererActionSauvegarde() {
-        String nouveauNom = txtNom.getText().trim();
-        String nouvelleAnneeStr = txtAnnee.getText().trim();
-        Theme themeSelectionne = comboTheme.getValue();
-
-        if (nouveauNom.isEmpty() || nouvelleAnneeStr.isEmpty()) {
-            afficherAlerte(AlertType.WARNING, "Champs incomplets", "Veuillez renseigner le nom et l'année");
-            return;
-        }
-
-        try {
-            int nouvelleAnnee = Integer.parseInt(nouvelleAnneeStr);
-            boite.setNom(nouveauNom);
-            boite.setAnnee(nouvelleAnnee);
-            if (themeSelectionne != null) {
-                boite.setTheme(themeSelectionne);
-            }
-            
-            afficherAlerte(AlertType.INFORMATION, "Succès", "Informations modifiées avec succès");
-
-        } catch (NumberFormatException ex) {
-            afficherAlerte(AlertType.ERROR, "Erreur de saisie", "L'année doit être un nombre entier");
-        }
+        if (boite.getTheme() != null) comboTheme.setValue(boite.getTheme());
     }
 
     private void ajouterLigneInfo(GridPane grille, int ligne, String libelle, String valeur) {
-        Label lblLibelle = new Label(libelle);
-        Label lblValeur = new Label(valeur);
-        lblValeur.setStyle("-fx-font-weight: bold;");
-        grille.add(lblLibelle, 0, ligne);
-        grille.add(lblValeur, 1, ligne);
+        Label lblLib = new Label(libelle);
+        Label lblVal = new Label(valeur);
+        lblVal.setStyle("-fx-font-weight: bold;");
+        grille.add(lblLib, 0, ligne);
+        grille.add(lblVal, 1, ligne);
     }
 
     private void ajouterLigneEdition(GridPane grille, int ligne, String libelle, TextField champ) {
-        Label lblLibelle = new Label(libelle);
+        Label lblLib = new Label(libelle);
         champ.setPrefWidth(220);
-        grille.add(lblLibelle, 0, ligne);
+        grille.add(lblLib, 0, ligne);
         grille.add(champ, 1, ligne);
+    }
+
+    private void afficherAlerte(AlertType type, String titre, String message) {
+        Alert alerte = new Alert(type);
+        alerte.setTitle(titre);
+        alerte.setHeaderText(null);
+        alerte.setContentText(message);
+        alerte.showAndWait();
     }
 }

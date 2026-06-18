@@ -1,0 +1,24 @@
+[
+  {
+    "numBoite": "71004-13",
+    "etat": "COMPLETE",
+    "construite": false,
+    "piecesManquantes": [],
+    "boitePersonnalisee": false,
+    "anneePerso": 0,
+    "idThemePerso": 0,
+    "piecesPerso": [],
+    "figurinesPerso": []
+  },
+  {
+    "numBoite": "DUTCHVANDER-1",
+    "etat": "COMPLETE",
+    "construite": false,
+    "piecesManquantes": [],
+    "boitePersonnalisee": false,
+    "anneePerso": 0,
+    "idThemePerso": 0,
+    "piecesPerso": [],
+    "figurinesPerso": []
+  }
+]
