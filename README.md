@@ -14,3 +14,8 @@ Ce projet est développé par :
    ```bash
    git clone [https://github.com/TMaume/SAE-Java-2026.git](https://github.com/TMaume/SAE-Java-2026.git)
    ```
+   *Pour Lancer notre docker avec l'application:* 
+   ```bash
+   ./launch.sh
+   ```
+   
