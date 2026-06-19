@@ -14,7 +14,7 @@ import App.Theme;
 import App.BoiteStats;
 import App.CollectionItem;
 import App.EtatBoite;
-import App.FigurineQuantite;
+
 import App.BoiteIdentiqueException;
 
 public class MenuUser {

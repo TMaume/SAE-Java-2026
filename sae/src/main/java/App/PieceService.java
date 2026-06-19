@@ -4,7 +4,6 @@ import BD.PieceBD;
 import BD.CategorieBD;
 import BD.CouleurBD;
 import java.util.List;
-import java.util.List;
 import java.util.ArrayList;
 
 /**

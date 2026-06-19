@@ -2,13 +2,10 @@ package UI.vue;
 
 import UI.Controller.CollectionController;
 import App.RoleUtilisateur;
-import App.Boite;
 import App.CollectionItem;
-import java.util.List;
 import UI.Controller.ParametreController;
 import UI.Controller.AuthController;
 import UI.Controller.DashboardController;
-import UI.Controller.AjouterBoiteController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -145,12 +142,6 @@ public class DashboardVue {
         activerBouton(btnModContenu);
     }
 
-    private void afficherCreationBoite(StackPane conteneurCentral, Button btnCreerRoot) {
-        CreerBoiteVue creerBoiteVue = new CreerBoiteVue();
-        new AjouterBoiteController(creerBoiteVue, controller.getBoiteService(), controller.getThemeService());
-        controller.chargerContenu(conteneurCentral, creerBoiteVue);
-        activerBouton(btnCreerRoot); 
-    }
 
     private void afficherMenuCreation(StackPane conteneurCentral, Button btnCreer) {
         CreerMenuVue menuVue = new CreerMenuVue(conteneurCentral, controller);
@@ -317,4 +308,6 @@ public class DashboardVue {
     public void resetCompteurEasterEgg() {
         this.compteurEasterEgg = 0;
     }
+
+    
 }

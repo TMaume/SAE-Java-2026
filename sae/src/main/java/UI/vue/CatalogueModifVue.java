@@ -28,7 +28,6 @@ public class CatalogueModifVue {
     
     private final BoiteService boiteService;
     private final ThemeService themeService;
-    private final CollectionService collectionService;
     private final Consumer<Boite> actionClicBoite;
 
     private int pageCourante = 1;
@@ -73,7 +72,6 @@ public class CatalogueModifVue {
     public CatalogueModifVue(BoiteService boiteService, ThemeService themeService, CollectionService collectionService, Consumer<Boite> actionClicBoite) {
         this.boiteService = boiteService;
         this.themeService = themeService;
-        this.collectionService = collectionService;
         this.actionClicBoite = actionClicBoite;
         
         initialiserInterface();

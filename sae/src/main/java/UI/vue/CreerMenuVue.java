@@ -47,7 +47,7 @@ public class CreerMenuVue extends VBox {
             CreerPieceVue CreerPieceVue = new CreerPieceVue(controller.getPieceService());
             controller.chargerContenu(conteneurCentral, CreerPieceVue);
         });
-
+        
         btnTheme.setOnAction(e -> {
             CreerThemeVue CreerThemeVue = new CreerThemeVue(controller.getThemeService());
             controller.chargerContenu(conteneurCentral, CreerThemeVue);

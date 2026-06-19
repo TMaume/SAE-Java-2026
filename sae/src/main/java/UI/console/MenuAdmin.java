@@ -14,9 +14,7 @@ public class MenuAdmin {
      */
     static void ajouterBoite(ConsoleUi ui, BoiteService boiteService, ThemeService themeService) {
         String numero = ui.lireTexte("Numéro de la boîte : ");
-        String nom = ui.lireTexte("Nom de la boîte : ");
-        int annee = ui.lireEntier("Année de sortie : ");
-        
+
         List<Theme> themes = themeService.listerThemes();
         if (themes.isEmpty()) {
             ui.afficherLigne("Aucun thème disponible.");
@@ -34,7 +32,6 @@ public class MenuAdmin {
             return;
         }
         
-        Boite b = new Boite(numero, nom, annee, theme, null);
 
         boiteService.rechercherBoiteParNumero(numero); 
         ui.afficherLigne("Fonctionnalité d'ajout à lier avec ton BoiteService.");

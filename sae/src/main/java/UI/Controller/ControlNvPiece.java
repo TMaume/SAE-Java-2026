@@ -6,7 +6,7 @@ import App.Categorie;
 import App.Couleur;
 import App.Piece;
 import App.PieceService;
-import App.Theme;
+
 import UI.vue.CreerPieceVue;
 import javafx.collections.FXCollections;
 import javafx.scene.paint.Color;

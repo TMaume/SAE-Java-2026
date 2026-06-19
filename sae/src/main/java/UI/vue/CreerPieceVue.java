@@ -5,8 +5,6 @@ import javafx.scene.control.*;
 import App.Categorie;
 import App.Couleur;
 import App.PieceService;
-import App.Theme;
-import App.ThemeService;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;

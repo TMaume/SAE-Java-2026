@@ -1,0 +1,24 @@
+[
+  {
+    "numBoite": "42156-1",
+    "etat": "COMPLETE",
+    "construite": false,
+    "piecesManquantes": [],
+    "boitePersonnalisee": false,
+    "anneePerso": 0,
+    "idThemePerso": 0,
+    "piecesPerso": [],
+    "figurinesPerso": []
+  },
+  {
+    "numBoite": "42208-1",
+    "etat": "COMPLETE",
+    "construite": false,
+    "piecesManquantes": [],
+    "boitePersonnalisee": false,
+    "anneePerso": 0,
+    "idThemePerso": 0,
+    "piecesPerso": [],
+    "figurinesPerso": []
+  }
+]

@@ -27,7 +27,6 @@ import App.ThemeService;
 public class ModifierBoiteVue extends BorderPane {
 
     private final BoiteService boiteService;
-    private final ThemeService themeService;
     private final PieceService pieceService;
     private Boite boite;
 
@@ -55,7 +54,6 @@ public class ModifierBoiteVue extends BorderPane {
 
     public ModifierBoiteVue(Boite boite, BoiteService boiteService, ThemeService themeService, PieceService pieceService, Runnable actionRetour) {
         this.boiteService = boiteService;
-        this.themeService = themeService;
         this.pieceService = pieceService;
 
         Boite boiteComplete = boiteService.chargerBoiteComplete(boite.getNumero());
@@ -330,7 +328,7 @@ public class ModifierBoiteVue extends BorderPane {
         return conteneur;
     }
 
-    @SuppressWarnings("unchecked")
+    //@SuppressWarnings("unchecked")
     private VBox creerOngletAjout() {
         VBox conteneur = new VBox(12);
         conteneur.setPadding(new Insets(20));
